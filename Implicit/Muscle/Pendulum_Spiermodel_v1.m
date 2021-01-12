@@ -13,6 +13,11 @@ pathmain = pwd;
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                        % Path to opensim model (scaled)
 
+pathmain = pwd;
+[pathTemp,~,~] = fileparts(pathmain);
+[pathRepo,~,~] = fileparts(pathTemp);
+path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                        % Path to opensim model (scaled)
+
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
 for j = 1:length(s.tr)
