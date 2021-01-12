@@ -1,6 +1,9 @@
 function [params] = ImportParameters(name)
 % Import parameters for pendulum test
-info     = load(['BK/',name]);
+pathmain = pwd;
+[pathTemp,~,~] = fileparts(pathmain);
+[pathRepo,~,~] = fileparts(pathTemp);
+info     = load([pathRepo '\BK\' ,name]);
 
 % Define parameters
 params.m_tot   = info.(char(name)).m;               % Totall mass of subject

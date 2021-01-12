@@ -1,15 +1,19 @@
 %% Simulations of pendulum test using a muscle model 
 %  Jente Willaert - 21/10/2020
-%  clear all; close all; clc; 
+clear all; close all; clc; 
 
 %% Input 
 s.nu = 'TD5';                                                                               % subject number/ name 
 s.tr = [1];                                                                                 % subject trials (number of trials)
-path = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\TD5/';                        % Path to opensim model (scaled)
 ScaleFactor = 1.697 ; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '';                                                                                  % Option used as name to save results 
 w1   = 0.7;
 w2   = 0.7;                                                                                 % Weigths in cost function
+
+pathmain = pwd;
+[pathTemp,~,~] = fileparts(pathmain);
+[pathRepo,~,~] = fileparts(pathTemp);
+path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                        % Path to opensim model (scaled)
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -95,7 +99,7 @@ for j = 1:length(s.tr)
     dlMdtGuess = vMGuess*params.MTparams(5)/lMo;
     
     %% Calculate LMT en Ma
-    map_MA         = ['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\TD5/MA_FakeMot_T',num2str(s.tr(j))]; 
+    map_MA         = [path 'MA_FakeMot_T',num2str(s.tr(j))]; 
     [coeff_LMT_ma] = DefineLMTCoefficients(map_MA, s.nu);
 
     %% Calculate offset (difference between IK en BK)
@@ -193,7 +197,7 @@ for j = 1:length(s.tr)
     % options for IPOPT
     options.ipopt.tol = 1*10^(-10);          % moet normaal 10^-6 zijn
     options.ipopt.linear_solver = 'mumps';
-    options.ipopt.linear_solver = 'ma57';
+%     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
     % Solve the OCP
