@@ -1,15 +1,17 @@
 %% Simulations of pendulum test using a muscle model 
 %  Jente Willaert - 21/10/2020
-%  clear all; close all; clc; 
+clear all; close all; clc; 
 
 %% Input 
 s.nu = 'TD5';                                                                               % subject number/ name 
 s.tr = [1];                                                                                 % subject trials (number of trials)
-path = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\TD5/';                        % Path to opensim model (scaled)
 ScaleFactor = 1.697 ; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
-opt  = '';                                                                                  % Option used as name to save results 
-w1   = 0.7;
-w2   = 0.7;                                                                                 % Weigths in cost function
+opt  = '';                                                                                  % Option used as name to save results                                                                                % Weigths in cost function
+
+pathmain = pwd;
+[pathTemp,~,~] = fileparts(pathmain);
+[pathRepo,~,~] = fileparts(pathTemp);
+path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                        % Path to opensim model (scaled)
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -95,7 +97,7 @@ for j = 1:length(s.tr)
     dlMdtGuess = vMGuess*params.MTparams(5)/lMo;
     
     %% Calculate LMT en Ma
-    map_MA         = ['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\TD5/MA_FakeMot_T',num2str(s.tr(j))]; 
+    map_MA         = [path 'MA_FakeMot_T',num2str(s.tr(j))]; 
     [coeff_LMT_ma] = DefineLMTCoefficients(map_MA, s.nu);
 
     %% Calculate offset (difference between IK en BK)
@@ -186,14 +188,14 @@ for j = 1:length(s.tr)
 %     
     % Objective function
     error = x - q_exp; 
-    J     = sumsqr(error) + sumsqr(act);
+    J     = sumsqr(error) + 2*sumsqr(act);
     opti.minimize(J); 
     
     
     % options for IPOPT
     options.ipopt.tol = 1*10^(-10);          % moet normaal 10^-6 zijn
     options.ipopt.linear_solver = 'mumps';
-    options.ipopt.linear_solver = 'ma57';
+%     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
     % Solve the OCP
@@ -206,31 +208,37 @@ for j = 1:length(s.tr)
     plot(tvect,q_exp,'k','LineWidth',1.5)
     hold on
     plot(tvect,sol_x,'r','LineWidth',1.5)
+    hold on
+    ylabel('Knee angle (rad)'); 
+    hold on
+    title('Check tracking');
+    xlabel('Time (s)');
+    legend('Experimental data','Simulated data')
     
     figure(j*100)
-    subplot(611)
+    subplot(711)
     plot(tvect,q_exp,'k','LineWidth',1.5)
     hold on
     plot(tvect,sol_x,'LineWidth',1.5)
     hold on
-    ylabel('(rad)'); box off; legend('Exp','Sim');
-    subplot(612)
+    ylabel('Knee angle (rad)'); box off; legend('Exp','Sim');
+    subplot(712)
     plot(tvect,sol.value(TLim),'LineWidth',1.5);
-    hold on; box off; ylabel('TLim');
-    subplot(613)
+    hold on; box off; ylabel('TLim (N)');
+    subplot(713)
     plot(tvect,sol.value(FT),'LineWidth',1.5);
-    hold on; box off; ylabel('FT');
-    subplot(614)
-    plot(tvect,sol.value(ma),'LineWidth',1.5);
-    hold on; box off; ylabel('ma');
-    subplot(615)
-    plot(tvect,sol.value(Fpe),'LineWidth',1.5);
-    hold on; box off; ylabel('Fpe');
-    subplot(616)
+    hold on; box off; ylabel('FT (N)');         % Tendon force
+    subplot(714)
+    plot(tvect,sol.value(ma),'LineWidth',1.5);  % Moment arm
+    hold on; box off; ylabel('ma (m)');
+    subplot(715)
+    plot(tvect,sol.value(Fpe),'LineWidth',1.5); % Passive force
+    hold on; box off; ylabel('Fpe (N)');
+    subplot(716)
     scatter(tvect(50),sol.value(kFpe),'LineWidth',1.5);
-    hold on; box off; ylabel('kFpe'); 
+    hold on; box off; ylabel('kFpe');           % Optimized passive force constant
     subplot(717)
     plot(tvect,sol.value(act),'LineWidth',1.5);
-    hold on; box off; ylabel('act'); 
+    hold on; box off; ylabel('actuator (Nm)'); xlabel('Time (s)')
 
 end

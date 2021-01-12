@@ -21,6 +21,12 @@ if bool == 1
     plot(q_exp,'k','LineWidth',1.5)
     hold on
     line([i i],[-2.5 0],'Color','r','LineWidth',1.5)
+    hold on
+    title('Experimental data and end of first swing');
+    hold on
+    ylabel('Knee angle (rad)')
+    legend('Exp data','End of first swing')
+    xlabel('Time (frames)')
 
 end
 

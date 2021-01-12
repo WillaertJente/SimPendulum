@@ -1,7 +1,7 @@
 function [FT, ma, dlMdt, err, lM, lT, Fce, Fpe, FM] = CalculateTendonForceAndMomentArm(x, params, lMtilda, a, sn, shift, vMtilda, lM_projected, coeff_LMT_ma, offset, kFpe, Fsrs)
 %Function to calculate tendon force and moment arms
 %   1. Calculate moment arm 
-%   ma is afgeleiden van LMT 
+%   moment arm is calculated as the derivative of the muscle tendon length
 %   2. Calculate tendon force
 %       Tendon force = Peak isometric muscle force * Fse
 %       Fse = exponential function of normalized tendon length
@@ -9,7 +9,7 @@ function [FT, ma, dlMdt, err, lM, lT, Fce, Fpe, FM] = CalculateTendonForceAndMom
 %       Tendon slack length  = input parameter
 %       Tendon length = Muscle tendon length - muscle fiber length (+
 %       andere factor)
-%   3. Calculate afgeleide van lMtilda
+%   3. Calculate derivative of lMtilda
 
 %% Stap 1 LMT en Ma
 offset   = offset*pi/180; 
