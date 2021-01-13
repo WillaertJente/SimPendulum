@@ -18,3 +18,7 @@ Implicit-muscle:
 This folder contains a seperate folder 'Experimental data', which is the experimental data that should be used for the muscle model.                           
 Pendulum_spiermodel_v1 is a simulation without SRS and works                          
 Pendulum_spiermodel_v2_SRS is still work in progress. The goal is to add SRS.                             
+
+The main file = pendulum_spiermodel_v1. You should run this file. 
+
+
