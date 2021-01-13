@@ -3,9 +3,9 @@
 clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP8';                                                                               % subject number/ name 
-s.tr = [5];                                                                                 % subject trials (number of trials)
-ScaleFactor = 1.7036 ; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+s.nu = 'TD5';                                                                               % subject number/ name 
+s.tr = [1];                                                                                 % subject trials (number of trials)
+ScaleFactor = 1.697 ; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '';                                                                                  % Option used as name to save results                                                                                % Weigths in cost function
 
 pathmain = pwd;
@@ -43,7 +43,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'TD5_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)

@@ -2,22 +2,25 @@ function [coeff_LMT_ma] = DefineLMTCoefficients(map_MA, sn)
 %  Calculate LMT and ma coefficients
 
 % Theta
-% theta    = (-120:0.01:10)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4;
+%theta    = (-120:0.01:10)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4;
 theta    = (-140:0.01:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; % for cp4 and cp 8 
 % Name MA files 
 name_LMT = '_MuscleAnalysis_Length.sto';
-name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto'; 
+name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_l.sto';        % CP4 TD 5
+%name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto'   ;     % CP 8
 
 % Data LMT
 % LMT_dat  = importdata([map_MA,char(sn),'_',name_LMT]);
-LMT_dat  = importdata([map_MA,name_LMT]);
-col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
+LMT_dat  = importdata([map_MA,name_LMT]);   
+col_RF   = find(strcmp('rect_fem_l',LMT_dat.colheaders));       % CP 4 TD 5
+%col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));      % CP 8
 LMT      = LMT_dat.data(:,col_RF);
 
 % Data ma
 % ma_dat   = importdata([map_MA,char(sn),'_',name_ma]);
 ma_dat   = importdata([map_MA,name_ma]);
-col_RF   = find(strcmp('rect_fem_r',ma_dat.colheaders));
+col_RF   = find(strcmp('rect_fem_l',ma_dat.colheaders));        % CP 4 TD 5
+% col_RF   = find(strcmp('rect_fem_r',ma_dat.colheaders));      % CP 8
 ma       = ma_dat.data(:,col_RF);
 
 % Define LMT coefficients together with ma coefficients

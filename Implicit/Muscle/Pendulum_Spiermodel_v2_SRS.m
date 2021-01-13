@@ -3,13 +3,11 @@
 %  clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP8';                                                                               % subject number/ name 
+s.nu = 'CP4';                                                                               % subject number/ name 
 s.tr = [3];                                                                                 % subject trials (number of trials)
-path = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8/';                        % Path to opensim model (scaled)
-ScaleFactor = 1.7036; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
-opt  = '';                                                                                  % Option used as name to save results 
-w1   = 0.7;
-w2   = 0.7;                                                                                 % Weigths in cost function
+path = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP4/';                        % Path to opensim model (scaled)
+ScaleFactor = 1.575; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+opt  = '';                                                                                  % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -36,7 +34,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/CP4_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -95,7 +93,7 @@ for j = 1:length(s.tr)
     dlMdtGuess = vMGuess*params.MTparams(5)/lMo;
     
     %% Calculate LMT en Ma
-    map_MA         = ['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8/MA_FakeMot_T',num2str(s.tr(j))]; 
+    map_MA         = ['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP4/MA_FakeMot_T',num2str(s.tr(j))]; 
     [coeff_LMT_ma] = DefineLMTCoefficients(map_MA, s.nu);
 
     %% Calculate offset (difference between IK en BK)
@@ -170,7 +168,6 @@ for j = 1:length(s.tr)
     %[TLim] = CalculateTLim(x,Kr1_OS, Kr2_OS, klim);
     %[Tlim] = CalculateTLim(x, Kr1, Kr2, klim);
         
-        
     % Calculate FT en ma 
     [FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM, Fsrs, Fsrs_dot] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe, N_1, Fsrs, N);
     
@@ -179,11 +176,11 @@ for j = 1:length(s.tr)
             opti.subject_to(xd(k) < 0);
     end
     for k = N_1:N-1
-        opti.subject_to(Fsrs(k+1) == Fsrs(k) + Fsrs_dot(k) * dt)
+        opti.subject_to(Fsrs(k+1) == Fsrs(k) + Fsrs_dot(k) * dt)       % Fsrs_dot(k)
     end
-    
+%     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT.*ma  + TLim + act); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT.*ma + act ); %  + Tdamp + FT*ma);
     
     % backward euler
     opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -191,16 +188,15 @@ for j = 1:length(s.tr)
     opti.subject_to(dlMdt(1:N-1)*dt + lMtilda(1:N-1) == lMtilda(2:N)); % VmTilde met factor 10 (MRS)
     opti.subject_to(lM.^2 - w.^2 == lM_projected.^2)
     opti.subject_to(err == 0); 
-%     
+    
     % Objective function
     error = x - q_exp; 
     J     = sumsqr(error) + sumsqr(act);
     opti.minimize(J); 
     
-    
     % options for IPOPT
     options.ipopt.tol = 1*10^(-10);          % moet normaal 10^-6 zijn
-    options.ipopt.linear_solver = 'mumps';
+    %options.ipopt.linear_solver = 'mumps';
     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
@@ -216,27 +212,30 @@ for j = 1:length(s.tr)
     plot(tvect,sol_x,'r','LineWidth',1.5)
     
     figure(j*100)
-    subplot(611)
+    subplot(711)
     plot(tvect,q_exp,'k','LineWidth',1.5)
     hold on
     plot(tvect,sol_x,'LineWidth',1.5)
     hold on
     ylabel('(rad)'); box off; legend('Exp','Sim');
-    subplot(612)
+    subplot(712)
     plot(tvect,sol.value(TLim),'LineWidth',1.5);
     hold on; box off; ylabel('TLim');
-    subplot(613)
+    subplot(713)
     plot(tvect,sol.value(FT),'LineWidth',1.5);
     hold on; box off; ylabel('FT');
-    subplot(614)
+    subplot(714)
     plot(tvect,sol.value(ma),'LineWidth',1.5);
     hold on; box off; ylabel('ma');
-    subplot(615)
+    subplot(715)
     plot(tvect,sol.value(Fpe),'LineWidth',1.5);
     hold on; box off; ylabel('Fpe');
-    subplot(616)
-    scatter(tvect(50),sol.value(kFpe),'LineWidth',1.5);
-    hold on; box off; ylabel('kFpe'); 
+%     subplot(716)
+%     scatter(tvect(50),sol.value(kFpe),'LineWidth',1.5);
+%     hold on; box off; ylabel('kFpe'); 
+    subplot(716)
+    plot(tvect,sol.value(Fsrs),'LineWidth',1.5);
+    hold on; box off; ylabel('Fsrs');
     subplot(717)
     plot(tvect,sol.value(act),'LineWidth',1.5);
     hold on; box off; ylabel('act'); 
