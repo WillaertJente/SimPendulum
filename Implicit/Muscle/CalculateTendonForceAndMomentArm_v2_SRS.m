@@ -64,7 +64,7 @@ kSRS = 280;
 dLm  = lMtilda - lMtilda(1);        % Stretch 
 
 for k = 1:N_1
-    Fsrs     =(0.5*tanh(10000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k).*FMltilda*FMo*a*kSRS + (0.5*tanh(10000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda*FMo*kSRS;
+    Fsrs     =(0.5*tanh(100*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k).*FMltilda*FMo*a*kSRS + (0.5*tanh(100*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda*FMo*kSRS;
 end
 for k = N_1:N-1
     Fsrs_dot = -Fsrs/0.001;
