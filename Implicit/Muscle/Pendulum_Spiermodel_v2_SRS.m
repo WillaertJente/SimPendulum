@@ -5,7 +5,10 @@
 %% Input 
 s.nu = 'CP4';                                                                               % subject number/ name 
 s.tr = [3];                                                                                 % subject trials (number of trials)
-path = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP4/';                        % Path to opensim model (scaled)
+pathmain = pwd;
+[pathTemp,~,~] = fileparts(pathmain);
+[pathRepo,~,~] = fileparts(pathTemp);
+path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
 ScaleFactor = 1.575; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '';                                                                                  % Option used as name to save results
 
@@ -93,7 +96,7 @@ for j = 1:length(s.tr)
     dlMdtGuess = vMGuess*params.MTparams(5)/lMo;
     
     %% Calculate LMT en Ma
-    map_MA         = ['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP4/MA_FakeMot_T',num2str(s.tr(j))]; 
+    map_MA         = [path 'MA_FakeMot_T',num2str(s.tr(j))]; 
     [coeff_LMT_ma] = DefineLMTCoefficients(map_MA, s.nu);
 
     %% Calculate offset (difference between IK en BK)
@@ -106,16 +109,20 @@ for j = 1:length(s.tr)
     % States 
     x       = opti.variable(1,N);
     xd      = opti.variable(1,N);
-    xdd     = opti.variable(1,N);
     lMtilda = opti.variable(1,N); 
     dlMdt   = opti.variable(1,N);
-    vMtilda = opti.variable(1,N);
     Fsrs    = opti.variable(1,N); 
         
     % Controls
-    a            = opti.variable(1);
     lM_projected = opti.variable(1,N);
     act          = opti.variable(1,N);
+    
+    % Slack controls
+%     xdd     = opti.variable(1,N);
+    vMtilda = opti.variable(1,N);
+    
+    % Parameters
+    a            = opti.variable(1);
     kFpe         = opti.variable(1); 
 %     klim         = opti.variable(1); 
 %     Kr1_OS       = opti.variable(1); 
@@ -127,12 +134,14 @@ for j = 1:length(s.tr)
     opti.subject_to(0.001 < a   < 1);
     opti.subject_to(1e-4  < lM_projected);       % Only positive lM's
     opti.subject_to(-10   < vMtilda < 10);
-    opti.subject_to(0.2   < lMtilda < 1.5);
+    opti.subject_to(-100   < dlMdt < 100);
+    opti.subject_to(0.2   < lMtilda < 1.8);
+    opti.subject_to(0  < Fsrs    < 2);
     opti.subject_to(-0.2  < kFpe    < 0.2); 
 %     opti.subject_to(-160  < Kr1_OS < -120);
 %     opti.subject_to(-30   < Kr2_OS < 10);
 %     opti.subject_to(0     < klim    < 6);
-    opti.subject_to(act <= 0);
+%     opti.subject_to(act <= 0);
 
 %     
     % Bounds on initial states
@@ -148,7 +157,7 @@ for j = 1:length(s.tr)
     opti.set_initial(lM_projected, lM_projectedGuess);
     opti.set_initial(lMtilda, lMtildeGuess);         % LmTildeGuess
     opti.set_initial(vMtilda, vMGuess); 
-    opti.set_initial(dlMdt,dlMdtGuess);
+%     opti.set_initial(dlMdt,dlMdtGuess);
     opti.set_initial(act,0); 
 %     opti.set_initial(Kr1_OS,-140); 
 %     opti.set_initial(Kr2_OS,-10); 
@@ -160,11 +169,11 @@ for j = 1:length(s.tr)
     [shift]    = getshift(kT);                   
      
     % Calculate Tlim
-    klim   = 5;                                     % 3 in script torques, 10 in script Friedl 
-    Kr1_OS = -140;
-    Kr2_OS = -10;
-    [TLim] = CalculateTLim_KA(x,Kr1_OS, Kr2_OS, klim, offset);
-    TLim = TLim/ScaleFactor;
+%     klim   = 5;                                     % 3 in script torques, 10 in script Friedl 
+%     Kr1_OS = -140;
+%     Kr2_OS = -10;
+%     [TLim] = CalculateTLim_KA(x,Kr1_OS, Kr2_OS, klim, offset);
+%     TLim = TLim/ScaleFactor;
     %[TLim] = CalculateTLim(x,Kr1_OS, Kr2_OS, klim);
     %[Tlim] = CalculateTLim(x, Kr1, Kr2, klim);
         
@@ -195,9 +204,9 @@ for j = 1:length(s.tr)
     opti.minimize(J); 
     
     % options for IPOPT
-    options.ipopt.tol = 1*10^(-10);          % moet normaal 10^-6 zijn
-    %options.ipopt.linear_solver = 'mumps';
-    options.ipopt.linear_solver = 'ma57';
+    options.ipopt.tol = 1*10^(-6);          % moet normaal 10^-6 zijn
+    options.ipopt.linear_solver = 'mumps';
+%     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
     % Solve the OCP
