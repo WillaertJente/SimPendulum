@@ -131,13 +131,13 @@ for j = 1:length(s.tr)
 %     % Bounds
     opti.subject_to(-4*pi < x   < 4*pi);  
     opti.subject_to(-300  < xd  < 300);
-    opti.subject_to(0.001 < a   < 1);
+    opti.subject_to(0.001 < a   < 0.5);
     opti.subject_to(1e-4  < lM_projected);       % Only positive lM's
     opti.subject_to(-10   < vMtilda < 10);
     opti.subject_to(-100   < dlMdt < 100);
     opti.subject_to(0.2   < lMtilda < 1.8);
     opti.subject_to(0  < Fsrs    < 2);
-    opti.subject_to(-0.2  < kFpe    < 0.2); 
+    opti.subject_to(0.05  < kFpe    < 0.15); 
 %     opti.subject_to(-160  < Kr1_OS < -120);
 %     opti.subject_to(-30   < Kr2_OS < 10);
 %     opti.subject_to(0     < klim    < 6);
