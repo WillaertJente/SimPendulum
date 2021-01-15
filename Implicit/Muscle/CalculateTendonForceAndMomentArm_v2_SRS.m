@@ -58,18 +58,15 @@ vMtildamax = params.MTparams(5,:);
 % Get force length velocity parameters
 [Fpe, FMltilda, FMvtilda] = getForceLengthVelocityProperties(lMtilda, params, vMtilda, vMtildamax, kFpe);
 
-
 % Tsrs
 kSRS = 280;
 dLm  = lMtilda - lMtilda(1);        % Stretch 
 
 for k = 1:N_1
-    Fsrs(k)     =(0.5*tanh(100*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k).*FMltilda(k)*a*kSRS + (0.5*tanh(100*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda(k)*kSRS;
+    Fsrs(k)     =(0.5*tanh(1000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k).*FMltilda(k)*a*kSRS + (0.5*tanh(1000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda(k)*kSRS;
 end
 
 Fsrs_dot = -Fsrs/0.050;
-
-
 
 % FMce
 Fce = a.* FMltilda.* FMvtilda + Fsrs; 

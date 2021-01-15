@@ -3,13 +3,13 @@
 %  clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP4';                                                                               % subject number/ name 
-s.tr = [3];                                                                                 % subject trials (number of trials)
+s.nu = 'CP8';                                                                               % subject number/ name 
+s.tr = [2];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor = 1.575; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+ScaleFactor = 1.7036; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '';                                                                                  % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
@@ -37,7 +37,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'/CP4_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -110,7 +110,6 @@ for j = 1:length(s.tr)
     x       = opti.variable(1,N);
     xd      = opti.variable(1,N);
     lMtilda = opti.variable(1,N); 
-    dlMdt   = opti.variable(1,N);
     Fsrs    = opti.variable(1,N); 
         
     % Controls
@@ -118,36 +117,27 @@ for j = 1:length(s.tr)
     act          = opti.variable(1,N);
     
     % Slack controls
-%     xdd     = opti.variable(1,N);
     vMtilda = opti.variable(1,N);
     
     % Parameters
     a            = opti.variable(1);
     kFpe         = opti.variable(1); 
-%     klim         = opti.variable(1); 
-%     Kr1_OS       = opti.variable(1); 
-%     Kr2_OS       = opti.variable(1); 
 
-%     % Bounds
+    % Bounds
     opti.subject_to(-4*pi < x   < 4*pi);  
     opti.subject_to(-300  < xd  < 300);
     opti.subject_to(0.001 < a   < 0.5);
     opti.subject_to(1e-4  < lM_projected);       % Only positive lM's
     opti.subject_to(-10   < vMtilda < 10);
-    opti.subject_to(-100   < dlMdt < 100);
     opti.subject_to(0.2   < lMtilda < 1.8);
-    opti.subject_to(0  < Fsrs    < 2);
+    opti.subject_to(0     < Fsrs    < 2);
     opti.subject_to(0.05  < kFpe    < 0.15); 
-%     opti.subject_to(-160  < Kr1_OS < -120);
-%     opti.subject_to(-30   < Kr2_OS < 10);
-%     opti.subject_to(0     < klim    < 6);
-%     opti.subject_to(act <= 0);
-
-%     
+    opti.subject_to(act <= 0);
+     
     % Bounds on initial states
     opti.subject_to(x(1)     == x0(1));
-    %opti.subject_to(xd(1)    == x0(2));
-    opti.subject_to(xd(1)    == 0);
+    opti.subject_to(xd(1)    == x0(2));
+    %opti.subject_to(xd(1)    == 0);
     
     % Initial guess
     opti.set_initial(x, q_exp);
@@ -157,26 +147,13 @@ for j = 1:length(s.tr)
     opti.set_initial(lM_projected, lM_projectedGuess);
     opti.set_initial(lMtilda, lMtildeGuess);         % LmTildeGuess
     opti.set_initial(vMtilda, vMGuess); 
-%     opti.set_initial(dlMdt,dlMdtGuess);
     opti.set_initial(act,0); 
-%     opti.set_initial(Kr1_OS,-140); 
-%     opti.set_initial(Kr2_OS,-10); 
-%     opti.set_initial(klim,10);
-%        
+        
     % Defining problem (muscle model)
     % Calculate shift
     kT = 35; 
     [shift]    = getshift(kT);                   
-     
-    % Calculate Tlim
-%     klim   = 5;                                     % 3 in script torques, 10 in script Friedl 
-%     Kr1_OS = -140;
-%     Kr2_OS = -10;
-%     [TLim] = CalculateTLim_KA(x,Kr1_OS, Kr2_OS, klim, offset);
-%     TLim = TLim/ScaleFactor;
-    %[TLim] = CalculateTLim(x,Kr1_OS, Kr2_OS, klim);
-    %[Tlim] = CalculateTLim(x, Kr1, Kr2, klim);
-        
+            
     % Calculate FT en ma 
     [FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM, Fsrs, Fsrs_dot] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe, N_1, Fsrs, N);
     
@@ -185,9 +162,9 @@ for j = 1:length(s.tr)
             opti.subject_to(xd(k) < 0);
     end
     for k = N_1:N-1
-        opti.subject_to(Fsrs(k+1) == Fsrs(k) + Fsrs_dot(k) * dt)       % Fsrs_dot(k)
+        opti.subject_to(Fsrs(k+1) == Fsrs(k) + Fsrs_dot(k) * dt)       
     end
-%     
+     
     % Dynamics
     xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT.*ma + act ); %  + Tdamp + FT*ma);
     
@@ -199,15 +176,16 @@ for j = 1:length(s.tr)
     opti.subject_to(err == 0); 
     
     % Objective function
-    error = x - q_exp; 
-    J     = sumsqr(error) + sumsqr(act);
+    error    = x - q_exp; 
+    %error_fs = x(1:N_1+10) - q_exp(1:N_1+10); 
+    J        = sumsqr(error) + sumsqr(act);
     opti.minimize(J); 
     
     % options for IPOPT
     options.ipopt.tol = 1*10^(-6);          % moet normaal 10^-6 zijn
-    options.ipopt.linear_solver = 'mumps';
-%     options.ipopt.linear_solver = 'ma57';
-    %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
+    %     options.ipopt.linear_solver = 'mumps';
+    options.ipopt.linear_solver = 'ma57';
+    %     options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
     % Solve the OCP
     opti.solver('ipopt',options);
@@ -221,31 +199,25 @@ for j = 1:length(s.tr)
     plot(tvect,sol_x,'r','LineWidth',1.5)
     
     figure(j*100)
-    subplot(711)
-    plot(tvect,q_exp,'k','LineWidth',1.5)
+    subplot(611)
+    plot(tvect,q_exp*180/pi,'k','LineWidth',1.5)
     hold on
-    plot(tvect,sol_x,'LineWidth',1.5)
+    plot(tvect,sol_x*180/pi,'LineWidth',1.5)
     hold on
-    ylabel('(rad)'); box off; legend('Exp','Sim');
-    subplot(712)
-    plot(tvect,sol.value(TLim),'LineWidth',1.5);
-    hold on; box off; ylabel('TLim');
-    subplot(713)
+    ylabel('({\circ})'); box off; legend('Exp','Sim');
+    subplot(612)
     plot(tvect,sol.value(FT),'LineWidth',1.5);
     hold on; box off; ylabel('FT');
-    subplot(714)
+    subplot(613)
     plot(tvect,sol.value(ma),'LineWidth',1.5);
     hold on; box off; ylabel('ma');
-    subplot(715)
+    subplot(614)
     plot(tvect,sol.value(Fpe),'LineWidth',1.5);
     hold on; box off; ylabel('Fpe');
-%     subplot(716)
-%     scatter(tvect(50),sol.value(kFpe),'LineWidth',1.5);
-%     hold on; box off; ylabel('kFpe'); 
-    subplot(716)
+    subplot(615)
     plot(tvect,sol.value(Fsrs),'LineWidth',1.5);
     hold on; box off; ylabel('Fsrs');
-    subplot(717)
+    subplot(616)
     plot(tvect,sol.value(act),'LineWidth',1.5);
     hold on; box off; ylabel('act'); 
 
