@@ -14,7 +14,8 @@ Fsrs(i)     =(0.5*tanh(b*(-dLm+5.7*10^(-3)))+0.5)*dLm.*FMltilda*a*kSRS + (0.5*ta
 
 end
 
-figure()
+% figure()
 plot(deltaL, Fsrs)
+hold on
 xlabel('\Delta L [-]')
 ylabel('F_{SRS}')

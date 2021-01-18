@@ -1,16 +1,17 @@
 %% Simulations of pendulum test using a muscle model 
 %  Jente Willaert - 21/10/2020
-%  clear all; close all; clc; 
+ clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP8';                                                                               % subject number/ name 
+s.nu = 'TD5';                                                                               % subject number/ name 
 s.tr = [2];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor = 1.7036; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
-opt  = '';                                                                                  % Option used as name to save results
+ScaleFactor = 1.5757; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+opt  = '';   % Option used as name to save results
+
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -37,7 +38,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/TD5_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -155,7 +156,7 @@ for j = 1:length(s.tr)
     [shift]    = getshift(kT);                   
             
     % Calculate FT en ma 
-    [FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM, Fsrs, Fsrs_dot] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe, N_1, Fsrs, N);
+    [FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM, Fsrs, Fsrs_dot, FMltilda] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe, N_1, Fsrs, N);
     
     % Constraints srs
     for k = 1:N_1
@@ -176,9 +177,14 @@ for j = 1:length(s.tr)
     opti.subject_to(err == 0); 
     
     % Objective function
-    error    = x - q_exp; 
+    error        = x - q_exp; 
+    error_dot    = xd - qdot_exp;
+    error_fs     = x(N_1)-q_exp(N_1); 
+    error_fs_dot= xd(N_1)-qdot_exp(N_1);
+    error_ra     = x(N-500:end)-q_exp(N-500:end); 
+    
     %error_fs = x(1:N_1+10) - q_exp(1:N_1+10); 
-    J        = sumsqr(error) + sumsqr(act);
+    J        = sumsqr(error)  + sumsqr(error_dot) + sumsqr(act);
     opti.minimize(J); 
     
     % options for IPOPT
@@ -192,11 +198,21 @@ for j = 1:length(s.tr)
     sol = opti.solve();  
     
     sol_x = sol.value(x);
+    sol_a = sol.value(a);
+    sol_lMtilda = sol.value(lMtilda);
+    sol_act = sol.value(act);
+    sol_FT  = sol.value(FT);
+    sol_ma = sol.value(ma);
+    sol_Fpe = sol.value(Fpe); 
+    sol_kFpe = sol.value(kFpe);
+    sol_J   = sol.value(J);
+    sol_Fsrs = sol.value(Fsrs);
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),'.mat'],'sol_x', 'sol_a', 'sol_lMtilda', 'sol_act', 'sol_FT', 'sol_ma', 'sol_Fpe', 'sol_kFpe', 'sol_J', 'sol_Fsrs')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)
     hold on
-    plot(tvect,sol_x,'r','LineWidth',1.5)
+    plot(tvect,sol_x,'LineWidth',1.5)
     
     figure(j*100)
     subplot(611)
@@ -220,5 +236,8 @@ for j = 1:length(s.tr)
     subplot(616)
     plot(tvect,sol.value(act),'LineWidth',1.5);
     hold on; box off; ylabel('act'); 
+    
+    
 
+    
 end

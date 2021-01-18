@@ -1,4 +1,4 @@
-function [FT, ma, dlMdt, err, lM, lT, Fce, Fpe, FM, Fsrs, Fsrs_dot] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, sn, shift, vMtilda, lM_projected, coeff_LMT_ma, offset, kFpe, N_1,Fsrs, N)
+function [FT, ma, dlMdt, err, lM, lT, Fce, Fpe, FM, Fsrs, Fsrs_dot, FMltilda] = CalculateTendonForceAndMomentArm_v2_SRS(x, params, lMtilda, a, sn, shift, vMtilda, lM_projected, coeff_LMT_ma, offset, kFpe, N_1,Fsrs, N)
 %Function to calculate tendon force and moment arms with SRS 
 %   1. Calculate moment arm
 %   ma is derivative of LMT
@@ -63,7 +63,7 @@ kSRS = 280;
 dLm  = lMtilda - lMtilda(1);        % Stretch 
 
 for k = 1:N_1
-    Fsrs(k)     =(0.5*tanh(1000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k).*FMltilda(k)*a*kSRS + (0.5*tanh(1000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda(k)*kSRS;
+    Fsrs(k)     =(0.5*tanh(1000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k)*FMltilda(k)*a*kSRS + (0.5*tanh(1000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a*FMltilda(k)*kSRS;
 end
 
 Fsrs_dot = -Fsrs/0.050;
