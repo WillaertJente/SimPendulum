@@ -1,0 +1,107 @@
+function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe, N_1,Fsrs, N)
+%Function to calculate tendon force and moment arms with SRS 
+%   1. Calculate moment arm
+%   ma is derivative of LMT
+%   2. Calculate tendon force
+%       Tendon force = Peak isometric muscle force * Fse
+%       Fse = exponential function of normalized tendon length
+%       Normalized tendon length = tendon length/ tendon slack length
+%       Tendon slack length  = input parameter
+%       Tendon length = Muscle tendon length - muscle fiber length (+
+%       andere factor)
+%   3. Calculate derivative of lMtilda
+
+%% Stap 1 LMT en Ma
+offset   = offset*pi/180;
+m_offset = mean(offset);
+
+lMT_ext = coeff_LMT_ma_ext(1) + coeff_LMT_ma_ext(2)*(x+m_offset) + coeff_LMT_ma_ext(3)*(x+m_offset).^2 + coeff_LMT_ma_ext(4)*(x+m_offset).^3;
+ma_ext  = -coeff_LMT_ma_ext(2) + -coeff_LMT_ma_ext(3)*(x+m_offset) + -coeff_LMT_ma_ext(4)*(x+m_offset).^2;
+
+lMT_flex = coeff_LMT_ma_flex(1) + coeff_LMT_ma_flex(2)*(x+m_offset) + coeff_LMT_ma_flex(3)*(x+m_offset).^2 + coeff_LMT_ma_flex(4)*(x+m_offset).^3;
+ma_flex  = -coeff_LMT_ma_flex(2) + -coeff_LMT_ma_flex(3)*(x+m_offset) + -coeff_LMT_ma_flex(4)*(x+m_offset).^2;
+
+%% Stap 2
+% w
+lMo_ext    = params.MTparams_ext(2,:);
+alphao_ext = params.MTparams_ext(4,:);
+w_ext      = lMo_ext.* sin(alphao_ext);
+
+lMo_flex    = params.MTparams_flex(2,:);
+alphao_flex = params.MTparams_flex(4,:);
+w_flex      = lMo_flex.* sin(alphao_flex);
+
+% Hill type muscle model: geometric relationships
+% lM (muscle fiber length)
+lM_ext      = lMtilda_ext.* lMo_ext;
+lM_flex     = lMtilda_flex.* lMo_flex;
+
+% lMT
+% lMT    = interp1(params.LMT_qknee, params.LMT, x);
+
+% lT (tendon length)
+lT_ext        = lMT_ext - lM_projected_ext;
+lT_flex       = lMT_flex - lM_projected_flex;
+% lT     = lMT - sqrt(abs(lM.^2 - w.^2));
+
+% lTs (Tendon slack length)
+lTs_ext    = params.MTparams_ext(3,:);
+lTs_flex   = params.MTparams_flex(3,:);
+
+% lTtilda
+lTtilda_ext  = lT_ext./lTs_ext;
+lTtilda_flex  = lT_flex./lTs_flex;
+
+% Fse
+fse_ext          = (exp(35*(lTtilda_ext - 0.995)))/5-0.25 + shift;
+fse_flex         = (exp(35*(lTtilda_flex - 0.995)))/5-0.25 + shift;
+%   fse(fse<0) = 0;
+
+% FMo
+FMo_ext = params.MTparams_ext(1,:);
+FMo_flex = params.MTparams_flex(1,:);
+
+% Compute tendon force
+FT_ext = FMo_ext.* fse_ext;
+FT_flex = FMo_flex.* fse_flex;
+
+%% Stap 3
+% vMtildamax
+vMtildamax_ext  = params.MTparams_ext(5,:);
+vMtildamax_flex = params.MTparams_flex(5,:);
+
+% Get force length velocity parameters
+[Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe);
+
+% Tsrs
+kSRS = 280;
+dLm  = lMtilda_ext - lMtilda_ext(1);        % Stretch 
+
+for k = 1:N_1
+    Fsrs(k)     =(0.5*tanh(1000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k)*FMltilda_ext(k)*a_ext*kSRS + (0.5*tanh(1000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a_ext*FMltilda_ext(k)*kSRS;
+end
+
+Fsrs_dot = -Fsrs/0.050;
+
+% FMce
+Fce_ext  = a_ext.* FMltilda_ext.* FMvtilda_ext + Fsrs; 
+Fce_flex = a_flex.* FMltilda_flex.* FMvtilda_flex; 
+% FMce = fse.* lM ./(lMT-lT) - Fpe;
+
+% Compute dlMdt
+dlMdt_ext  = vMtilda_ext.* vMtildamax_ext./ lMo_ext;
+dlMdt_flex = vMtilda_flex.* vMtildamax_flex./ lMo_flex;
+
+% Compute Muscle force
+FM_ext   = Fce_ext + Fpe_ext;
+FM_flex  = Fce_flex + Fpe_flex;
+% FM  = Fce;
+
+% Force equilibrium
+cos_alpha_ext = (lMT_ext-lT_ext)./lM_ext;
+err_ext       = FM_ext.*cos_alpha_ext - fse_ext;
+
+cos_alpha_flex = (lMT_flex-lT_flex)./lM_flex;
+err_flex       = FM_flex.*cos_alpha_flex - fse_flex;
+end
+
