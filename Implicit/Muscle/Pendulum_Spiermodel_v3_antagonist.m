@@ -3,13 +3,13 @@
 % clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP8';                                                                               % subject number/ name 
-s.tr = [2];                                                                                 % subject trials (number of trials)
+s.nu = 'CP4';                                                                               % subject number/ name 
+s.tr = [3];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor = 1.7036; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+ScaleFactor = 1.5757; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '2muscles';   % Option used as name to save results
 
 
@@ -24,7 +24,13 @@ for j = 1:length(s.tr)
     
     % Discretised time: interpolate experimental data at discr. time using spline 
     [q_exp, qdot_exp,N, tvect, dt] = ExpDatAtDiscrTime(t_span,t_exp,q_exp_r);       % dt = 0.005
-
+    
+    q_exp = q_exp(1:500);
+    qdot_exp = qdot_exp(1:500);
+    N = 500; 
+    tvect = tvect(1:500);
+    tspan  = [tvect(1) tvect(end)]
+    
     % Define phases of pendulum (initial state, end of first swing) 
     [x0, N_1] = PendulumPhases(q_exp, qdot_exp, N, 1);                          % 1 if you want to plot the phases
 
@@ -38,7 +44,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/CP4_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -157,8 +163,9 @@ for j = 1:length(s.tr)
      
     % Bounds on initial states
     opti.subject_to(x(1)     == x0(1));
-    opti.subject_to(xd(1)    == x0(2));
-    %opti.subject_to(xd(1)    == 0);
+    opti.subject_to(xd(1)    == 0);
+%     opti.subject_to(xd(1)    == x0(2));
+    
     
     % Initial guess
     opti.set_initial(x, q_exp);
@@ -210,11 +217,11 @@ for j = 1:length(s.tr)
     error        = x - q_exp; 
     error_dot    = xd - qdot_exp;
     error_fs     = x(N_1)-q_exp(N_1); 
-    error_fs_dot= xd(N_1)-qdot_exp(N_1);
-    error_ra     = x(N-500:end)-q_exp(N-500:end); 
+    error_fs_dot = xd(N_1)-qdot_exp(N_1);
+   % error_ra     = x(N-500:end)-q_exp(N-500:end); 
     
     %error_fs = x(1:N_1+10) - q_exp(1:N_1+10); 
-    J        = sumsqr(error)  + sumsqr(error_dot) + sumsqr(act);
+    J        = sumsqr(error)  + sumsqr(error_dot) ;%+ sumsqr(act);
     opti.minimize(J); 
     
     % options for IPOPT
