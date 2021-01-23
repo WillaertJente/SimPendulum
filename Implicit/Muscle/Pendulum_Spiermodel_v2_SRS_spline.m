@@ -3,14 +3,14 @@
 % clear all; close all; clc;
 
 %% Input
-s.nu = 'TD5';                                                                               % subject number/ name
-s.tr = [2];                                                                                 % subject trials (number of trials)
+s.nu = 'CP8';                                                                               % subject number/ name
+s.tr = [3];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor =1.697; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
-opt  = 'Spline2';   % Option used as name to save results
+ScaleFactor =1.7036; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+opt  = 'Spline_NoAct';   % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -47,7 +47,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim';
-    model_path = [path,'/TD5_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -124,12 +124,12 @@ for j = 1:length(s.tr)
     
     % Controls
     lM_projected = opti.variable(1,N);
-    act          = opti.variable(1,N);
+%     act          = opti.variable(1,N);
     
     % Slack controls
     vMtilda = opti.variable(1,N);
     dt1          = opti.variable(1);
-%     dt2          = opti.variable(1);
+    dt2          = opti.variable(1);
     
     % Parameters
     a            = opti.variable(1);
@@ -145,7 +145,7 @@ for j = 1:length(s.tr)
     opti.subject_to(0     < Fsrs    < 2);
     opti.subject_to(0.05  < kFpe    < 0.15);
     opti.subject_to(0.001 < dt1     < 0.01);    % 0.05
-  %  opti.subject_to(0.001 < dt2     < 0.01);
+   opti.subject_to(0.001 < dt2     < 0.01);
     % opti.subject_to(act <= 0);
     
     % Bounds on initial states
@@ -161,9 +161,9 @@ for j = 1:length(s.tr)
     opti.set_initial(lM_projected, lM_projectedGuess);
     opti.set_initial(lMtilda, lMtildeGuess);         % LmTildeGuess
     opti.set_initial(vMtilda, vMGuess);
-    opti.set_initial(act,0);
+%     opti.set_initial(act,0);
     opti.set_initial(dt1,0.005);
-    %.set_initial(dt2,0.005);
+    opti.set_initial(dt2,0.005);
     
     % Defining problem (muscle model)
     % Calculate shift
@@ -190,7 +190,7 @@ for j = 1:length(s.tr)
     end
     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT.*ma + act ); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT.*ma ); %  + Tdamp + FT*ma);
       
     % backward euler
     %     opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -217,16 +217,17 @@ for j = 1:length(s.tr)
         tvect_spline(i) = t;
     end
        
-     error        = x - q_exp_spline(tvect_spline);
-     error_dot    = xd - q_dot_spline(tvect_spline);
-    %  error = x-q_exp;
-    %  error_dot = xd-qdot_exp;
+%      error        = x - q_exp_spline(tvect_spline);
+%      error_dot    = xd - q_dot_spline(tvect_spline);
+%      error_fs     = x(N_1) - q_exp_spline(tvect_spline(N_1));
+     error = x-q_exp;
+     error_dot = xd-qdot_exp;
     error_fs     = x(N_1)-q_exp(N_1);
     error_fs_dot = xd(N_1)-qdot_exp(N_1);
 %    error_ra     = x(N-500:end)-q_exp(N-500:end);
     
     %error_fs = x(1:N_1+10) - q_exp(1:N_1+10);
-    J        = sumsqr(error)  + sumsqr(error_dot) + sumsqr(act);
+    J        = sumsqr(error)  + sumsqr(error_dot) ;
     opti.minimize(J);
     
     % options for IPOPT
@@ -249,7 +250,7 @@ for j = 1:length(s.tr)
     sol_kFpe = sol.value(kFpe);
     sol_J   = sol.value(J);
     sol_Fsrs = sol.value(Fsrs);
-    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),'_',char(opt),'.mat'],'sol_x', 'sol_a', 'sol_lMtilda', 'sol_act', 'sol_FT', 'sol_ma', 'sol_Fpe', 'sol_kFpe', 'sol_J', 'sol_Fsrs')
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),'_',char(opt),'.mat'],'sol_x', 'sol_a', 'sol_lMtilda',  'sol_FT', 'sol_ma', 'sol_Fpe', 'sol_kFpe', 'sol_J', 'sol_Fsrs')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)
