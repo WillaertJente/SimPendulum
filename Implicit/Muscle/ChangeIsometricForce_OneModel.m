@@ -7,7 +7,7 @@ clear all, close all, clc
 %% Input 
 %-------
 
-path_gen = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8\CP8_ScaledModel.osim';
+path_gen = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Data\CP2\CP2_ScaledModel.osim';
 % InfoFile = 'J:\GBW-0301_HumanMovementBiomechanics\SimCP\OpenSimWorkflow_TestSam\SubjectsSam2.xlsx';
 % root = 'J:\GBW-0301_HumanMovementBiomechanics\SimCP\Model_Database\BOTOX'; 
 % rootxml = 'J:\GBW-0301_HumanMovementBiomechanics\SimCP\OpenSimWorkflow_TestSam\ReferenceSetup'; % root directory where your reference OpenSim setup files are
@@ -35,10 +35,10 @@ nMuscles = GenMuscles.getSize();
 
 
 % for p = 2:size(raw,1)
- mass = 33.8; 
+ mass = 17.6; 
    scaleFactor =((mass/75.16).^(2/3));
    
-   model_in = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8\CP8_ScaledModel_ScaledForces.osim'; %fullfile(root,raw{p,1},'static',[raw{p,1} '.osim']); 
+   model_in = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Data\CP2\CP2_ScaledModel_ScaledForces.osim'; %fullfile(root,raw{p,1},'static',[raw{p,1} '.osim']); 
    
    MyModel = Model(model_in); 
    MyModel.initSystem; 

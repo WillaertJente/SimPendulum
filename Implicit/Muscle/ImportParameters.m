@@ -8,15 +8,16 @@ info     = load([pathRepo '\BK\' ,name]);
 % Define parameters
 params.m_tot   = info.(char(name)).m;               % Totall mass of subject
 params.age     = info.(char(name)).age;             % Age of subject
-params.lc      = info.(char(name)).lc  ;            % Distance knee - COM tibia
-params.l       = info.(char(name)).l;               % Leg length
+%params.lc      = info.(char(name)).lc  ;            % Distance knee - COM tibia
+%params.l       = info.(char(name)).l;               % Leg length
 params.z       = info.(char(name)).z;               % 18 if left leg, 11 if right leg
 params.Nmr     = info.(char(name)).Nmr;             % First trial with MR
-m_ratio        = 0.00137 * params.age + (0.03809+0.0187);   % ratio to calculate leg mass
-params.m       = m_ratio * params.m_tot;            % Mass of the leg
+%m_ratio        = 0.00137 * params.age + (0.03809+0.0187);   % ratio to calculate leg mass
+%params.m       = m_ratio * params.m_tot;            % Mass of the leg
 params.g       = 9.81;                              % Gravitational constant
-params.RG      = params.l * 0.416;                  % Radius of gyration (Winter 2009)
-params.SE      = (0.0055 + 0.0028)*params.m_tot;    % SE used in equation to estimate leg mass
+%params.RG      = params.l * 0.416;                  % Radius of gyration (Winter 2009)
+%params.SE      = (0.0055 + 0.0028)*params.m_tot;    % SE used in equation to estimate leg mass
+params.length_tibia = info.(char(name)).lTibia; 
 
 end
 

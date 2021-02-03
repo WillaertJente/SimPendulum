@@ -59,7 +59,10 @@ e2 = params.Fvparam(2);
 e3 = params.Fvparam(3);
 e4 = params.Fvparam(4); 
 
-FMvtilda_ext  = e1*log((e2*vMtilda_ext./vMtildamax_ext+e3)+sqrt((e2*vMtilda_ext./vMtildamax_ext+e3).^2+1))+e4;
-FMvtilda_flex = e1*log((e2*vMtilda_flex./vMtildamax_flex+e3)+sqrt((e2*vMtilda_flex./vMtildamax_flex+e3).^2+1))+e4;
+% FMvtilda_ext  = e1*log((e2*vMtilda_ext./vMtildamax_ext+e3)+sqrt((e2*vMtilda_ext./vMtildamax_ext+e3).^2+1))+e4;
+% FMvtilda_flex = e1*log((e2*vMtilda_flex./vMtildamax_flex+e3)+sqrt((e2*vMtilda_flex./vMtildamax_flex+e3).^2+1))+e4;
+
+FMvtilda_ext  = e1*log((e2*vMtilda_ext+e3)+sqrt((e2*vMtilda_ext+e3).^2+1))+e4; 
+FMvtilda_flex = e1*log((e2*vMtilda_flex+e3)+sqrt((e2*vMtilda_flex+e3).^2+1))+e4;
 end
 

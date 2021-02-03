@@ -3,14 +3,14 @@
 % clear all; close all; clc; 
 
 %% Input 
-s.nu = 'CP4';                                                                               % subject number/ name 
-s.tr = [3];                                                                                 % subject trials (number of trials)
+s.nu = 'TD5';                                                                               % subject number/ name 
+s.tr = [1];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor = 1.5757; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
-opt  = '2muscles';   % Option used as name to save results
+ScaleFactor = 1.697; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
+opt  = '2muscles_adap10_mum';   % Option used as name to save results
 
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
@@ -25,15 +25,15 @@ for j = 1:length(s.tr)
     % Discretised time: interpolate experimental data at discr. time using spline 
     [q_exp, qdot_exp,N, tvect, dt] = ExpDatAtDiscrTime(t_span,t_exp,q_exp_r);       % dt = 0.005
     
-    q_exp = q_exp(1:500);
-    qdot_exp = qdot_exp(1:500);
-    N = 500; 
-    tvect = tvect(1:500);
-    tspan  = [tvect(1) tvect(end)]
+%     q_exp = q_exp(1:500);
+%     qdot_exp = qdot_exp(1:500);
+%     N = 500; 
+%     tvect = tvect(1:500);
+%     tspan  = [tvect(1) tvect(end)]
     
     % Define phases of pendulum (initial state, end of first swing) 
     [x0, N_1] = PendulumPhases(q_exp, qdot_exp, N, 1);                          % 1 if you want to plot the phases
-
+    N_1 = 85; 
     %% Formulate OCP 
     import casadi.*;        % Import casadi libraries
     opti = casadi.Opti();   % Initialise opti structure
@@ -44,7 +44,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*           
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim'; 
-    model_path = [path,'/CP4_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/TD5_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -131,7 +131,7 @@ for j = 1:length(s.tr)
     % Controls
     lM_projected_ext  = opti.variable(1,N);
     lM_projected_flex = opti.variable(1,N); 
-    act               = opti.variable(1,N);
+%     act               = opti.variable(1,N);
     
     % Slack controls
     vMtilda_ext  = opti.variable(1,N);
@@ -181,7 +181,7 @@ for j = 1:length(s.tr)
     opti.set_initial(lMtilda_flex, lMtildeGuess);         % LmTildeGuess
     opti.set_initial(vMtilda_ext, vMGuess); 
     opti.set_initial(vMtilda_flex, vMGuess); 
-    opti.set_initial(act,0); 
+%     opti.set_initial(act,0); 
         
     % Defining problem (muscle model)
     % Calculate shift
@@ -201,7 +201,7 @@ for j = 1:length(s.tr)
     end
      
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex); %  + Tdamp + FT*ma);
     
     % backward euler
     opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -221,13 +221,13 @@ for j = 1:length(s.tr)
    % error_ra     = x(N-500:end)-q_exp(N-500:end); 
     
     %error_fs = x(1:N_1+10) - q_exp(1:N_1+10); 
-    J        = sumsqr(error)  + sumsqr(error_dot) ;%+ sumsqr(act);
+    J        = sumsqr(error)  + sumsqr(error_dot) ;% + 100*sumsqr(act);
     opti.minimize(J); 
     
     % options for IPOPT
     options.ipopt.tol = 1*10^(-6);          % moet normaal 10^-6 zijn
-    %     options.ipopt.linear_solver = 'mumps';
-    options.ipopt.linear_solver = 'ma57';
+    options.ipopt.linear_solver = 'mumps';
+%     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
           
     % Solve the OCP
@@ -237,7 +237,7 @@ for j = 1:length(s.tr)
     sol_x = sol.value(x);
     sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);    
     sol_lMtilda_ext = sol.value(lMtilda_ext);   sol_lMtilda_flex = sol.value(lMtilda_flex);
-    sol_act = sol.value(act);
+%     sol_act = sol.value(act);
     sol_FT_ext  = sol.value(FT_ext);            sol_FT_flex  = sol.value(FT_flex);
     sol_ma_ext = sol.value(ma_ext);             sol_ma_flex = sol.value(ma_flex);
     sol_Fpe_ext = sol.value(Fpe_ext);           sol_Fpe_flex = sol.value(Fpe_flex); 
@@ -245,7 +245,7 @@ for j = 1:length(s.tr)
     %sol_kFpe_ext = sol.value(kFpe_ext);         sol_kFpe_flex = sol.value(kFpe_flex);
     sol_J   = sol.value(J);
     sol_Fsrs = sol.value(Fsrs);
-   % save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_act', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J', 'sol_Fsrs')
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J', 'sol_Fsrs')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)

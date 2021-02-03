@@ -15,11 +15,11 @@ function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_f
 offset   = offset*pi/180;
 m_offset = mean(offset);
 
-lMT_ext = coeff_LMT_ma_ext(1) + coeff_LMT_ma_ext(2)*(x+m_offset) + coeff_LMT_ma_ext(3)*(x+m_offset).^2 + coeff_LMT_ma_ext(4)*(x+m_offset).^3;
-ma_ext  = -coeff_LMT_ma_ext(2) + -coeff_LMT_ma_ext(3)*(x+m_offset) + -coeff_LMT_ma_ext(4)*(x+m_offset).^2;
+lMT_ext = coeff_LMT_ma_ext(1) + coeff_LMT_ma_ext(2)*(x+m_offset) + coeff_LMT_ma_ext(3)*(x+m_offset).^2 + coeff_LMT_ma_ext(4)*(x+m_offset).^3 + coeff_LMT_ma_ext(5)*(x+m_offset).^4 + coeff_LMT_ma_ext(6)*(x+m_offset).^5;
+ma_ext  = -coeff_LMT_ma_ext(2) + -coeff_LMT_ma_ext(3)*(x+m_offset) + -coeff_LMT_ma_ext(4)*(x+m_offset).^2 + -coeff_LMT_ma_ext(5)*(x+m_offset).^3 + -coeff_LMT_ma_ext(6)*(x+m_offset).^4;
 
-lMT_flex = coeff_LMT_ma_flex(1) + coeff_LMT_ma_flex(2)*(x+m_offset) + coeff_LMT_ma_flex(3)*(x+m_offset).^2 + coeff_LMT_ma_flex(4)*(x+m_offset).^3;
-ma_flex  = -coeff_LMT_ma_flex(2) + -coeff_LMT_ma_flex(3)*(x+m_offset) + -coeff_LMT_ma_flex(4)*(x+m_offset).^2;
+lMT_flex = coeff_LMT_ma_flex(1) + coeff_LMT_ma_flex(2)*(x+m_offset) + coeff_LMT_ma_flex(3)*(x+m_offset).^2 + coeff_LMT_ma_flex(4)*(x+m_offset).^3 + coeff_LMT_ma_flex(5)*(x+m_offset).^4 + coeff_LMT_ma_flex(6)*(x+m_offset).^5;
+ma_flex  = -coeff_LMT_ma_flex(2) + -coeff_LMT_ma_flex(3)*(x+m_offset) + -coeff_LMT_ma_flex(4)*(x+m_offset).^2 + -coeff_LMT_ma_flex(5)*(x+m_offset).^3 + -coeff_LMT_ma_flex(6)*(x+m_offset).^4;
 
 %% Stap 2
 % w
@@ -89,8 +89,10 @@ Fce_flex = a_flex.* FMltilda_flex.* FMvtilda_flex;
 % FMce = fse.* lM ./(lMT-lT) - Fpe;
 
 % Compute dlMdt
-dlMdt_ext  = vMtilda_ext.* vMtildamax_ext./ lMo_ext;
-dlMdt_flex = vMtilda_flex.* vMtildamax_flex./ lMo_flex;
+% dlMdt_ext  = vMtilda_ext.* vMtildamax_ext./ lMo_ext;
+% dlMdt_flex = vMtilda_flex.* vMtildamax_flex./ lMo_flex;
+dlMdt_ext  = vMtilda_ext.* vMtildamax_ext;
+dlMdt_flex = vMtilda_flex.* vMtildamax_flex;
 
 % Compute Muscle force
 FM_ext   = Fce_ext + Fpe_ext;

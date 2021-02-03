@@ -2,12 +2,10 @@ function [coeff_LMT_ma_ext, coeff_LMT_ma_flex] = DefineLMTCoefficients_2muscles(
 %  Calculate LMT and ma coefficients
 
 % Theta
-if sn == 'CP4'
-    theta = (-140:0.01:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; 
-elseif sn == 'CP8'
-    theta = (-140:0.01:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; 
+if sn == 'TD5'
+    theta = (-120:0.01:10)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; theta_fi = theta.^5;
 else
-    theta = (-120:0.01:10)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4;
+    theta = (-140:0.01:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; theta_fi = theta.^5;    
 end
 
 % Name MA files
@@ -15,7 +13,14 @@ name_LMT = '_MuscleAnalysis_Length.sto';
 if sn == 'CP4'
     name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_l.sto'; 
 elseif sn == 'CP8'
-    name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto'; 
+    name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto';
+elseif sn == 'CP1'
+    name_ma = '_MuscleAnalysis_MomentArm_knee_angle_r.sto';
+% elseif sn == 'CP14'
+%     name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto';
+% elseif sn == 'CP16'
+%     name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto';
+
 else
     name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_l.sto'; 
 end
@@ -29,6 +34,16 @@ if sn == 'CP4'
 elseif sn == 'CP8'
     col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
     col_BF   = find(strcmp('bifemlh_r',LMT_dat.colheaders));
+elseif sn == 'CP1'
+    col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
+    col_BF   = find(strcmp('bifemlh_r',LMT_dat.colheaders));
+    
+% elseif sn == 'CP14'
+%     col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
+%     col_BF   = find(strcmp('bifemlh_r',LMT_dat.colheaders));
+% elseif sn == 'CP16'
+%     col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
+%     col_BF   = find(strcmp('bifemlh_r',LMT_dat.colheaders));
 else
     col_RF   = find(strcmp('rect_fem_l',LMT_dat.colheaders));
     col_BF   = find(strcmp('bifemlh_l',LMT_dat.colheaders));
@@ -44,6 +59,16 @@ if sn == 'CP4'
 elseif sn =='CP8'
     col_RF  = find(strcmp('rect_fem_r',ma_dat.colheaders));
     col_BF  = find(strcmp('bifemlh_r',ma_dat.colheaders));
+elseif sn =='CP1'
+    col_RF  = find(strcmp('rect_fem_r',ma_dat.colheaders));
+    col_BF  = find(strcmp('bifemlh_r',ma_dat.colheaders));
+% elseif sn =='CP14'
+%     col_RF  = find(strcmp('rect_fem_r',ma_dat.colheaders));
+%     col_BF  = find(strcmp('bifemlh_r',ma_dat.colheaders));
+% elseif sn =='CP16'
+%     col_RF  = find(strcmp('rect_fem_r',ma_dat.colheaders));
+%     col_BF  = find(strcmp('bifemlh_r',ma_dat.colheaders));
+
 else
     col_RF  = find(strcmp('rect_fem_l',ma_dat.colheaders));
     col_BF  = find(strcmp('bifemlh_l',ma_dat.colheaders));
@@ -56,8 +81,8 @@ LMT_ma_dat_ext = [LMT(:,1); -ma(:,1)];
 one      = ones(length(LMT),1);
 zero     = zeros(length(ma),1); 
 
-A        = [one  theta theta_sq   theta_th ];
-B        = [zero one   2*theta    3*theta_sq ];
+A        = [one  theta theta_sq   theta_th    theta_fo    theta_fi];
+B        = [zero one   2*theta    3*theta_sq  4*theta_th  5*theta_fo ];
 C        = [A; B];
 
 coeff_LMT_ma_ext = C\LMT_ma_dat_ext;
@@ -73,8 +98,8 @@ LMT_ma_dat_flex = [LMT(:,2); -ma(:,2)];
 one      = ones(length(LMT),1);
 zero     = zeros(length(ma),1); 
 
-A        = [one  theta theta_sq   theta_th ];
-B        = [zero one   2*theta    3*theta_sq ];
+A        = [one  theta theta_sq   theta_th    theta_fo   theta_fi];
+B        = [zero one   2*theta    3*theta_sq  4*theta_th 5*theta_fo];
 C        = [A; B];
 
 coeff_LMT_ma_flex = C\LMT_ma_dat_flex;

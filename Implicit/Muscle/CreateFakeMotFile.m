@@ -4,7 +4,7 @@
 addpath('C:\Users\u0125183\Documents\MATLAB\Sam/WriteMotFile')
 
 % Read existing mot file
-[header, names, data, fpath] = SIMM_ReadMotion('C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8/IK_Trial05.mot');
+[header, names, data, fpath] = SIMM_ReadMotion('C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Data\CP2/IK_Trial10.mot');
 
 % Read hip flexion
 col_hipf = find(strcmp('hip_flexion_r',names))
@@ -24,7 +24,7 @@ data_new = [time' zero zero zero zero zero zero zero zero zero zero zero zero ze
 % Write new mot file
 q.data   = data_new;
 q.labels = names;
-fname    = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8/FakeMot_T5.mot'
+fname    = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Data\CP2/FakeMot_T10.mot';
 write_motionFile(q, fname)
 
 % %% Hip at zero 35 degrees

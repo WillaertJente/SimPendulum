@@ -4,13 +4,13 @@
 
 %% Input
 s.nu = 'CP1';                                                                               % subject number/ name
-s.tr = [8];                                                                                 % subject trials (number of trials)
+s.tr = [1];                                                                                 % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-ScaleFactor = 1.1955; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036 CP 14=2.1079 CP16=1.4723 CP1 = 1.1955 CP2 = 2.6322
-opt  = '_2muscles_v1';   % Option used as name to save results
+ScaleFactor = 1.1955; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036 CP 14=2.1079 CP16=1.4723 CP1 = 1.1955
+opt  = 'TEST';   % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -23,11 +23,7 @@ for j = 1:length(s.tr)
     
     % Discretised time: interpolate experimental data at discr. time using spline
     [q_exp, qdot_exp,N, tvect, dt] = ExpDatAtDiscrTime(t_span,t_exp,q_exp_r);       % dt = 0.005
-        
-%     q_exp = q_exp(1:450);
-%     qdot_exp = qdot_exp(1:450);
-%     N = 450;
-%     tvect = tvect(1:450)
+    
     %% Formulate OCP
     import casadi.*;        % Import casadi libraries
     opti = casadi.Opti();   % Initialise opti structure
@@ -51,7 +47,7 @@ for j = 1:length(s.tr)
     % Opensim model
     import org.opensim.modeling.*
     %model_path = 'C:\Opensim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim';
-    model_path = [path,'/CP1_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/CP16_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -150,29 +146,28 @@ for j = 1:length(s.tr)
     lMtilda_ext  = opti.variable(1,N);
     lMtilda_flex = opti.variable(1,N);
     Fsrs         = opti.variable(1,N);
+    Fsrs_d       = opti.variable(1,N);
     
     % Controls
     lM_projected_ext  = opti.variable(1,N);
     lM_projected_flex = opti.variable(1,N);
     act               = opti.variable(1,N);
     dt1               = opti.variable(1);
-%     dt2          = opti.variable(1);
     
     % Slack controls
     vMtilda_ext  = opti.variable(1,N);
     vMtilda_flex = opti.variable(1,N);
     
     % Parameters
-    a_ext        = opti.variable(1);
-    a_flex       = opti.variable(1);
-    %     kFpe_ext         = opti.variable(1);
-    %     kFpe_flex         = opti.variable(1);
-    kFpe        = opti.variable(1);
+    a_ext_0        = opti.variable(1);
+    a_flex         = opti.variable(1);
+    kFpe           = opti.variable(1);
+    Rk             = opti.variable(1); 
     
     % Bounds
     opti.subject_to(-4*pi < x   < 4*pi);
     opti.subject_to(-300  < xd  < 300);
-    opti.subject_to(0.001 < a_ext   < 0.5);
+    opti.subject_to(0.001 < a_ext_0 < 0.5);
     opti.subject_to(0.001 < a_flex  < 0.5);
     opti.subject_to(1e-4  < lM_projected_ext);       % Only positive lM's
     opti.subject_to(1e-4  < lM_projected_flex);
@@ -181,26 +176,23 @@ for j = 1:length(s.tr)
     opti.subject_to(0.2   < lMtilda_ext < 1.8);
     opti.subject_to(0.2   < lMtilda_flex < 1.8);
     opti.subject_to(0     < Fsrs    < 2);
-    %     opti.subject_to(0.05  < kFpe_ext    < 0.15);
-    %     opti.subject_to(0.05  < kFpe_flex    < 0.15);
-    opti.subject_to(0.05 < kFpe < 0.15);
+    opti.subject_to(0     < Fsrs_d  < 2); 
+    opti.subject_to(0.05  < kFpe    < 0.15);
     opti.subject_to(0.001 < dt1     < 0.01);    % 0.05
-%     opti.subject_to(0.001 < dt2     < 0.01);
-    opti.subject_to(act <= 0);
-%     opti.subject_to( act <= 0);
+    opti.subject_to(0.001 < Rk      < 4); 
+    opti.subject_to(-0.1 < act <= 0);
     
     % Bounds on initial states
     opti.subject_to(x(1)     == x0(1));
     opti.subject_to(xd(1)    == 0);
+    opti.subject_to(Fsrs_d(1) ==0); 
     %     opti.subject_to(xd(1)    == x0(2));
        
     % Initial guess
     opti.set_initial(x, q_exp);
     opti.set_initial(xd,qdot_exp);
-    opti.set_initial(a_ext,  0.01);
+    opti.set_initial(a_ext_0,  0.01);
     opti.set_initial(a_flex, 0.01);
-    %     opti.set_initial(kFpe_ext,0.1);
-    %     opti.set_initial(kFpe_flex,0.1);
     opti.set_initial(kFpe,0.1);
     opti.set_initial(lM_projected_ext, lM_projectedGuess_ext);
     opti.set_initial(lM_projected_flex, lM_projectedGuess_flex);
@@ -210,12 +202,19 @@ for j = 1:length(s.tr)
     opti.set_initial(vMtilda_flex, vMGuess);
     opti.set_initial(act,0);
     opti.set_initial(dt1,0.005);
-%     opti.set_initial(dt2,0.005);
+    opti.set_initial(Rk, 0.01);
     
     % Defining problem (muscle model)
     % Calculate shift
     kT = 35;
     [shift]    = getshift(kT);
+    
+    % activatie voor feedback
+    a_ext = a_ext_0 + Rk*Fsrs_d; 
+    
+    % Reflex activity
+    tau_d = 0.05;
+    Fsrs_ddt = Fsrs-Fsrs_d/tau_d;
     
     % Calculate FT en ma
     %[FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe_ext, kFpe_flex, N_1,Fsrs, N);
@@ -236,9 +235,9 @@ for j = 1:length(s.tr)
     for k = N_1:N-1
         opti.subject_to(Fsrs(k+1) == Fsrs(k) + Fsrs_dot(k) * dt2)
     end
-    
+        
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act -0.1*xd ); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.1*xd); %  + Tdamp + FT*ma);
     %xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act); %  + Tdamp + FT*ma);
     
     % backward euler
@@ -254,6 +253,8 @@ for j = 1:length(s.tr)
     % opti.subject_to(dlMdt_flex(1:N-1)*dt + lMtilda_flex(1:N-1) == lMtilda_flex(2:N)); % VmTilde met factor 10 (MRS)
     opti.subject_to(dlMdt_flex(1:N_1-1)*dt1 + lMtilda_flex(1:N_1-1) == lMtilda_flex(2:N_1));
     opti.subject_to(dlMdt_flex(N_1:N-1)*dt2 + lMtilda_flex(N_1:N-1) == lMtilda_flex(N_1+1:N));
+    opti.subject_to(Fsrs_ddt(1:N_1-1)*dt1 + Fsrs_d(1:N_1-1) == Fsrs_d(2:N_1));
+    opti.subject_to(Fsrs_ddt(N_1:N-1)*dt2 + Fsrs_d(N_1:N-1) == Fsrs_d(N_1+1:N));
     opti.subject_to(lM_ext.^2 - w_ext.^2 == lM_projected_ext.^2);
     opti.subject_to(lM_flex.^2 - w_flex.^2 == lM_projected_flex.^2);
     opti.subject_to(err_ext == 0);
@@ -275,11 +276,11 @@ for j = 1:length(s.tr)
 %     error_dot    = xd - q_dot_spline(tvect_spline);
     error        = x - q_exp;
     error_dot    = xd - qdot_exp;
-    %       error_fs     = x(N_1)-q_exp(N_1);
-    %       error_fs_dot = xd(N_1)-qdot_exp(N_1);
-    %       error_ra     = x(N-500:end)-q_exp(N-500:end);    
-    %       error_fs = x(1:N_1+10) - q_exp(1:N_1+10);
+    %error_fs     = x(N_1)-q_exp(N_1);
+    error_fs_dot = xd(N_1)-qdot_exp(N_1);
+    % error_ra     = x(N-500:end)-q_exp(N-500:end);
     
+    %error_fs = x(1:N_1+10) - q_exp(1:N_1+10);
     J        = sumsqr(error)  + sumsqr(error_dot)+ 100*sumsqr(act);
     opti.minimize(J);
     
@@ -296,6 +297,7 @@ for j = 1:length(s.tr)
     sol_x = sol.value(x);
     sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
     sol_lMtilda_ext = sol.value(lMtilda_ext);   sol_lMtilda_flex = sol.value(lMtilda_flex);
+    sol_aext0 = sol.value(a_ext_0);
     sol_act = sol.value(act);
     sol_FT_ext  = sol.value(FT_ext);            sol_FT_flex  = sol.value(FT_flex);
     sol_ma_ext = sol.value(ma_ext);             sol_ma_flex = sol.value(ma_flex);
@@ -305,7 +307,8 @@ for j = 1:length(s.tr)
     sol_J   = sol.value(J);
     sol_Fsrs = sol.value(Fsrs);
     sol_dt1  = sol.value(dt1);
-    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_dt1','sol_act','sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe', 'sol_J', 'sol_Fsrs','q_exp')
+    sol_Rk   = sol.value(Rk);
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe', 'sol_J', 'sol_Fsrs','q_exp')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)
@@ -337,4 +340,6 @@ for j = 1:length(s.tr)
     subplot(616)
     plot(tvect,sol.value(act),'LineWidth',1.5);
     hold on; box off; ylabel('act');  
+
+    disp(['Reflex gain =', num2str(sol.value(Rk))])
 end
