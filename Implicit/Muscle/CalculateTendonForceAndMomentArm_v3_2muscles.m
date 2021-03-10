@@ -1,4 +1,4 @@
-function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe, N_1,Fsrs, N)
+function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe, N_1, N, a_ext_0, Fsrs_d, Fsrs2)
 %Function to calculate tendon force and moment arms with SRS 
 %   1. Calculate moment arm
 %   ma is derivative of LMT
@@ -77,14 +77,13 @@ vMtildamax_flex = params.MTparams_flex(5,:);
 kSRS = 280;
 dLm  = lMtilda_ext - lMtilda_ext(1);        % Stretch 
 
-for k = 1:N_1
-    Fsrs(k)     =(0.5*tanh(1000*(-dLm(k)+5.7*10^(-3)))+0.5)*dLm(k)*FMltilda_ext(k)*a_ext*kSRS + (0.5*tanh(1000*(dLm(k) - 5.7*10^(-3)))+0.5)*5.7*10^(-3)*a_ext*FMltilda_ext(k)*kSRS;
-end
+Fsrs     =(0.5*tanh(1000*(-dLm(1:N_1)+5.7*10^(-3)))+0.5).*dLm(1:N_1).*FMltilda_ext(1:N_1)*a_ext_0*kSRS + (0.5*tanh(1000*(dLm(1:N_1) - 5.7*10^(-3)))+0.5)*5.7*10^(-3).*a_ext_0.*FMltilda_ext(1:N_1)*kSRS;    
 
-Fsrs_dot = -Fsrs/0.050;
+            
+Fsrs_dot = -Fsrs2/0.050;
 
 % FMce
-Fce_ext  = a_ext.* FMltilda_ext.* FMvtilda_ext + Fsrs; 
+Fce_ext  = a_ext.* FMltilda_ext.* FMvtilda_ext + [Fsrs Fsrs2]; 
 Fce_flex = a_flex.* FMltilda_flex.* FMvtilda_flex; 
 % FMce = fse.* lM ./(lMT-lT) - Fpe;
 

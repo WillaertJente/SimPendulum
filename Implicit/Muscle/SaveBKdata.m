@@ -1,6 +1,6 @@
 %% SCript to save BK data for simulations
-map   = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\CP8/'
-nr_tr = [2 3 4 5];  
+map   = 'C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Data/CP6/'
+nr_tr = [2];  
 
 for i = nr_tr
 %% Import BK data 
