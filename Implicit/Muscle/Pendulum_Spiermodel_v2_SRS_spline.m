@@ -275,7 +275,7 @@ for j = 1:length(s.tr)
     hold on; box off; ylabel('Fpe');
     subplot(615)
     plot(tvect,sol.value(Fsrs),'LineWidth',1.5);
-    hold on; box off; ylabel('Fsrs');
+    hold on; box off; ylabel('Fsrs'); hold on;
     subplot(616)
     plot(tvect,sol.value(act),'LineWidth',1.5);
     hold on; box off; ylabel('act');    

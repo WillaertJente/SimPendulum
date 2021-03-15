@@ -1,4 +1,4 @@
-function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe, N_1, N, a_ext_0, Fsrs_d, Fsrs2)
+function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext_0,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, m_offset, kFpe, N_1, N, Fsrs_d, Fsrs2, a_ext)
 %Function to calculate tendon force and moment arms with SRS 
 %   1. Calculate moment arm
 %   ma is derivative of LMT
@@ -12,9 +12,6 @@ function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_f
 %   3. Calculate derivative of lMtilda
 
 %% Stap 1 LMT en Ma
-offset   = offset*pi/180;
-m_offset = mean(offset);
-
 lMT_ext = coeff_LMT_ma_ext(1) + coeff_LMT_ma_ext(2)*(x+m_offset) + coeff_LMT_ma_ext(3)*(x+m_offset).^2 + coeff_LMT_ma_ext(4)*(x+m_offset).^3 + coeff_LMT_ma_ext(5)*(x+m_offset).^4 + coeff_LMT_ma_ext(6)*(x+m_offset).^5;
 ma_ext  = -coeff_LMT_ma_ext(2) + -coeff_LMT_ma_ext(3)*(x+m_offset) + -coeff_LMT_ma_ext(4)*(x+m_offset).^2 + -coeff_LMT_ma_ext(5)*(x+m_offset).^3 + -coeff_LMT_ma_ext(6)*(x+m_offset).^4;
 
@@ -22,27 +19,17 @@ lMT_flex = coeff_LMT_ma_flex(1) + coeff_LMT_ma_flex(2)*(x+m_offset) + coeff_LMT_
 ma_flex  = -coeff_LMT_ma_flex(2) + -coeff_LMT_ma_flex(3)*(x+m_offset) + -coeff_LMT_ma_flex(4)*(x+m_offset).^2 + -coeff_LMT_ma_flex(5)*(x+m_offset).^3 + -coeff_LMT_ma_flex(6)*(x+m_offset).^4;
 
 %% Stap 2
-% w
 lMo_ext    = params.MTparams_ext(2,:);
-alphao_ext = params.MTparams_ext(4,:);
-w_ext      = lMo_ext.* sin(alphao_ext);
-
 lMo_flex    = params.MTparams_flex(2,:);
-alphao_flex = params.MTparams_flex(4,:);
-w_flex      = lMo_flex.* sin(alphao_flex);
 
 % Hill type muscle model: geometric relationships
 % lM (muscle fiber length)
 lM_ext      = lMtilda_ext.* lMo_ext;
 lM_flex     = lMtilda_flex.* lMo_flex;
 
-% lMT
-% lMT    = interp1(params.LMT_qknee, params.LMT, x);
-
 % lT (tendon length)
 lT_ext        = lMT_ext - lM_projected_ext;
 lT_flex       = lMT_flex - lM_projected_flex;
-% lT     = lMT - sqrt(abs(lM.^2 - w.^2));
 
 % lTs (Tendon slack length)
 lTs_ext    = params.MTparams_ext(3,:);
@@ -55,7 +42,6 @@ lTtilda_flex  = lT_flex./lTs_flex;
 % Fse
 fse_ext          = (exp(35*(lTtilda_ext - 0.995)))/5-0.25 + shift;
 fse_flex         = (exp(35*(lTtilda_flex - 0.995)))/5-0.25 + shift;
-%   fse(fse<0) = 0;
 
 % FMo
 FMo_ext = params.MTparams_ext(1,:);
@@ -71,21 +57,20 @@ vMtildamax_ext  = params.MTparams_ext(5,:);
 vMtildamax_flex = params.MTparams_flex(5,:);
 
 % Get force length velocity parameters
+% Friedl - would be better to use vector notation and not create new
+% functions every time you change number of muscles.
 [Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe);
 
 % Tsrs
 kSRS = 280;
 dLm  = lMtilda_ext - lMtilda_ext(1);        % Stretch 
 
-Fsrs     =(0.5*tanh(1000*(-dLm(1:N_1)+5.7*10^(-3)))+0.5).*dLm(1:N_1).*FMltilda_ext(1:N_1)*a_ext_0*kSRS + (0.5*tanh(1000*(dLm(1:N_1) - 5.7*10^(-3)))+0.5)*5.7*10^(-3).*a_ext_0.*FMltilda_ext(1:N_1)*kSRS;    
-
-            
-Fsrs_dot = -Fsrs2/0.050;
+Fsrs     =(0.5*tanh(1000*(-dLm(1:N_1)+5.7*10^(-3)))+0.5).*dLm(1:N_1).*FMltilda_ext(1:N_1)*a_ext_0*kSRS + ...
+    (0.5*tanh(1000*(dLm(1:N_1) - 5.7*10^(-3)))+0.5)*5.7*10^(-3).*a_ext_0.*FMltilda_ext(1:N_1)*kSRS;    
 
 % FMce
 Fce_ext  = a_ext.* FMltilda_ext.* FMvtilda_ext + [Fsrs Fsrs2]; 
 Fce_flex = a_flex.* FMltilda_flex.* FMvtilda_flex; 
-% FMce = fse.* lM ./(lMT-lT) - Fpe;
 
 % Compute dlMdt
 % dlMdt_ext  = vMtilda_ext.* vMtildamax_ext./ lMo_ext;
@@ -94,9 +79,14 @@ dlMdt_ext  = vMtilda_ext.* vMtildamax_ext;
 dlMdt_flex = vMtilda_flex.* vMtildamax_flex;
 
 % Compute Muscle force
-FM_ext   = Fce_ext + Fpe_ext;
-FM_flex  = Fce_flex + Fpe_flex;
-% FM  = Fce;
+% Friedl - do not allow the passive forces to become larger than 1.5
+Fpe_ext_lim = (- 0.5*tanh(10*(Fpe_ext-1.5)) + 0.5).*Fpe_ext + (0.5*tanh(10*(Fpe_ext-1.5)) + 0.5)*1.5;
+Fpe_flex_lim = (- 0.5*tanh(10*(Fpe_flex-1.5)) + 0.5).*Fpe_flex + (0.5*tanh(10*(Fpe_flex-1.5)) + 0.5)*1.5;
+FM_ext   = Fce_ext + Fpe_ext_lim;
+FM_flex  = Fce_flex + Fpe_flex_lim;
+
+% FM_ext   = Fce_ext + Fpe_ext;
+% FM_flex  = Fce_flex + Fpe_flex;
 
 % Force equilibrium
 cos_alpha_ext = (lMT_ext-lT_ext)./lM_ext;

@@ -149,7 +149,7 @@ for j = 1:length(s.tr)
     xd           = opti.variable(1,N);
     lMtilda_ext  = opti.variable(1,N);
     lMtilda_flex = opti.variable(1,N);
-    Fsrs1        = opti.variable(1,N_1);
+%     Fsrs1        = opti.variable(1,N_1);
     Fsrs2        = opti.variable(1,N-N_1);
     Fsrs_d       = opti.variable(1,N);
     a_ext        = opti.variable(1,N);
@@ -171,39 +171,39 @@ for j = 1:length(s.tr)
     Rk             = opti.variable(1); 
     
     % Bounds
-    opti.subject_to(-4*pi < x   < 4*pi);
-    opti.subject_to(-300  < xd  < 300);
-    opti.subject_to(1e-4 < a_ext_0 < 0.5);
-    opti.subject_to(1e-4 < a_flex  < 0.5);
-    opti.subject_to(1e-4  < a_ext < 1);    
+    opti.subject_to(-4*pi < x   < 4*pi); % Friedl - It seems that these bounds are assuming angles are in degrees, not the case. Smaller/larger bounds => no convergence. 
+    opti.subject_to(-300 < xd  < 300);
+    opti.subject_to(0.0 < a_ext_0 < 0.5);
+    opti.subject_to(0.0 < a_flex  < 0.5);
+    opti.subject_to(0.0  < a_ext < 0.5);    
     opti.subject_to(1e-4  < lM_projected_ext);       % Only positive lM's
     opti.subject_to(1e-4  < lM_projected_flex);
-    opti.subject_to(-10   < vMtilda_ext < 10);
-    opti.subject_to(-10   < vMtilda_flex < 10);
+    opti.subject_to(-10   < vMtilda_ext < 10); % Friedl - changed bounds
+    opti.subject_to(-10   < vMtilda_flex < 10); % Friedl - changed bounds
     opti.subject_to(0.2   < lMtilda_ext < 1.8);
     opti.subject_to(0.2   < lMtilda_flex < 1.8);
-    opti.subject_to(0.0  < Fsrs1    < 2);
+%     opti.subject_to(0.0  < Fsrs1    < 2);
     opti.subject_to(0.0  < Fsrs2    < 2);
-    opti.subject_to(0.0  < Fsrs_d  < 2); 
+    opti.subject_to(-1  < Fsrs_d  < 2); 
     opti.subject_to(0.05  < kFpe    < 0.15);
     opti.subject_to(0.001 < dt1     < 0.01);    % 0.05
-    opti.subject_to(0.001 < Rk      < 4); 
-    %opti.subject_to(-0.001 <act <  0.001);
+    opti.subject_to(0.0 < Rk      < 4); 
+%     opti.subject_to(-0.05 <act <  0.05);
     %opti.subject_to(act < 0);
         
     % Bounds on initial states
     opti.subject_to(x(1)     == x0(1));
     opti.subject_to(xd(1)    == 0);
     opti.subject_to(Fsrs_d(1) ==0); 
-    opti.subject_to(Fsrs1(1) ==0); 
+%     opti.subject_to(Fsrs1(1) ==0); 
     %     opti.subject_to(xd(1)    == x0(2));
        
     % Initial guess
     opti.set_initial(x, q_exp);
     opti.set_initial(xd,qdot_exp);
-    opti.set_initial(a_ext_0,  0.01);
+    opti.set_initial(a_ext_0,  0.001);
     opti.set_initial(a_flex, 0.01);
-    opti.set_initial(a_ext,0.01*ones(1,N));
+    opti.set_initial(a_ext,0.001*ones(1,N));
     opti.set_initial(kFpe,0.1);
     opti.set_initial(lM_projected_ext, lM_projectedGuess_ext);
     opti.set_initial(lM_projected_flex, lM_projectedGuess_flex);
@@ -220,29 +220,41 @@ for j = 1:length(s.tr)
     kT = 35;
     [shift]    = getshift(kT);
     
-    
-    % Reflex activity
-    tau_d = 0.05;
-    Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))/tau_d  (Fsrs2-Fsrs_d(N_1+1:N))/tau_d];
-%     Fsrs_ddt(N_1+1:N) = (Fsrs2-Fsrs_d(N_1+1:N))/tau_d;
+    offset   = mean(offset)*pi/180; % Friedl - moved this, you do not need to compute this every time you call muscle dynamics.
     
     % Calculate FT en ma
     %[FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe_ext, kFpe_flex, N_1,Fsrs, N);
-    [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs_out, Fsrs_dot, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, offset, kFpe, N_1, N, a_ext_0, Fsrs_d, Fsrs2);
+    [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, ...
+        lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, ...
+        FM_ext, FM_flex, Fsrs1, FMltilda_ext, FMltilda_flex] = ...
+        CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, ...
+        lMtilda_flex, a_ext_0, a_flex, shift, vMtilda_ext, vMtilda_flex, ...
+        lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, ...
+        offset, kFpe, N_1, N, Fsrs_d, Fsrs2, a_ext);
     
-    opti.subject_to(Fsrs_out == Fsrs1)
-     % Variable time of phases
+    opti.subject_to(0.0001 < a_ext - a_ext_0 - Rk*Fsrs_d <0.0001); % Does not converge with smaller bounds.
+%     opti.subject_to(a_ext == a_ext_0 + Rk*Fsrs_d); % Friedl - does not
+%     converge. Still wondering why but not surprising given our previous
+%     results. Also, when eliminating a_ext from the problem, it did not
+%     converge.
+    
+    % Variable time of phases
     tF1 = (N_1)*dt1;        %N_1-1
     dt2 = 0.005;
     
     % Constraints on phases
     opti.subject_to(tF1 > 0.2 );
-    opti.subject_to(1e-4 < xd(N_1+1) < 0.1);
-            
-    % Constraints srs
     opti.subject_to(xd(1:N_1) < 0);
-    opti.subject_to(Fsrs2(2:N-N_1) == Fsrs2(1:N-N_1-1) + Fsrs_dot(1:N-N_1-1)* dt2);
-        
+    opti.subject_to(1e-4 < xd(N_1+1) < 1); % positive joint velocity after end of first swing
+                
+    % Constraints srs - exponential decay
+    opti.subject_to(Fsrs2 == [Fsrs1(N_1) Fsrs2(1:N-N_1-1)] - [Fsrs1(N_1) Fsrs2(1:N-N_1-1)]/ 0.05* dt2); % Friedl
+    
+    % Reflex activity
+    tau_d = 0.05;
+    Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))  (Fsrs2-Fsrs_d(N_1+1:N))]/tau_d;
+    % Fsrs_ddt(N_1+1:N) = (Fsrs2-Fsrs_d(N_1+1:N))/tau_d;
+    
     % Dynamics
     xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.1393*xd); %  + Tdamp + FT*ma);
     
@@ -265,8 +277,8 @@ for j = 1:length(s.tr)
     opti.subject_to(lM_flex.^2 - w_flex.^2 == lM_projected_flex.^2);
     opti.subject_to(err_ext == 0);
     opti.subject_to(err_flex == 0);
-        % activatie voor feedback
-    opti.subject_to(a_ext == a_ext_0 + Rk*Fsrs_d); 
+    % activatie voor feedback
+%     opti.subject_to(a_ext == a_ext_0 + Rk*Fsrs_d); 
     
     % Objective function
     tvect_spline = MX(1,N);
@@ -283,13 +295,15 @@ for j = 1:length(s.tr)
     error        = x - q_exp;
     error_dot    = xd - qdot_exp;
      
-    J            = sumsqr(error)  + sumsqr(error_dot)+ 10*sumsqr(act); %+ 100*sumsqr(error_ra);
+    J            = sumsqr(error)  + sumsqr(error_dot)+ 10*sumsqr(act); % + ...
+        % 0.001 * (sumsqr(vMtilda_ext) + sumsqr(vMtilda_ext)); %+ 100*sumsqr(error_ra);
     opti.minimize(J);
     
     % options for IPOPT
     options.ipopt.tol = 1*10^(-6);          % moet normaal 10^-6 zijn
     options.ipopt.linear_solver = 'mumps';
-%         options.ipopt.linear_solver = 'ma57';
+%     options.ipopt.nlp_scaling_method = 'none';
+%     options.ipopt.linear_solver = 'ma57';
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
     
     % Solve the OCP
@@ -297,7 +311,7 @@ for j = 1:length(s.tr)
     sol = opti.solve();
     
     sol_x = sol.value(x);
-    sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
+%     sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
     sol_lMtilda_ext = sol.value(lMtilda_ext);   sol_lMtilda_flex = sol.value(lMtilda_flex);
     sol_aext0 = sol.value(a_ext_0);
     sol_act = sol.value(act);
@@ -307,14 +321,17 @@ for j = 1:length(s.tr)
     sol_kFpe    = sol.value(kFpe);
     %sol_kFpe_ext = sol.value(kFpe_ext);         sol_kFpe_flex = sol.value(kFpe_flex);
     sol_J   = sol.value(J);
-    sol_Fsrs = sol.value(Fsrs);
+    sol_Fsrs1 = sol.value(Fsrs1);
+    sol_Fsrs2 = sol.value(Fsrs2);
+    sol_Fsrs = [sol_Fsrs1 sol_Fsrs2];
+    sol_Fsrs_d = sol.value(Fsrs_d);
     sol_dt1  = sol.value(dt1);
     sol_Rk   = sol.value(Rk);
     sol_dlmdt_ext = sol.value(dlMdt_ext);       sol_dlmdt_flex = sol.value(dlMdt_flex);
     sol_lM_ext = sol.value(lM_ext);             sol_lM_flex    = sol.value(lM_flex);
     sol_FMltilda_ext = sol.value(FMltilda_ext); sol_FMltilda_flex = sol.value(FMltilda_flex);
     Total = sol.value(FT_ext).*sol.value(ma_ext) + sol.value(FT_flex).*sol.value(ma_flex);
-    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect')
+%     save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)
@@ -341,10 +358,10 @@ for j = 1:length(s.tr)
     hold on;  plot(tvect,sol.value(Fpe_flex),'LineWidth',1.5);
     hold on; box off; ylabel('Fpe');
     subplot(614)
-    plot(tvect,sol.value(Fsrs),'LineWidth',1.5);
-    hold on; box off; ylabel('Fsrs');
+    plot(tvect,sol_Fsrs,'LineWidth',1.5); hold on; 
+    plot(tvect,sol_Fsrs_d,'LineWidth',1); box off; ylabel('Fsrs');
     subplot(615)
-    plot(tvect,sol_a_ext,'LineWidth',1.5);
+    plot(tvect,sol_aext0 + sol.value(Rk)*sol_Fsrs_d,'LineWidth',1.5);
     hold on; box off; ylabel('a0+Rk*Fsrs_d');
     subplot(616)
     plot(tvect,sol.value(act),'LineWidth',1.5);
