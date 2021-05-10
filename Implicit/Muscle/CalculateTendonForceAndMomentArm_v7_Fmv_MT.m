@@ -1,4 +1,4 @@
-function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, FMltilda_ext, FMltilda_flex] = CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, lMtilda_flex, a_ext_0,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, m_offset, kFpe, N_1, N, Fsrs_d, Fsrs2, a_ext)
+function [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, FM_ext, FM_flex, Fsrs, FMltilda_ext, FMltilda_flex, FMvtilda_ext] = CalculateTendonForceAndMomentArm_v7_Fmv_MT(x, params, lMtilda_ext, lMtilda_flex, a_ext_0,a_flex, shift, vMtilda_ext,vMtilda_flex, lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, m_offset, kFpe_ext, kFpe_flex, N_1, N, Fsrs_d, Fsrs2, a_ext)
 %Function to calculate tendon force and moment arms with SRS 
 %   1. Calculate moment arm
 %   ma is derivative of LMT
@@ -59,7 +59,9 @@ vMtildamax_flex = params.MTparams_flex(5,:);
 % Get force length velocity parameters
 % Friedl - would be better to use vector notation and not create new
 % functions every time you change number of muscles.
-[Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe);
+[Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles_kFpe(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe_ext, kFpe_flex);
+
+FMvtilda_ext(1:N_1) = 1; 
 
 % Tsrs
 kSRS = 280;

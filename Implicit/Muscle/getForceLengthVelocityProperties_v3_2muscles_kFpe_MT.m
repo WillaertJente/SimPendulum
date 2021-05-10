@@ -1,4 +1,4 @@
-function [Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe)
+function [Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_flex] = getForceLengthVelocityProperties_v3_2muscles_kFpe_MT(lMtilda_ext, lMtilda_flex, params, vMtilda_ext, vMtilda_flex, vMtildamax_ext, vMtildamax_flex, kFpe_ext, kFpe_flex)
 %calculate Fpe, FMltilda
 %   Fpe      = Normalized passive muscle force 
 %   FMltilda = Normalized force-length multiplier
@@ -6,10 +6,10 @@ function [Fpe_ext,Fpe_flex, FMltilda_ext, FMltilda_flex, FMvtilda_ext, FMvtilda_
 
 % Fpe
 e0  = 0.6;   kpe = 4;
-t5_ext  = exp(kpe * (lMtilda_ext - kFpe*10) / e0);
+t5_ext  = exp(kpe * (lMtilda_ext - kFpe_ext*10) / e0);
 Fpe_ext = ((t5_ext - 0.10e1) - params.Fpparam(1)) / params.Fpparam(2);        %Fpe = musclepassiveforcelength(lMtilda);
 
-t5_flex  = exp(kpe * (lMtilda_flex - kFpe*10) / e0);
+t5_flex  = exp(kpe * (lMtilda_flex - kFpe_flex*10) / e0);
 Fpe_flex = ((t5_flex - 0.10e1) - params.Fpparam(1)) / params.Fpparam(2);      %Fpe = musclepassiveforcelength(lMtilda);
 
 % FMltilda

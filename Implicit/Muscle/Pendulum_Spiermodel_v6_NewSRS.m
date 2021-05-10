@@ -3,14 +3,13 @@
 % clear all; close all; clc;
 
 %% Input
-s.nu = 'CP8';                                                                               % subject number/ name
-s.tr = [3];                                                                                % subject trials (number of trials)
+s.nu = 'CP7';                                                                               % subject number/ name
+s.tr = [2];                                                                                % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
-%ScaleFactor = 1.4723; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036 CP 14=2.1079 CP16=1.4723 CP1 = 1.1955 CP2 = 2.6322 TD 12 = 1.8047
-opt  = '_ReflAgonist2';   % Option used as name to save results
+opt  = '_NewSRS_N1_30';   % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
@@ -28,7 +27,7 @@ for j = 1:length(s.tr)
 %       qdot_exp = qdot_exp(1:end-300);
 %       N = N-300;
 %       tvect = tvect(1:end-300);
-%     
+   
     %% Formulate OCP
     import casadi.*;        % Import casadi libraries
     opti  = casadi.Opti();   % Initialise opti structure
@@ -40,13 +39,13 @@ for j = 1:length(s.tr)
     
     % Define phases of pendulum (initial state, end of first swing)
     [x0, N_1] = PendulumPhases(q_exp, qdot_exp, N, 1);                          % 1 if you want to plot the phases
-    
+    N_1 = 30; 
     %% Add OpenSim Model
     addpath('MuscleModel');
     
     % Opensim model
     import org.opensim.modeling.*
-    model_path = [path,'/CP8_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
+    model_path = [path,'/',s.nu,'_ScaledModel_ScaledForces.osim'];                                 % if cp = CPModel_Scaled.osim
     osimModel  = Model(model_path);
     
     % Inertial parameters (tibia)
@@ -83,7 +82,7 @@ for j = 1:length(s.tr)
     params.I_OS = inertia_tibia.get(0,0) + inertia_calcn.get(0,0) + tibia.getMass() * com_tibia.get(1) ^ 2 + calcn.getMass() * com_foot_in_tibia ^ 2;
     
     % Muscle tendon properties
-    [params_Muscle,lOpt,L_TendonSlack,Fiso,PennationAngle]=ReadMuscleParameters(model_path,{'rect_fem_r','bifemlh_r'});
+    [params_Muscle,lOpt,L_TendonSlack,Fiso,PennationAngle]=ReadMuscleParameters(model_path,{'rect_fem_l','bifemlh_l'});
     params_Muscle_ext(2,1) = params_Muscle(2,1);  params_Muscle_flex(2,1) = params_Muscle(2,2);
     params_Muscle_ext(3,1) = params_Muscle(3,1);  params_Muscle_flex(3,1) = params_Muscle(3,2);
     params.MTparams_ext    = params_Muscle(:,1);  params.MTparams_flex    = params_Muscle(:,2); % 5 x 2 matrix: 1 - Fmo, 2 - Lmo, 3 - Lts, 4 - alphao, 5 - vmmax
@@ -144,7 +143,6 @@ for j = 1:length(s.tr)
     xd           = opti.variable(1,N);          % velocity (rad/s)
     lMtilda_ext  = opti.variable(1,N);          
     lMtilda_flex = opti.variable(1,N);
-    %     Fsrs1        = opti.variable(1,N_1);
     Fsrs2        = opti.variable(1,N-N_1);      % SRS force during second phase (exponential decay)
     Fsrs_d       = opti.variable(1,N);          % Delayed SRS force
     a_ext        = opti.variable(1,N);          % Activation of extensor 
@@ -162,7 +160,8 @@ for j = 1:length(s.tr)
     % Parameters
     a_ext_0        = opti.variable(1);          % Baseline muscle tone extensor
     a_flex         = opti.variable(1);          % Baseline muscle tone flexor
-    kFpe           = opti.variable(1);          % Passive force constant kFpe
+    kFpe_ext       = opti.variable(1); 
+    kFpe_flex      = opti.variable(1); 
     Rk             = opti.variable(1);          % Reflex gain extensor 
     
     % Bounds
@@ -173,23 +172,22 @@ for j = 1:length(s.tr)
     opti.subject_to(0.0   < a_ext   < 0.5);
     opti.subject_to(1e-4  < lM_projected_ext);  % Only positive lM's
     opti.subject_to(1e-4  < lM_projected_flex);
-    opti.subject_to(-10   < vMtilda_ext < 10);  % Friedl - changed bounds
+    opti.subject_to(-10   < vMtilda_ext  < 10);  % Friedl - changed bounds
     opti.subject_to(-10   < vMtilda_flex < 10); % Friedl - changed bounds
-    opti.subject_to(0.2   < lMtilda_ext < 1.8);
+    opti.subject_to(0.2   < lMtilda_ext  < 1.8);
     opti.subject_to(0.2   < lMtilda_flex < 1.8);
-    %     opti.subject_to(0.0  < Fsrs1    < 2);
-    opti.subject_to(0.0  < Fsrs2   < 2);
-    opti.subject_to(-1   < Fsrs_d  < 2);
-    opti.subject_to(0.05 < kFpe    < 0.15);
-    opti.subject_to(0.001< dt1     < 0.01);    % 0.05
-    opti.subject_to(1e-5    < Rk      < 4);
-    opti.subject_to(-0.005 < act < 0.005); 
-    %opti.subject_to(act < 0);
+    opti.subject_to(0.0   < Fsrs2   < 2);
+    opti.subject_to(-1    < Fsrs_d  < 2);
+    opti.subject_to(0.05  < kFpe_ext    < 0.15);
+    opti.subject_to(0.05  < kFpe_flex   < 0.15);
+    opti.subject_to(0.001 < dt1     < 0.01);    % 0.05
+    opti.subject_to(1e-5  < Rk      < 4);
+    opti.subject_to(-0.01 < act < 0.01); 
     
     % Bounds on initial states
-    opti.subject_to(x(1)     == x0(1));
-    opti.subject_to(xd(1)    == 0);
-    opti.subject_to(Fsrs_d(1) ==0);
+    opti.subject_to(x(1)      == x0(1));
+    opti.subject_to(xd(1)     == 0);
+    opti.subject_to(Fsrs_d(1) == 0);
     
     % Initial guess
     opti.set_initial(x, q_exp);
@@ -197,15 +195,16 @@ for j = 1:length(s.tr)
     opti.set_initial(a_ext_0, 0.001);
     opti.set_initial(a_flex,  0.01);
     opti.set_initial(a_ext,   0.001*ones(1,N));
-    opti.set_initial(kFpe,0.1);
-    opti.set_initial(lM_projected_ext, lM_projectedGuess_ext);
+    opti.set_initial(kFpe_ext,0.1);
+    opti.set_initial(kFpe_flex,0.1);
+    opti.set_initial(lM_projected_ext,  lM_projectedGuess_ext);
     opti.set_initial(lM_projected_flex, lM_projectedGuess_flex);
-    opti.set_initial(lMtilda_ext, lMtildeGuess);        
+    opti.set_initial(lMtilda_ext,  lMtildeGuess);        
     opti.set_initial(lMtilda_flex, lMtildeGuess);       
-    opti.set_initial(vMtilda_ext, vMGuess);
+    opti.set_initial(vMtilda_ext,  vMGuess);
     opti.set_initial(vMtilda_flex, vMGuess);
     opti.set_initial(act,0);
-    opti.set_initial(dt1,0.005);
+    opti.set_initial(dt1,0.0005);
     opti.set_initial(Rk, 0.01);
     
     % Defining problem (muscle model)
@@ -220,10 +219,10 @@ for j = 1:length(s.tr)
     [FT_ext,FT_flex, ma_ext, ma_flex, dlMdt_ext, dlMdt_flex, err_ext, err_flex, ...
         lM_ext, lM_flex, lT_ext, lT_flex, Fce_ext, Fce_flex, Fpe_ext, Fpe_flex, ...
         FM_ext, FM_flex, Fsrs1, FMltilda_ext, FMltilda_flex] = ...
-        CalculateTendonForceAndMomentArm_v3_2muscles(x, params, lMtilda_ext, ...
+        CalculateTendonForceAndMomentArm_v4_NewSRS(x, params, lMtilda_ext, ...
         lMtilda_flex, a_ext_0, a_flex, shift, vMtilda_ext, vMtilda_flex, ...
         lM_projected_ext, lM_projected_flex, coeff_LMT_ma_ext, coeff_LMT_ma_flex, ...
-        offset, kFpe, N_1, N, Fsrs_d, Fsrs2, a_ext);
+        offset, kFpe_ext, kFpe_flex, N_1, N, Fsrs_d, Fsrs2, a_ext);
     
     opti.subject_to(-0.0001 < a_ext - a_ext_0 - Rk*Fsrs_d <0.0001); % Does not converge with smaller bounds.
     %     opti.subject_to(a_ext == a_ext_0 + Rk*Fsrs_d); % Friedl - does not
@@ -236,9 +235,12 @@ for j = 1:length(s.tr)
     dt2 = 0.005;
     
     % Constraints on phases
-    opti.subject_to(tF1 > 0.2 );
+    opti.subject_to(tF1 > 0.02 );
+    opti.subject_to(lMtilda_ext(1:N_1) - lMtilda_ext(1) <= 5.7*10^-3); 
+    opti.subject_to(lMtilda_ext(N_1+1) - lMtilda_ext(1) > 5.7*10^-3);
+    
     opti.subject_to(xd(1:N_1) < 0);
-    opti.subject_to(1e-4 < xd(N_1+1) < 1); % positive joint velocity after end of first swing
+%     opti.subject_to(1e-4 < xd(N_1+1) < 1); % positive joint velocity after end of first swing
     
     % Constraints srs - exponential decay
     opti.subject_to(Fsrs2 == [Fsrs1(N_1) Fsrs2(1:N-N_1-1)] - [Fsrs1(N_1) Fsrs2(1:N-N_1-1)]/ 0.05* dt2); % Friedl
@@ -248,7 +250,7 @@ for j = 1:length(s.tr)
     Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))  (Fsrs2-Fsrs_d(N_1+1:N))]/tau_d;
     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.18*xd); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.042*xd); %  + Tdamp + FT*ma);
     
     % backward euler
     % opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -301,14 +303,16 @@ for j = 1:length(s.tr)
     sol = opti.solve();
     
     sol_x = sol.value(x);
-    %     sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
+        sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
     sol_lMtilda_ext = sol.value(lMtilda_ext);   sol_lMtilda_flex = sol.value(lMtilda_flex);
     sol_aext0 = sol.value(a_ext_0);
     sol_act = sol.value(act);
     sol_FT_ext  = sol.value(FT_ext);            sol_FT_flex  = sol.value(FT_flex);
     sol_ma_ext = sol.value(ma_ext);             sol_ma_flex = sol.value(ma_flex);
     sol_Fpe_ext = sol.value(Fpe_ext);           sol_Fpe_flex = sol.value(Fpe_flex);
-    sol_kFpe    = sol.value(kFpe);
+    %sol_kFpe    = sol.value(kFpe);
+    sol_kFpe_ext = sol.value(kFpe_ext);
+    sol_kFpe_flex = sol.value(kFpe_flex); 
     %sol_kFpe_ext = sol.value(kFpe_ext);         sol_kFpe_flex = sol.value(kFpe_flex);
     sol_J   = sol.value(J);
     sol_Fsrs1 = sol.value(Fsrs1);
@@ -321,7 +325,7 @@ for j = 1:length(s.tr)
     sol_lM_ext = sol.value(lM_ext);             sol_lM_flex    = sol.value(lM_flex);
     sol_FMltilda_ext = sol.value(FMltilda_ext); sol_FMltilda_flex = sol.value(FMltilda_flex);
     Total = sol.value(FT_ext).*sol.value(ma_ext) + sol.value(FT_flex).*sol.value(ma_flex);
-    %     save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_ext', 'sol_a_flex', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect')
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_flex','sol_a_ext', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect')
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)
@@ -362,4 +366,9 @@ for j = 1:length(s.tr)
     figure()
     plot(sol.value(act),'LineWidth',1.5);
     disp(['Reflex gain =', num2str(sol.value(Rk))])
+    
+    figure()
+    bar(1,sol_kFpe_ext); hold on; 
+    bar(2,sol_kFpe_flex); hold on; 
+    legend('Ext','Flex');
 end
