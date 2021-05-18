@@ -2,7 +2,7 @@ function [coeff_LMT_ma_ext, coeff_LMT_ma_flex] = DefineLMTCoefficients_2muscles(
 %  Calculate LMT and ma coefficients
 
 % Theta of fake motion file 
-if strcmp('CP8',sn) % TD12
+if strcmp('CP6',sn) % TD12
     theta = (-140:0.5:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; theta_fi = theta.^5;
 elseif strcmp('TD5',sn) 
     theta = (-120:0.01:10)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4; theta_fi = theta.^5;
@@ -12,7 +12,7 @@ end
 
 % Name MA files
 name_LMT = '_MuscleAnalysis_Length.sto';
-if strcmp('CP8',sn)
+if strcmp('CP6',sn)
     name_ma  = '_MuscleAnalysis_MomentArm_knee_angle_r.sto'; 
 else
     name_ma = '_MuscleAnalysis_MomentArm_knee_angle_l.sto'; 
@@ -20,7 +20,7 @@ end
 
 % Data LMT
 LMT_dat  = importdata([map_MA,name_LMT]);   
-if strcmp('CP8',sn)
+if strcmp('CP6',sn)
     col_RF   = find(strcmp('rect_fem_r',LMT_dat.colheaders));
     col_BF   = find(strcmp('bifemlh_r',LMT_dat.colheaders));
 else
@@ -32,7 +32,7 @@ LMT(:,2)     = LMT_dat.data(:,col_BF);
 
 % Data ma
 ma_dat   = importdata([map_MA,name_ma]);
-if strcmp('CP8',sn)
+if strcmp('CP6',sn)
     col_RF  = find(strcmp('rect_fem_r',ma_dat.colheaders));
     col_BF  = find(strcmp('bifemlh_r',ma_dat.colheaders));
 else

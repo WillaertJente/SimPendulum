@@ -272,7 +272,7 @@ for j = 1:length(s.tr)
     error        = x - q_exp;
     error_dot    = xd - qdot_exp;
     
-    J            = sumsqr(error)  + sumsqr(error_dot) + 100*sumsqr(act);% + 0.001 * (sumsqr(vMtilda_ext)) ;
+    J            = sumsqr(error)  + sumsqr(error_dot) + 100*sumsqr(act)+ 0.001 * (sumsqr(vMtilda_ext)) ;
     opti.minimize(J);
     
     % options for IPOPT

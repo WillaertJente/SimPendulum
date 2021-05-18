@@ -3,14 +3,14 @@
 % clear all; close all; clc;
 
 %% Input
-s.nu = 'CP8';                                                                               % subject number/ name
-s.tr = [3];                                                                                % subject trials (number of trials)
+s.nu = 'CP6';                                                                               % subject number/ name
+s.tr = [6];                                                                                % subject trials (number of trials)
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];                       % Path to opensim model (scaled)
 %ScaleFactor = 1.4723; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036 CP 14=2.1079 CP16=1.4723 CP1 = 1.1955 CP2 = 2.6322 TD 12 = 1.8047
-opt  = '_ScaledTorso';   % Option used as name to save results
+opt  = '_MTtest2';   % Option used as name to save results
 
 params = ImportParameters(s.nu);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 % KFpe aanmaken voor casadi 
@@ -171,8 +171,8 @@ for j = 1:length(s.tr)
     Rk             = opti.variable(1);          % Reflex gain extensor 
     
     % Bounds
-    opti.subject_to(-4*pi < x   < 4*pi);        % Friedl - It seems that these bounds are assuming angles are in degrees, not the case. Smaller/larger bounds => no convergence.
-    opti.subject_to(-300  < xd  < 300);
+    opti.subject_to(-2 < x   < 2);        % Friedl - It seems that these bounds are assuming angles are in degrees, not the case. Smaller/larger bounds => no convergence.
+    opti.subject_to(-5  < xd  < 5);
     opti.subject_to(0.0   < a_ext_0 < 0.5);
     opti.subject_to(0.0   < a_flex  < 0.5);
     opti.subject_to(0.0   < a_ext   < 0.5);
@@ -257,7 +257,7 @@ for j = 1:length(s.tr)
     Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))  (Fsrs2-Fsrs_d(N_1+1:N))]/tau_d;
     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.0771*xd); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.0117*xd); %  + Tdamp + FT*ma);
     
     % backward euler
     % opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -306,10 +306,10 @@ for j = 1:length(s.tr)
     %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
     
     % Solve the OCP
-    opti.solver('ipopt',options);
-    sol = opti.solve();
-%     optionssol = []
-%     result = solve_NLPSOL(opti,options)
+%     opti.solver('ipopt',options);
+%     sol = opti.solve();
+    optionssol = []
+    result = solve_NLPSOL(opti,options)
     
     sol_x = sol.value(x);
         sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);

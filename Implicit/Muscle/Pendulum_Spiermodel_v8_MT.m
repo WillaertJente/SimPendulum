@@ -7,9 +7,9 @@ pathmain = pwd;
 
 %% Subject and trial information
 s.nu   = 'CP6';                                                            % subject number/ name
-s.tr   = [4 4];                                                             % subject trials (number of trials)
+s.tr   = [6];                                                             % subject trials (number of trials)
 path   = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];         % Path to opensim model (scaled)
-opt    = '_MT';                                                             % Option used as name to save results
+opt    = '_MTtest2';                                                             % Option used as name to save results
 params = ImportParameters(s.nu);                                            % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
 %% Define length of different trials 
@@ -39,6 +39,9 @@ for j = 1:length(s.tr)
     
     % Save end of first swing for every trial 
     N_1_all(j) = N_1; 
+    
+    % q exp totaal
+    q_exp_totaal.T{j} = q_exp; 
 end
 
 %% Define vector for casadi variables with length of all trials together 
@@ -237,7 +240,7 @@ for j = 1:length(s.tr)
     opti.subject_to(0.05  < kFpe_flex1   < 0.15);
     opti.subject_to(0.001< dt11     < 0.01);    % 0.05
     opti.subject_to(1e-5    < Rk1      < 4);
-%     opti.subject_to(-0.005< act < 0.005);
+    opti.subject_to(-0.005< act1 < 0.005);
     
     % Bounds on initial states
     opti.subject_to(x1(1)     == x0(1));
@@ -341,7 +344,7 @@ for j = 1:length(s.tr)
     
     J1            = sumsqr(error)  + sumsqr(error_dot)  + 100*sumsqr(act1)+ 0.001 * (sumsqr(vMtilda_ext1))  %+ 100*sumsqr(act);%+ ...
     % 0.001 * (sumsqr(vMtilda_ext)); %+ 100*sumsqr(error_ra);
-    opti.minimize(J1);
+    %opti.minimize(J1);
         
     else  
         x2             = x_tot(1,N_all(j-1)+1:N_all(j-1)+N_all(j));
@@ -387,7 +390,7 @@ for j = 1:length(s.tr)
     opti.subject_to(0.05  < kFpe_flex2   < 0.15);
     opti.subject_to(0.001< dt12     < 0.01);    % 0.05
     opti.subject_to(1e-5    < Rk2      < 4);
-%     opti.subject_to(-0.005< act < 0.005);
+    opti.subject_to(-0.005< act2 < 0.005);
     
     % Bounds on initial states
     opti.subject_to(x2(1)     == x0(1));
@@ -491,9 +494,10 @@ for j = 1:length(s.tr)
     
     J2            = sumsqr(error)  + sumsqr(error_dot)  + 100*sumsqr(act2)+ 0.001 * (sumsqr(vMtilda_ext2)) %+ 100*sumsqr(act);%+ ...
     % 0.001 * (sumsqr(vMtilda_ext)); %+ 100*sumsqr(error_ra);
-    opti.minimize(J2);
+    %opti.minimize(J2);
 end
 end
+    opti.minimize(J1+J2)
     % options for IPOPT
     options.ipopt.tol = 1*10^(-6);          % moet normaal 10^-6 zijn
     options.ipopt.linear_solver = 'mumps';
@@ -505,73 +509,128 @@ end
     opti.solver('ipopt',options);
     sol = opti.solve();
     
-    sol_x = sol.value(x_tot);                       sol_dx = sol.value(xd_tot);
-    sol_a_ext = sol.value(a_ext_tot);               sol_a_flex = sol.value(a_flex_tot);
-    sol_lMtilda_ext = sol.value(lMtilda_ext_tot);   sol_lMtilda_flex = sol.value(lMtilda_flex_tot);
-    sol_aext0 = sol.value(a_ext_0_tot);
-    sol_act = sol.value(act_tot);
-    sol_FT_ext  = sol.value(FT_ext_tot);            sol_FT_flex  = sol.value(FT_flex_tot);
-    sol_ma_ext = sol.value(ma_ext_tot);             sol_ma_flex = sol.value(ma_flex_tot);
-    sol_Fpe_ext = sol.value(Fpe_ext_tot);           sol_Fpe_flex = sol.value(Fpe_flex_tot);
-    %sol_kFpe    = sol.value(kFpe);
-    sol_kFpe_ext = sol.value(kFpe_ext_tot);
-    sol_kFpe_flex = sol.value(kFpe_flex_tot);
-    %sol_kFpe_ext = sol.value(kFpe_ext);         sol_kFpe_flex = sol.value(kFpe_flex);
-%     sol_J   = sol.value(J);
-%     sol_Fsrs1 = sol.value(Fsrs1_tot);
-    sol_Fsrs2 = sol.value(Fsrs2_tot);
-    %sol_Fsrs = [sol_Fsrs1 sol_Fsrs2];
-    sol_Fsrs_d = sol.value(Fsrs_d_tot);
-    sol_dt1  = sol.value(dt1_tot);
-    sol_Rk   = sol.value(Rk_tot);
-    %sol_dlmdt_ext = sol.value(dlMdt_ext_tot);       sol_dlmdt_flex = sol.value(dlMdt_flex);
-    %sol_lM_ext = sol.value(lM_ext_tot);             sol_lM_flex    = sol.value(lM_flex);
-    %sol_FMltilda_ext = sol.value(FMltilda_ext_tot); sol_FMltilda_flex = sol.value(FMltilda_flex);
-    %Total = sol.value(FT_ext).*sol.value(ma_ext) + sol.value(FT_flex).*sol.value(ma_flex);
-    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),char(opt),'.mat'],'sol_x','sol_dx','sol_a_ext','sol_a_flex','sol_aext0', 'sol_a_flex','sol_a_ext', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect','sol_Fsrs_d')
+    % Solutions
+    sol_x            = sol.value(x_tot);     
+    sol_dx           = sol.value(xd_tot);    
+    sol_a_ext        = sol.value(a_ext_tot); 
+    sol_a_flex       = sol.value(a_flex_tot);
+    sol_lMtilda_ext  = sol.value(lMtilda_ext_tot);   
+    sol_lMtilda_flex = sol.value(lMtilda_flex_tot);
+    sol_aext0        = sol.value(a_ext_0_tot);
+    sol_act          = sol.value(act_tot);
+    sol_FT_ext1      = sol.value(FT_ext1);
+    sol_FT_ext2      = sol.value(FT_ext2);
+    sol_FT_flex1     = sol.value(FT_flex1);
+    sol_FT_flex2     = sol.value(FT_flex2);
+    sol_ma_ext1      = sol.value(ma_ext1);
+    sol_ma_ext2      = sol.value(ma_ext2);
+    sol_ma_flex1     = sol.value(ma_flex1);
+    sol_ma_flex2     = sol.value(ma_flex2);
+    sol_Fpe_ext1     = sol.value(Fpe_ext1);
+    sol_Fpe_flex1    = sol.value(Fpe_flex1);
+    sol_Fpe_ext2     = sol.value(Fpe_ext2);
+    sol_Fpe_flex2    = sol.value(Fpe_flex2);
+    sol_kFpe_ext     = sol.value(kFpe_ext_tot);
+    sol_kFpe_flex    = sol.value(kFpe_flex_tot);
+    sol_J1           = sol.value(J1);
+    sol_J2           = sol.value(J2);
+    sol_Fsrs11       = sol.value(Fsrs11); 
+    sol_Fsrs12       = sol.value(Fsrs12);
+    sol_Fsrs2        = sol.value(Fsrs2_tot);
+    sol_Fsrs_d       = sol.value(Fsrs_d_tot);
+    sol_dt1          = sol.value(dt1_tot);
+    sol_Rk           = sol.value(Rk_tot);
+    sol_lM_ext1      = sol.value(lM_ext1); 
+    sol_lM_ext2      = sol.value(lM_ext2); 
+    sol_lM_flex1     = sol.value(lM_flex1); 
+    sol_lM_flex2     = sol.value(lM_flex2); 
+    sol_FMltilda_ext1= sol.value(FMltilda_ext1); 
+    sol_FMltilda_flex1= sol.value(FMltilda_flex1); 
+    sol_FMltilda_ext2= sol.value(FMltilda_ext2); 
+    sol_FMltilda_flex2= sol.value(FMltilda_flex2); 
+    Total1            = sol_FT_ext1.*sol_ma_ext1 + sol_FT_flex1.*sol_ma_flex1;
+    Total2            = sol_FT_ext2.*sol_ma_ext2 + sol_FT_flex2.*sol_ma_flex2;
+    
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),char(opt),'.mat'],...
+    'sol_x','sol_dx','sol_a_ext','sol_a_flex','sol_aext0', 'sol_a_flex','sol_a_ext', 'sol_lMtilda_ext','sol_lMtilda_flex',...
+    'sol_FT_ext1','sol_FT_ext2', 'sol_FT_flex1','sol_FT_flex2', 'sol_ma_ext1','sol_ma_ext2', 'sol_ma_flex1','sol_ma_flex2',...
+    'sol_Fpe_ext1','sol_Fpe_ext2','sol_Fpe_flex1', 'sol_Fpe_flex2', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J1','sol_J2',...
+    'sol_Fsrs11','sol_Fsrs12','sol_lM_ext1','sol_lM_flex1','sol_lM_ext2','sol_lM_flex2','sol_FMltilda_ext1','sol_FMltilda_ext2',...
+    'sol_FMltilda_flex1','sol_FMltilda_flex2','tvect','sol_Fsrs_d','sol_act','sol_Fsrs2','sol_Rk',...
+    'sol_dt1','q_exp_totaal')
     
     figure(j*10)
-    plot(tvect,q_exp,'k','LineWidth',1.5)
-    hold on
-    plot(tvect,sol_x,'LineWidth',1.5)
+    subplot(121)
+    plot(q_exp_totaal.T{1,1}*180/pi,'k','LineWidth',1.5); hold on; plot(sol_x(1:length(q_exp_totaal.T{1,1}))*180/pi,'LineWidth',1.5) 
+    subplot(122)
+    plot(q_exp_totaal.T{1,2}*180/pi,'k','LineWidth',1.5); hold on; plot(sol_x(length(q_exp_totaal.T{1,1})+1:end)*180/pi,'LineWidth',1.5)
     
     figure(j*100)
-    subplot(611)
-    plot(tvect,q_exp*180/pi,'k','LineWidth',1.5)
-    hold on
-    plot(tvect,sol_x*180/pi,'LineWidth',1.5)
-    hold on
+    subplot(621)
+    plot(q_exp_totaal.T{1,1}*180/pi,'k','LineWidth',1.5);hold on; plot(sol_x(1:length(q_exp_totaal.T{1,1}))*180/pi,'LineWidth',1.5)
     ylabel('({\circ})'); box off; legend('Exp','Sim');
-    subplot(612)
-    plot(tvect,sol.value(FT_ext),'LineWidth',1.5);
-    hold on; plot(tvect,sol.value(FT_flex),'LineWidth',1.5);
-    hold on; box off; ylabel('FT');
-    %     subplot(613)
-    %     plot(tvect,sol.value(ma_ext),'LineWidth',1.5);
-    %     hold on; plot(tvect,sol.value(ma_flex),'LineWidth',1.5);
-    %     hold on; box off; ylabel('ma');
-    subplot(613)
-    plot(tvect,sol.value(Fpe_ext),'LineWidth',1.5);
-    hold on;  plot(tvect,sol.value(Fpe_flex),'LineWidth',1.5);
-    hold on; box off; ylabel('Fpe');
-    subplot(614)
-    plot(tvect,sol_Fsrs,'LineWidth',1.5); hold on;
-    plot(tvect,sol_Fsrs_d,'LineWidth',1); box off; ylabel('Fsrs');
-    subplot(615)
-    plot(tvect,sol_aext0 + sol.value(Rk)*sol_Fsrs_d,'LineWidth',1.5);
+    
+    subplot(622)
+    plot(q_exp_totaal.T{1,2}*180/pi,'k','LineWidth',1.5);hold on; plot(sol_x(length(q_exp_totaal.T{1,1})+1:end)*180/pi,'LineWidth',1.5)
+    ylabel('({\circ})'); box off; legend('Exp','Sim');
+    
+    subplot(623)
+    plot(sol_FT_ext1,'LineWidth',1.5); hold on; 
+    plot(sol_FT_flex1,'LineWidth',1.5); hold on;
+    box off; ylabel('FT'); legend('Ext','Flex')
+    
+    subplot(624)
+    plot(sol_FT_ext2,'LineWidth',1.5); hold on; 
+    plot(sol_FT_flex2,'LineWidth',1.5); hold on;
+    box off; ylabel('FT'); legend('Ext','Flex')
+    
+    subplot(625)
+    plot(sol_Fpe_ext1,'LineWidth',1.5); hold on; 
+    plot(sol_Fpe_flex1,'LineWidth',1.5); hold on;
+    box off; ylabel('Fpe'); legend('Ext','Flex')
+    
+    subplot(626)
+    plot(sol_Fpe_ext2,'LineWidth',1.5); hold on; 
+    plot(sol_Fpe_flex2,'LineWidth',1.5); hold on;
+    box off; ylabel('Fpe'); legend('Ext','Flex')
+    
+    subplot(627)
+    plot(sol_Fsrs11,'LineWidth',1.5); hold on;
+    plot(sol_Fsrs_d(1:length(q_exp_totaal.T{1,1})),'LineWidth',1);hold on; 
+    box off; legend('Fsrs','Fsrs_d')
+    
+    subplot(628)
+    plot(sol_Fsrs12,'LineWidth',1.5); hold on;
+    plot(sol_Fsrs_d(length(q_exp_totaal.T{1,1})+1:end),'LineWidth',1);hold on; 
+    box off; legend('Fsrs','Fsrs_d')
+    
+    subplot(629)
+    plot(sol_aext0(1)+ sol_Rk(1)*sol_Fsrs_d(1:length(q_exp_totaal.T{1,1})),'LineWidth',1.5);
     hold on; box off; ylabel('a0+Rk*Fsrs_d');
-    subplot(616)
-    plot(tvect,sol.value(act),'LineWidth',1.5);
-    hold on;
-    plot(tvect, Total,'LineWidth',1.5);
-    hold on; box off; ylabel('Nm');  legend({'actuator','Total torque muscles'})
+    
+    subplot(6,2,10)
+    plot(sol_aext0(2)+ sol_Rk(1)*sol_Fsrs_d(length(q_exp_totaal.T{1,1})+1:end),'LineWidth',1.5);
+    hold on; box off; ylabel('a0+Rk*Fsrs_d');
+    
+    subplot(6,2,11)
+    plot(sol_act(1:length(q_exp_totaal.T{1,1})),'LineWidth',1.5); hold on; 
+    plot(Total1,'LineWidth',1.5); hold on
+    box off; ylabel('Nm');  legend({'actuator','Total torque muscles'})
+    
+    subplot(6,2,12)
+    plot(sol_act(length(q_exp_totaal.T{1,1})+1:end),'LineWidth',1.5); hold on; 
+    plot(Total2,'LineWidth',1.5); hold on
+    box off; ylabel('Nm');  legend({'actuator','Total torque muscles'})
     
     figure()
-    plot(sol.value(act),'LineWidth',1.5);
-    disp(['Reflex gain =', num2str(sol.value(Rk))])
-    
-    figure()
-    bar(1,sol_kFpe_ext); hold on;
-    bar(2,sol_kFpe_flex); hold on;
-    legend('Ext','Flex');
+    subplot(131)
+    bar(1,sol_kFpe_ext); hold on; bar(2,sol_kFpe_flex); hold on;
+    box off; legend('Ext','Flex'); title('kFpe')
+    subplot(132)
+    bar(1,sol_aext0(1)); hold on; bar(2,sol_aext0(2)); hold on; 
+    bar(3,sol_a_flex(1)); hold on; bar(4,sol_a_flex(2)); hold on; 
+    legend('Ext1','Ext2','Flex1','Flex2'); title('Tone')
+    subplot(133)
+    bar(1,sol_Rk(1)); hold on; bar(2,sol_Rk(2)); hold on; 
+    legend('1','2'); title('Rk')
 
