@@ -3,10 +3,10 @@
 % clear all; close all; clc;
 pathmain = pwd; [pathTemp,~,~] = fileparts(pathmain); [pathRepo,~,~] = fileparts(pathTemp);
 %% Input
-s.nu = 'TD5';                                                              % subject number/ name
-s.tr = [1];                                                                % subject trials (number of trials)
+s.nu = 'CP4';                                                              % subject number/ name
+s.tr = [4];                                                                % subject trials (number of trials)
 path = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];          % Path to experimental data
-opt  = '_ScaledTorso3';                                                    % Option used as name to save results
+opt  = '_Inert3';                                                    % Option used as name to save results
 
 % Import parameters of model (mass of subject, leg tested, length, ..)
 params = ImportParameters(s.nu);                                           % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
@@ -155,10 +155,11 @@ for j = 1:length(s.tr)
     kFpe_ext       = opti.variable(1);          % Passive force constant extensors (>1 less passive)
     kFpe_flex      = opti.variable(1);          % Passive force constant flexors (>1 less passive)
     Rk             = opti.variable(1);          % Reflex gain extensor
+    inert          = opti.variable(1); 
     
     % Bounds
-    opti.subject_to(-4*pi < x   < 4*pi);        % Friedl - It seems that these bounds are assuming angles are in degrees, not the case. Smaller/larger bounds => no convergence.
-    opti.subject_to(-300  < xd  < 300);
+    opti.subject_to(-2.5 < x   < 0);        % Friedl - It seems that these bounds are assuming angles are in degrees, not the case. Smaller/larger bounds => no convergence.
+    opti.subject_to(-7   < xd  < 6);
     opti.subject_to(0.0   < a_ext_0 < 0.5);
     opti.subject_to(0.0   < a_flex  < 0.5);
     opti.subject_to(0.0   < a_ext   < 0.5);
@@ -175,6 +176,7 @@ for j = 1:length(s.tr)
     opti.subject_to(0.001 < dt1     < 0.01);        % 0.05
     opti.subject_to(1e-5    < Rk      < 4);         
     opti.subject_to(-0.005 < act < 0.005);
+    opti.subject_to( params.I_OS - 0.05 < inert <  params.I_OS + 0.05);
     
     % Bounds on initial states
     opti.subject_to(x(1)     == x0(1));
@@ -198,6 +200,7 @@ for j = 1:length(s.tr)
     opti.set_initial(act,0);
     opti.set_initial(dt1,0.005);
     opti.set_initial(Rk, 0.01);
+    opti.set_initial(inert, params.I_OS)
     
     % Calculate shift
     kT         = 35;
@@ -238,7 +241,7 @@ for j = 1:length(s.tr)
     Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))  (Fsrs2-Fsrs_d(N_1+1:N))]/tau_d;
     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.1393*xd); % 0.1393 'personalized' damping for this subject. Might need to be changed    
+    xdd = 1/inert * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.1*xd); % 0.1393 'personalized' damping for this subject. Might need to be changed    
    
     % backward euler
     opti.subject_to(xd(1:N_1-1)*dt1 +x(1:N_1-1) == x(2:N_1));
@@ -280,16 +283,15 @@ for j = 1:length(s.tr)
     options.ipopt.linear_solver = 'mumps';
     %     options.ipopt.nlp_scaling_method = 'none';
     %     options.ipopt.linear_solver = 'ma57';
-    %options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
+    options.ipopt.hessian_approximation = 'limited-memory'; % enkel bij moeilijke problemen
     
     % Solve the OCP
     opti.solver('ipopt',options);
     sol = opti.solve();
-    %optionssol = []
-    %result = solve_NLPSOL(opti,options)
+
     
     % Solution 
-    sol_x = sol.value(x);
+    sol_x = sol.value(x);                       sol_xd = sol.value(xd);
     sol_a_ext = sol.value(a_ext);               sol_a_flex = sol.value(a_flex);
     sol_lMtilda_ext = sol.value(lMtilda_ext);   sol_lMtilda_flex = sol.value(lMtilda_flex);
     sol_aext0 = sol.value(a_ext_0);
@@ -307,7 +309,13 @@ for j = 1:length(s.tr)
     sol_lM_ext = sol.value(lM_ext);             sol_lM_flex    = sol.value(lM_flex);
     sol_FMltilda_ext = sol.value(FMltilda_ext); sol_FMltilda_flex = sol.value(FMltilda_flex);
     Total = sol.value(FT_ext).*sol.value(ma_ext) + sol.value(FT_flex).*sol.value(ma_flex);
-    %save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],'sol_aext0','sol_Rk','sol_dt1','sol_act','sol_x', 'sol_a_flex','sol_a_ext', 'sol_lMtilda_ext','sol_lMtilda_flex', 'sol_FT_ext', 'sol_FT_flex', 'sol_ma_ext', 'sol_ma_flex', 'sol_Fpe_ext', 'sol_Fpe_flex', 'sol_kFpe_ext','sol_kFpe_flex', 'sol_J', 'sol_Fsrs','q_exp','sol_dlmdt_ext','sol_dlmdt_flex','sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect','sol_Fsrs_d')
+    sol_inert = sol.value(inert); 
+    
+    save(['C:\Users\u0125183\Box\PhD 1\Simulations Pendulum Test\Results/Result_',char(s.nu),'_T',num2str(s.tr(j)),char(opt),'.mat'],...
+        'sol_x','sol_xd','sol_a_ext','sol_a_flex','sol_lMtilda_ext','sol_lMtilda_flex','sol_aext0','sol_act','sol_FT_ext','sol_FT_flex',...
+        'sol_ma_ext','sol_ma_flex','sol_Fpe_ext','sol_Fpe_flex','sol_kFpe_ext','sol_kFpe_flex','sol_J','sol_Fsrs1','sol_Fsrs2','sol_Fsrs',...
+        'sol_dt1','sol_Rk','sol_dlmdt_ext','sol_dlmdt_flex', 'sol_lM_ext','sol_lM_flex','sol_FMltilda_ext','sol_FMltilda_flex','tvect','sol_Fsrs_d','Total',...
+        'q_exp'); 
     
     figure(j*10)
     plot(tvect,q_exp,'k','LineWidth',1.5)

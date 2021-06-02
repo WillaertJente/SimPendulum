@@ -6,10 +6,10 @@ pathmain = pwd;
 [pathRepo,~,~] = fileparts(pathTemp);
 
 %% Subject and trial information
-s.nu   = 'CP6';                                                            % subject number/ name
-s.tr   = [2 3 4];                                                             % subject trials (number of trials)
+s.nu   = 'CP8';                                                            % subject number/ name
+s.tr   = [2 3];                                                             % subject trials (number of trials)
 path   = [pathRepo '\Implicit\Muscle\Experimental data\' s.nu '\'];         % Path to opensim model (scaled)
-opt    = '_MT5';                                                             % Option used as name to save results
+opt    = '_MT1';                                                             % Option used as name to save results
 params = ImportParameters(s.nu);                                            % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
 %% Define length of different trials
@@ -321,7 +321,7 @@ for j = 1:length(s.tr)
     Fsrs_ddt          = [(Fsrs1-Fsrs_d(1:N_1))  (Fsrs2-Fsrs_d(N_1+1:N))]/tau_d;
     
     % Dynamics
-    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.0117*xd); %  + Tdamp + FT*ma);
+    xdd = 1/params.I_OS * ((-params.mass_OS*params.g*params.lc_OS*cos(x))+ FT_ext.*ma_ext + FT_flex.*ma_flex + act - 0.0771*xd); %  + Tdamp + FT*ma);
     
     % backward euler
     % opti.subject_to(xd(1:N-1)*dt +x(1:N-1) == x(2:N));
@@ -357,8 +357,10 @@ for j = 1:length(s.tr)
     
     error        = x - q_exp;
     error_dot    = xd - qdot_exp;
+    error_fs     = x(N_1) - q_exp(N_1); 
     
-    cost            = sumsqr(error)  + sumsqr(error_dot)  + 100*sumsqr(act)+ 0.001 * (sumsqr(vMtilda_ext)) %+ 100*sumsqr(act);%+ ...
+    cost            = sumsqr(error)  + sumsqr(error_dot)  + 100*sumsqr(act)+ 0.001 * (sumsqr(vMtilda_ext)); %+ 100*sumsqr(act);%+ ...
+%     cost            = cost/length(q_exp);
     J = J + cost ;
     % 0.001 * (sumsqr(vMtilda_ext)); %+ 100*sumsqr(error_ra);
     %opti.minimize(J2);

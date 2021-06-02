@@ -1,4 +1,4 @@
-% Simulate a pendulum test.
+%% Forward implementation of pendulum test
 %
 % Friedl De Groote
 % August 24, 2017
