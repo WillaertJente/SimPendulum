@@ -5,7 +5,11 @@ lMo = params(2,:);              %Optimal muscle fiber length
 lTs = params(3,:);              %Tendon slack length 
 alphao = params(4,:);           %Pennation angle at optimal fiber length
 vMmax = params(5,:);            %Maximal fiber velocity 
-
+if length(params) > 5
+    kFpe = params(6);
+else
+    kFpe = 0.1;
+end
 
 lM = lMtilda.*lMo;
 w = lMo.*sin(alphao);
@@ -49,7 +53,7 @@ FMltilda = FMtilda1+FMtilda2+FMtilda3;
 % Fpe = musclepassiveforcelength(lMtilda);
 e0 = 0.6;
 kpe = 4;
-t5 = exp(kpe * (lMtilda - 0.10e1) / e0);
+t5 = exp(kpe * (lMtilda - kFpe*10) / e0);
 Fpe = ((t5 - 0.10e1) - Fpparam(1)) / Fpparam(2);
 
 FMce = fse.* lM ./(lMT-lT) - Fpe;

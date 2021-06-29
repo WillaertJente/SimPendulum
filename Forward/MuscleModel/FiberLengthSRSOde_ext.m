@@ -1,10 +1,15 @@
-function [dlMdt,FT, dFsrs, Fpe] = FiberLengthSRSOde_ext(a,lMtilda,lMT,MTparams, Fvparam, Fpparam, Faparam, params, omega, Fsrs, kFpe_ext, inputdata)
+function [dlMdt,FT, dFsrs, Fpe] = FiberLengthSRSOde_ext(a,ab,lMtilda,lMT,MTparams, Fvparam, Fpparam, Faparam, params, omega, Fsrs, inputdata)
 % Try to vectorize it
 FMo    = MTparams(1,:);
 lMo    = MTparams(2,:);
 lTs    = MTparams(3,:);
 alphao = MTparams(4,:);
 vMmax  = MTparams(5,:);
+if length(MTparams) > 5
+    kFpe = MTparams(6);
+else
+    kFpe = 0.1;
+end
 tauSRS = inputdata.tauSRS;
 kSRS   = inputdata.ksrs; 
 
@@ -50,38 +55,42 @@ FMltilda = FMtilda1+FMtilda2+FMtilda3;
 % Fpe = musclepassiveforcelength(lMtilda);
 e0 = 0.6;
 kpe = 4;
-t5 = exp(kpe * (lMtilda - kFpe_ext*10) / e0);
+t5 = exp(kpe * (lMtilda - kFpe*10) / e0);
 Fpe = ((t5 - 0.10e1) - Fpparam(1)) / Fpparam(2);
 
 FMce = fse.* lM ./(lMT-lT) - Fpe - Fsrs;
 
 % SRS
 dLm = lMtilda - inputdata.lMiso_ext;  
-
 global hist  
-if hist == 1 & omega <= 0
-    Fsrs_des = (0.5*tanh(1000*(-dLm+5.7*10^(-3)))+0.5).*dLm.*FMltilda*a*kSRS + ...
-    (0.5*tanh(1000*(dLm - 5.7*10^(-3)))+0.5)*5.7*10^(-3).*a.*FMltilda*kSRS  
+if hist == 1 && omega <= 0
+    % Let's assume that SRS is due to cross-bridges attached at baseline.
+    % Therefore use baseline activity ab here.
+    Fsrs_des = (0.5*tanh(1000*(-dLm+5.7*10^(-3)))+0.5).*dLm.*FMltilda*ab*kSRS + ...
+    (0.5*tanh(1000*(dLm - 5.7*10^(-3)))+0.5)*5.7*10^(-3).*ab.*FMltilda*kSRS;  
     dFsrs = 1/0.001 * (Fsrs_des - Fsrs);
-    FMvtilda = 1; 
+    
+    dlMdt = (FMce - a.*FMltilda)/0.001;  
 else
+    dFsrs = 1/tauSRS * (-Fsrs);
+    
     FMvtilda = FMce./(a.*FMltilda);
     FMvtilda(FMvtilda<0) = 0;
     FMvtilda(FMvtilda>1.8) = 1.8;
     
-    dFsrs = 1/tauSRS * (-Fsrs);
+    % FMvtilda = muscleforcevelocity(vMtilda);
+    % load Fvparam
+    e1 = Fvparam(1);
+    e2 = Fvparam(2);
+    e3 = Fvparam(3);
+    e4 = Fvparam(4);
+    
+    vMtilda = 1/e2*(sinh((FMvtilda-e4)/e1)-e3);
+    dlMdt = vMtilda .* vMmax ./ lMo;
+    
     hist = 0;
     
 end
 
-% FMvtilda = muscleforcevelocity(vMtilda);
-% load Fvparam
-e1 = Fvparam(1);
-e2 = Fvparam(2);
-e3 = Fvparam(3);
-e4 = Fvparam(4);
-
-vMtilda = 1/e2*(sinh((FMvtilda-e4)/e1)-e3);
-dlMdt = vMtilda .* vMmax ./ lMo;
 
 return

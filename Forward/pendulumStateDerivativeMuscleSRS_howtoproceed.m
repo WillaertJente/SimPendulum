@@ -40,13 +40,14 @@ a_flex = ab_flex;
 
 % state: fiber length - extensors 
 [dlMtilde_ext,FT_ext,dFsrs, Fpe] = FiberLengthSRSOde_ext(a_ext,x(3)',lMT_ext, params.MTparams_ext, params.Fvparam, params.Fpparam, params.Faparam, params, x(2),x(4),kFpe_ext, inputdata); % kFpe toeveogen
+
 % state: fiber length - flexors - Note the difference - no SRS.
 [dlMtilde_flex,FT_flex] = FiberLengthOde_flex(a_flex, x(6)',lMT_flex, params.MTparams_flex, params.Fvparam, params.Fpparam, params.Faparam, kFpe_flex);
 
 % xdot = derivative of x (= q qdot lMtilda_ext Fsrs Fsrs_delayed lMtilda_flex)
 xdot    = zeros(6,1);
 xdot(1) = x(2);                                                                     % xdot
-xdot(2) = 1/I * ((-m*g*l*cos(x(1)))+ FT_ext.*ma_ext + FT_flex.*ma_flex - B*x(2) )    % xdd
+xdot(2) = 1/I * ((-m*g*l*cos(x(1)))+ FT_ext.*ma_ext + FT_flex.*ma_flex - B*x(2) );    % xdd
 xdot(3) = dlMtilde_ext';                                                            % Derivative of fiber length (extensor)-  From FiberLengthSRSOde 
 xdot(4) = dFsrs;                                                                    %  Derivative of SRS force - From FiberLengthSRSode
 xdot(5) = (x(4) - x(5))/inputdata.tau_d;                                            % Derivative of delayed SRS force.
