@@ -26,5 +26,3 @@ data_exp  = ImportExperimentalData(info, bool_plot, params_subject, dt_spline);
 bool_plot = 1;
 [data_exp.x0, data_exp.N_1] = PendulumPhases(data_exp, bool_plot);  
          
-%% Import OpenSim Model 
-
