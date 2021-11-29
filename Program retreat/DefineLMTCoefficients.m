@@ -1,4 +1,4 @@
-function [coeff_LMT_ma_ext, coeff_LMT_ma_flex] = DefineLMTCoefficients(params_subject, info, muscles, bool_plot)
+function [coeff_LMT_ma] = DefineLMTCoefficients(params_subject, info, muscles, bool_plot)
 
 map_muscleanal        = [info.path 'MA_FakeMot_T',num2str(info.trial)];
 
@@ -79,5 +79,6 @@ for i = 1:2
 end
 coeff_LMT_ma_ext = coeff_LMT_MA(:,1);
 coeff_LMT_ma_flex = coeff_LMT_MA(:,2);
+coeff_LMT_ma     = [coeff_LMT_ma_ext coeff_LMT_ma_flex]; 
 
 end

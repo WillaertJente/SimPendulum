@@ -32,16 +32,20 @@ addpath('MuscleModel');
 muscles = {'rect_fem_','bifemlh_'};
 [params_OS] = ReadOpenSimParams(info, params_subject, muscles);
 
-%% Create initial guess
-bool_guess  = 1; % to create trial specific initial guess of lMtilda
-[InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles);
-
 %% Calculate LMT en Ma coefficients
 bool_plot = 1;
 [coeff_LMT_ma] = DefineLMTCoefficients(params_subject, info, muscles, bool_plot);
 
+%% Create initial guess
+bool_guess  = 1; % to create trial specific initial guess of lMtilda
+[InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles, coeff_LMT_ma);
+
+
 %% Define states, controls, bounds and initial guess
-N       = data_exp.Nspline; 
+import casadi.*;        % Import casadi libraries
+opti = casadi.Opti();   % Initialise opti structure
+
+N       = data_exp.Nspline;
 % States
 x       = opti.variable(1,N);
 xd      = opti.variable(1,N);
@@ -51,21 +55,21 @@ lMtilda = opti.variable(1,N);
 vMtilda      = opti.variable(1,N);
 lM_projected = opti.variable(1,N);
 
-% Parameters that will be optimized 
+% Parameters that will be optimized
 a            = opti.variable(1);
 kFpe         = opti.variable(1);
 
-% Bounds 
+% Bounds
 opti.subject_to(-pi   <  x  < 10*pi/180);
 opti.subject_to(min(data_exp.qdspline)-2  < xd  < max(data_exp.qdspline)+2);
 opti.subject_to(0.001 <  a   < 1);
-opti.subject_to(1e-4  <  lM_projected);      
+opti.subject_to(1e-4  <  lM_projected);
 opti.subject_to(-10   <  vMtilda < 10);
 opti.subject_to(0.2   <  lMtilda < 1.5);
-opti.subject_to(0     <  kFpe    < 0.2);    % nominal value = 0.1 
+opti.subject_to(0     <  kFpe    < 0.2);    % nominal value = 0.1
 
 % Constraints on initial states
-opti.subject_to(x(1)     == x0(1));
+opti.subject_to(x(1)     == data_exp.x0(1));
 opti.subject_to(xd(1)    == 0);
 
 % Initial guess
@@ -73,15 +77,14 @@ opti.set_initial(x, data_exp.qspline);
 opti.set_initial(xd,data_exp.qdspline);
 opti.set_initial(a, 0.01);
 opti.set_initial(kFpe,0.1);
-opti.set_initial(lM_projected, InitGuess.lM_projected(1,:));
-opti.set_initial(lMtilda, InitGuess.lMtilda(1,:));         % LmTildeGuess
+opti.set_initial(lM_projected, InitGuess.lM_projected(:,1));
+opti.set_initial(lMtilda, InitGuess.lMtilda(:,1));         % LmTildeGuess
 opti.set_initial(vMtilda, InitGuess.vM(1,:));
 
 %% Define problem (muscle model)
 % Calculate shift
-kT     = 35; 
-shift  = getshift(kT);                   
-    
-% Calculate FT en ma 
+kT     = 35;
+shift  = getshift(kT);
+
+% Calculate FT en ma
 [FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM] = CalculateTendonForceAndMomentArm(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe);
-    
