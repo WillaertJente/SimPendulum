@@ -23,4 +23,33 @@ dt_spline = 0.005;
 data_exp  = ImportExperimentalData(info, bool_plot, params_subject, dt_spline);
  
 % Define phases of pendulum (initial state, end of first swing) 
-[data_exp.x0, data_exp.N_1] = PendulumPhases(qdot_exp, N, 1);           
+bool_plot = 1;
+[data_exp.x0, data_exp.N_1] = PendulumPhases(data_exp, bool_plot);  
+         
+%% Import OpenSim model parameters 
+% OpenSim 
+addpath('MuscleModel');
+
+muscles = {'rect_fem_r','}
+[params_inert, params_MT] = ReadOpenSimParams(info, params_subject, muscles)
+ 
+% Muscle tendon properties
+    [params_Muscle,lOpt,L_TendonSlack,Fiso,PennationAngle]=ReadMuscleParameters(model_path,{'rect_fem_r'});
+    params_Muscle(2,1) = params_Muscle(2,1);
+    params_Muscle(3,1) = params_Muscle(3,1);
+    params.MTparams    = params_Muscle; % 5 x 2 matrix: 1 - Fmo, 2 - Lmo, 3 - Lts, 4 - alphao, 5 - vmmax
+    
+        % Force- velocity characteristics
+    load Fvparam.mat
+    Fvparam(1)       = 1.475*Fvparam(1); Fvparam(2) = 0.25*Fvparam(2);
+    Fvparam(3)       = Fvparam(3) + 0.75; Fvparam(4) = Fvparam(4) - 0.027;
+    params.Fvparam   = Fvparam;
+    
+    % Force length characteristics (active)
+    load Faparam.mat                            
+    params.Faparam   = Faparam;
+    
+    % Force length characteristics (passive)
+    e0  = 0.6; kpe = 4; t50  = exp(kpe * (0.2 - 0.10e1) / e0);
+    pp1 = (t50 - 0.10e1); t7 = exp(kpe); pp2 = (t7 - 0.10e1);
+    params.Fpparam = [pp1;pp2];
