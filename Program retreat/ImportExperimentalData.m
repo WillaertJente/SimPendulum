@@ -40,4 +40,9 @@ data_exp.tspline  = tvect_spline;
 data_exp.qspline  = q_spline;
 data_exp.qdspline = qd_spline;
 data_exp.Nspline  = N_spline;
+
+% 7. Calculate offset between IK and BK (used to calculate LMT and MA)
+% x (BK) + offset = knee angle die nodig is voor lMT en ma te bepalen
+offset          = CalculateOffset(info, params_subject, t_span); 
+data_exp.offset = offset*pi/180; 
 end

@@ -1,38 +1,78 @@
 %% SimPendulum_main
 
-%% Input 
+%% Input
 % Change here subject and trial
-info.subj   = 'TD5';           % Subject name                                                                    
-info.trial  = 2;               % Trial number                                                                     
-info.option = '';              % Name to save results 
+info.subj   = 'TD5';           % Subject name
+info.trial  = 1;               % Trial number
+info.option = '';              % Name to save results
 
 %% Import subject parameters and experimental data
- 
-% Path info -  Path to model and experimental data 
+
+% Path info -  Path to model and experimental data
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
-info.path      = [pathTemp '\Implicit\Muscle\Experimental data\' info.subj '\'];        
+info.path      = [pathTemp '\Implicit\Muscle\Experimental data\' info.subj '\'];
 
-% Import subject parameters 
+% Import subject parameters
 params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
-% Import experimental data 
+% Import experimental data
 bool_plot = 1;
-dt_spline = 0.005; 
+dt_spline = 0.005;
 data_exp  = ImportExperimentalData(info, bool_plot, params_subject, dt_spline);
- 
-% Define phases of pendulum (initial state, end of first swing) 
+
+% Define phases of pendulum (initial state, end of first swing)
 bool_plot = 1;
-[data_exp.x0, data_exp.N_1] = PendulumPhases(data_exp, bool_plot);  
-         
-%% Import OpenSim model parameters 
-% OpenSim 
+[data_exp.x0, data_exp.N_1] = PendulumPhases(data_exp, bool_plot);
+
+%% Import OpenSim model parameters
+% OpenSim
 addpath('MuscleModel');
-muscles = {'rect_fem_','bifemlh_'}; 
-[params_OS] = ReadOpenSimParams(info, params_subject, muscles); 
- 
- %% Create initial guess
+muscles = {'rect_fem_','bifemlh_'};
+[params_OS] = ReadOpenSimParams(info, params_subject, muscles);
+
+%% Create initial guess
 bool_guess  = 1; % to create trial specific initial guess of lMtilda
-[InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles); 
-    
+[InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles);
+
+%% Calculate LMT en Ma coefficients
+bool_plot = 1;
+[coeff_LMT_ma] = DefineLMTCoefficients(params_subject, info, muscles, bool_plot);
+
+%% Define states, controls, bounds and initial guess
+N       = data_exp.Nspline; 
+% States
+x       = opti.variable(1,N);
+xd      = opti.variable(1,N);
+lMtilda = opti.variable(1,N);
+
+% (Slack) controls
+vMtilda      = opti.variable(1,N);
+lM_projected = opti.variable(1,N);
+
+% Parameters that will be optimized 
+a            = opti.variable(1);
+kFpe         = opti.variable(1);
+
+% Bounds 
+opti.subject_to(-pi   <  x  < 10*pi/180);
+opti.subject_to(min(data_exp.qdspline)-2  < xd  < max(data_exp.qdspline)+2);
+opti.subject_to(0.001 <  a   < 1);
+opti.subject_to(1e-4  <  lM_projected);      
+opti.subject_to(-10   <  vMtilda < 10);
+opti.subject_to(0.2   <  lMtilda < 1.5);
+opti.subject_to(0     <  kFpe    < 0.2);    % nominal value = 0.1 
+
+% Constraints on initial states
+opti.subject_to(x(1)     == x0(1));
+opti.subject_to(xd(1)    == 0);
+
+% Initial guess
+opti.set_initial(x, data_exp.qspline);
+opti.set_initial(xd,data_exp.qdspline);
+opti.set_initial(a, 0.01);
+opti.set_initial(kFpe,0.1);
+opti.set_initial(lM_projected, InitGuess.lM_projected(1,:));
+opti.set_initial(lMtilda, InitGuess.lMtilda(1,:));         % LmTildeGuess
+opti.set_initial(vMtilda, InitGuess.vM(1,:));
