@@ -6,7 +6,7 @@ info.subj   = 'TD5';           % Subject name
 info.trial  = 2;               % Trial number                                                                     
 info.option = '';              % Name to save results 
 
-%% Import parameters and experimental data
+%% Import subject parameters and experimental data
  
 % Path info -  Path to model and experimental data 
 pathmain = pwd;
@@ -32,4 +32,7 @@ addpath('MuscleModel');
 muscles = {'rect_fem_','bifemlh_'}; 
 [params_OS] = ReadOpenSimParams(info, params_subject, muscles); 
  
- 
+ %% Create initial guess
+bool_guess  = 1; % to create trial specific initial guess of lMtilda
+[InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles); 
+    

@@ -1,0 +1,33 @@
+function [InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles)
+%UNTITLED4 Summary of this function  here
+N = data_exp.Nspline; 
+
+% vMtilde guess
+vMGuess = ones(length(muscles),N)*-0.3;
+    
+% lMtilde guess
+if bool_guess == 0; 
+    lMtildaGuess = ones(length(muscles),N)*0.9; % 0.9 of 1.1? 
+else
+    lMtildaGuess= ones(length(muscles),N)*0.9; % 0.9 of 1.1?  %% Nog aanpassen naar MT length voor experimental data - TSL 
+end
+    
+% lM projected guess
+params.MTparams = params_OS.MT;
+lMo      = params.MTparams(2,:)';
+alphao   = params.MTparams(4,:)';
+lMGuess  = lMtildaGuess.*lMo;
+w        = lMo.*sin(alphao);
+lM_projectedGuess = sqrt((lMGuess.^2 - w.^2));
+
+%dLdMT guess
+dlMdtGuess = vMGuess*params.MTparams(5)./lMo;
+
+% Guesses
+InitGuess.vM           = vMGuess; 
+InitGuess.lMtilda      = lMtildaGuess; 
+InitGuess.lM_projected = lM_projectedGuess; 
+InitGuess.dlMdt        = dlMdtGuess; 
+
+end
+
