@@ -3,7 +3,7 @@
 clear all; close all; clc; 
 
 %% Input 
-s.nu = 'TD5';                                                                               % subject number/ name 
+s.nu = 'TD6';                                                                               % subject number/ name 
 s.tr = [1];                                                                                 % subject trials (number of trials)
 ScaleFactor = 1.697 ; % TD5 = 1.697 CP 4 = 1.5757 CP 8 = 1.7036
 opt  = '';                                                                                  % Option used as name to save results                                                                                % Weigths in cost function
