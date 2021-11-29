@@ -76,3 +76,12 @@ opti.set_initial(kFpe,0.1);
 opti.set_initial(lM_projected, InitGuess.lM_projected(1,:));
 opti.set_initial(lMtilda, InitGuess.lMtilda(1,:));         % LmTildeGuess
 opti.set_initial(vMtilda, InitGuess.vM(1,:));
+
+%% Define problem (muscle model)
+% Calculate shift
+kT     = 35; 
+shift  = getshift(kT);                   
+    
+% Calculate FT en ma 
+[FT, ma, dlMdt, err, lM, lT,Fce, Fpe, FM] = CalculateTendonForceAndMomentArm(x, params, lMtilda, a, s.nu,shift, vMtilda, lM_projected,coeff_LMT_ma, offset, kFpe);
+    
