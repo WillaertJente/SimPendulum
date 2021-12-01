@@ -45,7 +45,7 @@ for i = 1:N
                         
     lMo    = params_OS.MT(2,:); 
     
-    rf = rootfinder('rf','kinsol',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16));
+    rf = rootfinder('rf','newton',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16));
     
         
     guess = [qd(:,i);       0;            0; 

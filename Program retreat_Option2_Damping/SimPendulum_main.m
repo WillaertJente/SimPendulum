@@ -161,22 +161,21 @@ R.bounds.Lb = Lb;
 save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.mat'],'R')
 
 %% Forward version
-[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N);
+[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
 
 %% Plot
 % Results
-q_forward = []; 
 h = PlotResults(R, q_forward, info);
-saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_1.Results.fig']);
+saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_1.Results.fig']);
 
 % Params
 g = PlotParams(R,info);
-saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_2.Params.fig']);
+saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_2.Params.fig']);
 
 % Muscle geometry
 f = PlotMuscleGeometry(R, info);
-saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_3.MuscleGeometry.fig']);
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_3.MuscleGeometry.fig']);
 
 % Torques
 p = PlotTorques(R); 
-saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_4.Torques.fig']);
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_4.Torques.fig']);

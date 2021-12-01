@@ -3,7 +3,7 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
-info.trial  = 1;               % Trial number
+info.trial  = 2;               % Trial number
 info.option = '';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0;             % weight on qd error
@@ -20,7 +20,7 @@ info.path      = [pathTemp '\Implicit\Muscle\Experimental data\' info.subj '\'];
 params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
 
 % Import experimental data
-bool_plot = 1;
+bool_plot = 0;
 dt_spline = 0.005;
 data_exp  = ImportExperimentalData(info, bool_plot, params_subject, dt_spline);
 
@@ -69,7 +69,7 @@ opti.subject_to(Lb.kFpe <  kFpe < Ub.kFpe);    % nominal value = 0.1
 opti.subject_to(Lb.lM_projected  <  lM_projected);
 opti.subject_to(Lb.vMtilda  <  vMtilda < Ub.vMtilda);
 opti.subject_to(Lb.lMtilda  <  lMtilda < Ub.lMtilda);
-% opti.subject_to(min(data_exp.qdspline)-2  < xd  < max(data_exp.qdspline)+2);
+%opti.subject_to(min(data_exp.qdspline)-3  < xd  < max(data_exp.qdspline)+3);
 
 % Constraints on initial states
 opti.subject_to(x(1)     == data_exp.x0(1));
@@ -162,16 +162,16 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 %% Plot
 % Results
 h = PlotResults(R, q_forward, info);
-saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_1.Results.fig']);
+saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_1.Results.fig']);
 
 % Params
 g = PlotParams(R,info);
-saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_2.Params.fig']);
+saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_2.Params.fig']);
 
 % Muscle geometry
 f = PlotMuscleGeometry(R, info);
-saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_3.MuscleGeometry.fig']);
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_3.MuscleGeometry.fig']);
 
 % Torques
 p = PlotTorques(R); 
-saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_4.Torques.fig']);
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_4.Torques.fig']);
