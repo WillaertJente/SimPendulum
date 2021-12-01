@@ -62,14 +62,14 @@ a            = opti.variable(1);
 kFpe         = opti.variable(1);
 
 % Bounds
-opti.subject_to(-pi   <  x  < 10*pi/180);
+[Ub Lb] = SelectBounds();
+opti.subject_to(-pi     <  x    < Ub.x);
+opti.subject_to(Lb.a    <  a    < Ub.a);
+opti.subject_to(Lb.kFpe <  kFpe < Ub.kFpe);    % nominal value = 0.1
+opti.subject_to(Lb.lM_projected  <  lM_projected);
+opti.subject_to(Lb.vMtilda  <  vMtilda < Ub.vMtilda);
+opti.subject_to(Lb.lMtilda  <  lMtilda < Ub.lMtilda);
 % opti.subject_to(min(data_exp.qdspline)-2  < xd  < max(data_exp.qdspline)+2);
-opti.subject_to(0.001 <  a   < 1);
-opti.subject_to(1e-4  <  lM_projected);
-opti.subject_to(-10   <  vMtilda < 10);
-opti.subject_to(0.2   <  lMtilda < 1.5);
-opti.subject_to(0     <  kFpe    < 0.2);    % nominal value = 0.1
-% opti.subject_to(0.001==  a   );
 
 % Constraints on initial states
 opti.subject_to(x(1)     == data_exp.x0(1));
@@ -146,6 +146,11 @@ R.coeff   = coeff_LMT_ma;
 R.initGuess= InitGuess; 
 R.shift   = shift; 
 
+% Bounds
+R.bounds.Ub = Ub; 
+R.bounds.Lb = Lb; 
+
+% Calculated Parameters
 [R.C] = RecalculateOutcomes(R); 
 
 % Write results 
@@ -155,58 +160,15 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 [q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N);
 
 %% Plot
-figure()
-plot(data_exp.qspline*180/pi,'k','LineWidth',1.5); hold on
-plot(R.x*180/pi,'r','LineWidth',1.5); hold on; 
-box off; legend({'Exp','Sim'}); ylabel('Knee Angle ({\circ})'); xlabel('Frames')
+% Results
+h = PlotResults(R, q_forward, info);
+saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_1.Results.fig']);
 
-figure()
-subplot(421)
-plot(R.exp.qspline*180/pi,'k','LineWidth',1.5); 
-subplot(422)
-plot(R.x*180/pi,'k','LineWidth',1.5); hold on;
-title('Solution')
-subplot(423)
-plot(R.lMtilda,'k','LineWidth',1.5); hold on
-title('lMtilda');
-subplot(426)
-plot(R.vMtilda,'k','LineWidth',1.5); hold on
-title('vMtilda')
-subplot(424)
-plot(R.lMprojected,'k','LineWidth',1.5); hold on
-title('lMprojected')
-subplot(425)
-plot(R.skelet.lM,'k','LineWidth',1.5); hold on
-title('lM')
-subplot(427)
-plot(R.skelet.dlMdt,'k','LineWidth',1.5); hold on
-title('dLmdt')
-subplot(428)
-plot(R.skelet.w,'k','LineWidth',1.5); hold on
+% Params
+g = PlotParams(R,info);
+saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_2.Params.fig']);
 
-figure()
-subplot(311)
-plot(R.FT,'k','LineWidth',1.5); hold on
-title('FT')
-subplot(312)
-plot(R.Fce,'k','LineWidth',1.5); hold on
-title('Fce')
-subplot(313)
-plot(R.Fpe,'k','LineWidth',1.5); hold on
-title('FPe')
+% Muscle geometry
+f = PlotMuscleGeometry(R, info);
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_3.MuscleGeometry.fig']);
 
-figure()
-subplot(121)
-bar(1,R.kFpe); hold on
-title('Passive stiffness')
-subplot(122)
-bar(1,R.a); hold on
-title('activation')
-
-figure()
-subplot(211)
-plot(R.lMT(1,:),'k','LineWidth',1.5); 
-title('lMT')
-subplot(212)
-plot(R.MA(1,:),'k','LineWidth',1.5); 
-title('MA')

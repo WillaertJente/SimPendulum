@@ -75,10 +75,10 @@ output.FMltilda = FMltilda;
 
 % FMvtilda
 % active force-velocity
-e1 = params_OS.Fv(1); 
-e2 = params_OS.Fv(2);
-e3 = params_OS.Fv(3);
-e4 = params_OS.Fv(4); 
+e1 = R.OS.Fv(1); 
+e2 = R.OS.Fv(2);
+e3 = R.OS.Fv(3);
+e4 = R.OS.Fv(4); 
 
 FMvtilda_ext  = e1*log((e2*vMtilda./vMtildamax(1)+e3)+sqrt((e2*vMtilda./vMtildamax(1)+e3).^2+1))+e4; % extensor
 FMvtilda_flex = e1*log((e2*vMtilda./vMtildamax(2)+e3)+sqrt((e2*vMtilda./vMtildamax(2)+e3).^2+1))+e4; % flexor, change vMtilda to flexor 
@@ -88,6 +88,10 @@ output.FMvtilda = FMvtilda;
 % Fce
 Fce = a.* FMltilda.* FMvtilda; 
 output.Fce = Fce; 
+
+% FM
+FM = Fce + Fpe_ext; 
+output.FM = FM; 
 
 end
 
