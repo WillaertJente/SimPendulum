@@ -3,6 +3,7 @@ function [output] = RecalculateOutcomes(R)
 
 % Input
 x        = R.x; 
+xdd      = R.xdd; 
 a        = R.a; 
 lMtilda  = R.lMtilda; 
 kFpe     = R.kFpe; 
@@ -16,6 +17,9 @@ shift    = R.shift;
 coeff_LMT_ma = R.coeff; 
 lM_projected = R.lMprojected;  
 vMtildamax = R.OS.MT(5,:); 
+m        = R.OS.inert.mass_OS; 
+l        = R.OS.inert.lc_OS;
+I        = R.OS.inert.I_OS; 
 
 % Muscle Tendon Lengths
 lMT_ext     = coeff_LMT_ma(1,1) + coeff_LMT_ma(2,1)*(x+m_offset) + coeff_LMT_ma(3,1)*(x+m_offset).^2 + coeff_LMT_ma(4,1)*(x+m_offset).^3;
@@ -92,6 +96,19 @@ output.Fce = Fce;
 % FM
 FM = Fce + Fpe_ext; 
 output.FM = FM; 
+
+% Muscle torque
+T_muscle = -FT_ext.*MA_ext;
+output.T_muscle = T_muscle;
+
+% Gravity torque
+g    = 9.81;
+T_Fz = m*g*l*cos(x);
+output.T_Fz      = T_Fz; 
+
+% Inertie torque
+T_inert = xdd*I ; 
+output.T_inert = T_inert;
 
 end
 

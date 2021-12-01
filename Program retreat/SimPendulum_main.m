@@ -172,3 +172,6 @@ saveas(g,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_2.
 f = PlotMuscleGeometry(R, info);
 saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_3.MuscleGeometry.fig']);
 
+% Torques
+p = PlotTorques(R); 
+saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),'_4.Torques.fig']);
