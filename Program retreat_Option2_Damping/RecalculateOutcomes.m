@@ -3,8 +3,10 @@ function [output] = RecalculateOutcomes(R)
 
 % Input
 x        = R.x; 
+xd       = R.xd; 
 xdd      = R.xdd; 
 a        = R.a; 
+B        = R.B;
 lMtilda  = R.lMtilda; 
 kFpe     = R.kFpe; 
 vMtilda  = R.vMtilda; 
@@ -109,6 +111,10 @@ output.T_Fz      = T_Fz;
 % Inertie torque
 T_inert = xdd*I ; 
 output.T_inert = T_inert;
+
+% Damping torque
+T_damping = xd*B; 
+output.T_damping = T_damping; 
 
 end
 

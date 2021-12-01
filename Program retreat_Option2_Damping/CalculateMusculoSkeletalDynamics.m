@@ -1,4 +1,4 @@
-function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda,lM_projected,kFpe, vMtilda,a, data_exp, coeff_LMT_ma, params_OS, shift)
+function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda,lM_projected,kFpe, vMtilda,a, data_exp, coeff_LMT_ma, params_OS, shift, B)
 
 % Calculate Muscle tendon lengths and moment arms 
 [lMT, MA] = CalculateMuscleTendonLengthAndMomentArms(q, data_exp, coeff_LMT_ma); 
@@ -25,7 +25,7 @@ l = params_OS.inert.lc_OS;
 g = 9.81; 
 ma_ext = MA(1,:); 
 
-error_skelet = qdd*I + m*g*l*cos(q) - FT.*ma_ext;  
+error_skelet = qdd*I + m*g*l*cos(q) - FT.*ma_ext + B*qd;  
 
 % Total error
 error = [error_force error_musclegeometry error_skelet];
