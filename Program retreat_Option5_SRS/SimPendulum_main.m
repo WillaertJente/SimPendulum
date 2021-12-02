@@ -3,9 +3,10 @@
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
 info.trial  = 1;               % Trial number
-info.option = 'Opt4_AddMuscle_AddVmtoJ';              % Name to save results
+info.option = 'Opt5_SRS';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
+info.kSRS   = 280; 
 
 %% Import subject parameters and experimental data
 
@@ -46,18 +47,18 @@ import casadi.*;        % Import casadi libraries
 opti = casadi.Opti();   % Initialise opti structure
 
 N       = data_exp.Nspline;
+N_1     = data_exp.N_1; 
 % States
 x            = opti.variable(1,N);
 xd           = opti.variable(1,N); 
 xdd          = opti.variable(1,N); 
-lMtilda      = opti.variable(2,N);  % RF
-%lMtilda_flex = opti.variable(1,N);  % BFlh
+lMtilda      = opti.variable(2,N);  
+Fsrs2        = opti.variable(1,N-N_1); 
 
 % (Slack) controls
 vMtilda      = opti.variable(2,N);
-%vMtilda_flex     = opti.variable(1,N);
+dFsrs2dt     = opti.variable(1,N-N_1); 
 lM_projected = opti.variable(2,N);
-%lM_projected_flex= opti.variable(1,N); 
 
 % Parameters that will be optimized
 a_ext         = opti.variable(1);
@@ -74,12 +75,8 @@ opti.subject_to(Lb.kFpe <  kFpe < Ub.kFpe);    % nominal value = 0.1
 opti.subject_to(Lb.B    < B     < Ub.B); 
 opti.subject_to(Lb.lM_projected  <  lM_projected(1,:));
 opti.subject_to(Lb.lM_projected  <  lM_projected(2,:));
-%opti.subject_to(Lb.lM_projected  <  lM_projected_flex);
 opti.subject_to(Lb.vMtilda  <  vMtilda  < Ub.vMtilda);
-%opti.subject_to(Lb.vMtilda  <  vMtilda_flex < Ub.vMtilda);
 opti.subject_to(Lb.lMtilda  <  lMtilda  < Ub.lMtilda);
-%opti.subject_to(Lb.lMtilda  <  lMtilda_flex < Ub.lMtilda);
-% opti.subject_to(min(data_exp.qdspline)-2  < xd  < max(data_exp.qdspline)+2);
 
 % Constraints on initial states
 opti.subject_to(x(1)     == data_exp.x0(1));
@@ -96,8 +93,6 @@ opti.set_initial(lM_projected, InitGuess.lM_projected');
 opti.set_initial(lMtilda, InitGuess.lMtilda');     
 opti.set_initial(vMtilda, InitGuess.vM);
 
-
-
 %% Define problem (muscle model)
 % Calculate shift
 kT     = 35;
@@ -107,8 +102,13 @@ shift  = getshift(kT);
 [dlMdt]   = CalculateDLMDT(vMtilda, params_OS); 
 dlMdt_ext = dlMdt(1,:); dlMdt_flex = dlMdt(2,:); 
 
+% Calculate FSRS and derivative
+% [Fsrs, dFsrs2dt] = CalculateSRS(info, data_exp, lMtilda, a_ext, Fsrs2); 
+
 % Skeletal dynamics 
-[error] = CalculateMusculoSkeletalDynamics(x,xd,xdd, lMtilda, lM_projected,kFpe,vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B); 
+[error_fase1 - zoals niet srs] = CalculateMusculoSkeletalDynamics(x,xd,xdd, lMtilda, lM_projected,kFpe,vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs2, dFsrs2dt); 
+[error_fase2] = CalculateMusculoSkeletalDynamics(x,xd,xdd, lMtilda, lM_projected,kFpe,vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs2, dFsrs2dt); 
+
 
 % Constraints - trapezoidal integration 
 dt = dt_spline; 
@@ -118,7 +118,10 @@ opti.subject_to((xd(1:N-1) + xd(2:N))*dt/2 + x(1:N-1) == x(2:N));
 opti.subject_to((xdd(2:N)+xdd(1:N-1))*dt/2 +xd(1:N-1) == xd(2:N));
 opti.subject_to((dlMdt_ext(2:N)+dlMdt_ext(1:N-1))*dt/2 + lMtilda_ext(1:N-1) == lMtilda_ext(2:N));
 opti.subject_to((dlMdt_flex(2:N)+dlMdt_flex(1:N-1))*dt/2 + lMtilda_flex(1:N-1) == lMtilda_flex(2:N));
+opti.subject_to((zoals dlMTdt
 opti.subject_to(error == 0);
+
+opti,subject_to(Fsrs2(1) = Fsrs1(end))
 
 % Objective function
 J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda); 
@@ -182,6 +185,7 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 
 %% Plot
 % Results
+q_forward = [];
 h = PlotResults(R, q_forward, info);
 saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_1.Results.fig']);
 
