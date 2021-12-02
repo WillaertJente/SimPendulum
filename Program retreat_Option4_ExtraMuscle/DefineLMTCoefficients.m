@@ -77,8 +77,8 @@ for i = 1:2
     end
     
 end
-coeff_LMT_ma_ext = coeff_LMT_MA(:,1);
+coeff_LMT_ma_ext  = coeff_LMT_MA(:,1);
 coeff_LMT_ma_flex = coeff_LMT_MA(:,2);
-coeff_LMT_ma     = [coeff_LMT_ma_ext coeff_LMT_ma_flex]; 
+coeff_LMT_ma      = [coeff_LMT_ma_ext coeff_LMT_ma_flex]; 
 
 end

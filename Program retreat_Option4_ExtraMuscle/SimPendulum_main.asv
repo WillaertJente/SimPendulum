@@ -1,9 +1,10 @@
 %% SimPendulum_main
+
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
 info.trial  = 1;               % Trial number
-info.option = 'Opt4_AddMuscle_AddVmtoJ';              % Name to save results
+info.option = 'Opt4_AddMuscle';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 
@@ -50,7 +51,7 @@ N       = data_exp.Nspline;
 x            = opti.variable(1,N);
 xd           = opti.variable(1,N); 
 xdd          = opti.variable(1,N); 
-lMtilda      = opti.variable(2,N);  % RF
+lMtilda  = opti.variable(2,N);  % RF
 %lMtilda_flex = opti.variable(1,N);  % BFlh
 
 % (Slack) controls
@@ -108,12 +109,11 @@ shift  = getshift(kT);
 dlMdt_ext = dlMdt(1,:); dlMdt_flex = dlMdt(2,:); 
 
 % Skeletal dynamics 
-[error] = CalculateMusculoSkeletalDynamics(x,xd,xdd, lMtilda, lM_projected,kFpe,vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B); 
+[error] = CalculateMusculoSkeletalDynamics(x,xd,xdd, lMtilda_ext, lMtilda_flex, lM_projected_ext, lM_projected_flex,...
+            kFpe,vMtilda_ext, vMtilda_flex, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B); 
 
 % Constraints - trapezoidal integration 
 dt = dt_spline; 
-lMtilda_ext = lMtilda(1,:); 
-lMtilda_flex= lMtilda(2,:); 
 opti.subject_to((xd(1:N-1) + xd(2:N))*dt/2 + x(1:N-1) == x(2:N));
 opti.subject_to((xdd(2:N)+xdd(1:N-1))*dt/2 +xd(1:N-1) == xd(2:N));
 opti.subject_to((dlMdt_ext(2:N)+dlMdt_ext(1:N-1))*dt/2 + lMtilda_ext(1:N-1) == lMtilda_ext(2:N));
@@ -121,7 +121,7 @@ opti.subject_to((dlMdt_flex(2:N)+dlMdt_flex(1:N-1))*dt/2 + lMtilda_flex(1:N-1) =
 opti.subject_to(error == 0);
 
 % Objective function
-J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda); 
+J = DefineObjectiveFunction(x,xd,data_exp, info); 
 opti.minimize(J); 
     
 %% Solve problem
@@ -142,11 +142,15 @@ R.OS     = params_OS;
 
 % States
 R.x           = sol.value(x); R.xd = sol.value(xd); R.xdd = sol.value(xdd); 
-R.lMtilda     = sol.value(lMtilda); 
+R.lMtilda_ext = sol.value(lMtilda_ext); 
+R.lMtilda_flex= sol.value(lMtilda_flex);
+R.lMtilda     = [R.lMtilda_ext; R.lMtilda_flex];
 
 % Controls
-R.vMtilda = sol.value(vMtilda);
-R.lMprojected = sol.value(lM_projected);
+R.vMtilda_ext     = sol.value(vMtilda_ext);
+R.vMtilda_flex    = sol.value(vMtilda_flex);
+R.lMprojected_ext = sol.value(lM_projected_ext);
+R.lMprojected_flex = sol.value(lM_projected_flex);
 R.dlMdt            = sol.value(dlMdt); 
 
 % Parameters
