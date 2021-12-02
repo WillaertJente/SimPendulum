@@ -4,7 +4,7 @@
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
 info.trial  = 1;               % Trial number
-info.option = 'Opt2_damping';              % Name to save results
+info.option = 'Opt4_AddMuscle';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 
