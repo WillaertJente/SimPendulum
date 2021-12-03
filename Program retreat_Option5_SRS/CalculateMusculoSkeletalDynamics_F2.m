@@ -1,4 +1,4 @@
-function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt)
+function [error] = CalculateMusculoSkeletalDynamics_F2(q,qd,qdd,lMtilda, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt)
 
 % Calculate Muscle tendon lengths and moment arms 
 [lMT, MA] = CalculateMuscleTendonLengthAndMomentArms(q, data_exp, coeff_LMT_ma); 
@@ -10,13 +10,8 @@ function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda, lM_project
 [Fpe, FMltilda, FMvtilda] = getForceLengthVelocityRelation(lMtilda, kFpe, params_OS, vMtilda);
 
 % Fsrs 
-
-% % Calculate Fsrs 
-% [Fsrs, dFsrs2dt_cal] = CalculateSRS(info, data_exp, lMtilda, a_ext, Fsrs2, FMltilda); 
-
-% % Fsrs_error
-% N_1 = data_exp.N_1; 
-% error_Fsrs = dFsrs2dt_cal - dFsrs2dt; 
+dFsrsdt_cal = Fsrs/0.05;  % Calculated value of derivative of Fsrs (exponential decay)
+error_Fsrs  = dFsrsdt - dFsrsdt_cal; 
 
 % FMce 
 Fce_ext  = a_ext.* FMltilda(1,:).* FMvtilda(1,:) + Fsrs;      % FMce = fse.* lM ./(lMT-lT) - Fpe;

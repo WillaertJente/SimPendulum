@@ -1,4 +1,4 @@
-function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt)
+function [error] = CalculateMusculoSkeletalDynamics_F1(q,qd,qdd,lMtilda, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info)
 
 % Calculate Muscle tendon lengths and moment arms 
 [lMT, MA] = CalculateMuscleTendonLengthAndMomentArms(q, data_exp, coeff_LMT_ma); 
@@ -9,14 +9,12 @@ function [error] = CalculateMusculoSkeletalDynamics(q,qd,qdd,lMtilda, lM_project
 % Get ForceLengthVelocity Relationships
 [Fpe, FMltilda, FMvtilda] = getForceLengthVelocityRelation(lMtilda, kFpe, params_OS, vMtilda);
 
-% Fsrs 
+% Fsrs  
+kSRS    = info.kSRS; 
+stretch = lMtilda(1,:)- lMtilda(1,1); 
 
-% % Calculate Fsrs 
-% [Fsrs, dFsrs2dt_cal] = CalculateSRS(info, data_exp, lMtilda, a_ext, Fsrs2, FMltilda); 
-
-% % Fsrs_error
-% N_1 = data_exp.N_1; 
-% error_Fsrs = dFsrs2dt_cal - dFsrs2dt; 
+% Fsrs 1
+Fsrs  = stretch.*FMltilda(1,:)*a_ext*kSRS; 
 
 % FMce 
 Fce_ext  = a_ext.* FMltilda(1,:).* FMvtilda(1,:) + Fsrs;      % FMce = fse.* lM ./(lMT-lT) - Fpe;
@@ -42,6 +40,6 @@ ma_flex = MA(2,:);
 error_skelet = qdd*I + m*g*l*cos(q) - FT(1,:).*ma_ext - FT(2,:).*ma_flex + B*qd ;  
 
 % Total error
-error = [error_force error_musclegeometry error_skelet error_Fsrs];
+error = [error_force error_musclegeometry error_skelet];
 end
 
