@@ -1,5 +1,4 @@
-function [error] = CalculateMusculoSkeletalDynamics_F1(q,qd,qdd,lMtilda, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info)
-
+function [error] = CalculateMusculoSkeletalDynamics_F1(q,qd,qdd,lMtilda, lMtilda_init, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info)
 % Calculate Muscle tendon lengths and moment arms 
 [lMT, MA] = CalculateMuscleTendonLengthAndMomentArms(q, data_exp, coeff_LMT_ma); 
 
@@ -11,7 +10,7 @@ function [error] = CalculateMusculoSkeletalDynamics_F1(q,qd,qdd,lMtilda, lM_proj
 
 % Fsrs  
 kSRS    = info.kSRS; 
-stretch = lMtilda(1,:)- lMtilda(1,1); 
+stretch = lMtilda(1,:)- lMtilda_init; 
 
 % Fsrs 1
 Fsrs  = stretch.*FMltilda(1,:)*a_ext*kSRS; 

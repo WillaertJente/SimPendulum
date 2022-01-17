@@ -3,10 +3,10 @@
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
 info.trial  = 1;               % Trial number
-info.option = 'Opt5_SRS';              % Name to save results
+info.option = 'Opt6_SRS_VarTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
-info.kSRS   = 0; 
+info.kSRS   = 280; 
 
 %% Import subject parameters and experimental data
 % Path info -  Path to model and experimental data

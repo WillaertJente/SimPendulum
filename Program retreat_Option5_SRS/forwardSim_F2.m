@@ -1,4 +1,4 @@
-function [q,qd,lMtilda] = forwardSim_F1(q_init,qd_init,lMtilda_init,kFpe,a,data_exp, coeff_LMT_ma, params_OS, shift, dt, N, B, info)
+function [q,qd,lMtilda] = forwardSim_F2(q_init,qd_init,lMtilda_init,kFpe,a,data_exp, coeff_LMT_ma, params_OS, shift, dt, N, B, info)
 nMuscles = 2;
 nJoints = 1;
 nStates = nMuscles + 2*nJoints;
@@ -33,8 +33,8 @@ for i = 1:N
     lM_projected_next = Urf(4*nJoints+2*nMuscles+2*nJoints+2*nMuscles+1:4*nJoints+2*nMuscles+2*nJoints+3*nMuscles);
 
     
-    errorDyn_meshStart = CalculateMusculoSkeletalDynamics_F1(q(:,i),qd_implicit,qdd_implicit,lMtilda(:,i),lMtilda_init(1), lM_projected,kFpe, vMtilda_implicit,a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info);
-    errorDyn_meshEnd = CalculateMusculoSkeletalDynamics_F1(q_next,qd_next,qdd_implicit_next,lMtilda_next,lMtilda_init(1),lM_projected_next,kFpe, vMtilda_implicit_next,a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info);
+    errorDyn_meshStart = CalculateMusculoSkeletalDynamics_F2(q(:,i),qd_implicit,qdd_implicit,lMtilda(:,i), lM_projected,kFpe, vMtilda_implicit,a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt); 
+    errorDyn_meshEnd = CalculateMusculoSkeletalDynamics_F2(q_next,qd_next,qdd_implicit_next,lMtilda_next,lM_projected_next,kFpe, vMtilda_implicit_next,a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt);
     errorVel_meshStart = qd_implicit - qd(:,i);
     errorVel_meshEnd = qd_implicit_next - qd_next;
     dlMdt_implicit = CalculateDLMDT(vMtilda_implicit, params_OS); 

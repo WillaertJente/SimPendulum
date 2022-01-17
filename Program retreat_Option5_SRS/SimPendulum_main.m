@@ -2,7 +2,7 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
-info.trial  = 2;               % Trial number
+info.trial  = 1;               % Trial number
 info.option = 'Opt5_SRS_FixedTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
@@ -106,7 +106,8 @@ shift  = getshift(kT);
 dlMdt_ext = dlMdt(1,:); dlMdt_flex = dlMdt(2,:); 
 
 % Skeletal dynamics fase 1 
-[error_f1] = CalculateMusculoSkeletalDynamics_F1(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info); 
+lMtilda_init = lMtilda(1,1); 
+[error_f1] = CalculateMusculoSkeletalDynamics_F1(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info); 
 
 % Skeletal dynamics fase 2
 [error_f2] = CalculateMusculoSkeletalDynamics_F2(x(N_1+1:end),xd(N_1+1:end),xdd(N_1+1:end),lMtilda(:,N_1+1:end), lM_projected(:,N_1+1:end), kFpe, vMtilda(:,N_1+1:end), ...
@@ -185,13 +186,16 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 
 %% Forward version
 %[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
+info.kSRS=280; 
 [q_forward_F1,qd_forward_F1,lMtilda_forward_F1] = forwardSim_F1(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1-1, R.B, info);
-[q_forward_F2,qd_forward_F2,lMtilda_forward_F2] = forwardSim_F2(R.x(N_1+1),R.xd(N_1+1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1+1:end, R.B, info);
+[q_forward_F2,qd_forward_F2,lMtilda_forward_F2] = forwardSim_F2(R.x(N_1+1),R.xd(N_1+1),R.lMtilda(:,N_1+1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N-data_exp.N_1, R.B, info);
 
+q_forward  = [q_forward_F1 q_forward_F2]; 
+qd_forward = [qd_forward_F1 qd_forward_F2];
+lMtilda_forward = [lMtilda_forward_F1 lMtilda_forward_F2];
 
 %% Plot
 % Results
-q_forward = [];
 h = PlotResults(R, q_forward, info);
 saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_1.Results.fig']);
 
