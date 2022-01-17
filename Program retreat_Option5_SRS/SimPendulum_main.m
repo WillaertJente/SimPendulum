@@ -2,8 +2,8 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
-info.trial  = 1;               % Trial number
-info.option = 'Opt5_SRS';              % Name to save results
+info.trial  = 2;               % Trial number
+info.option = 'Opt5_SRS_FixedTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 0; 
@@ -184,7 +184,10 @@ R.bounds.Lb = Lb;
 save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.mat'],'R')
 
 %% Forward version
-[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
+%[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
+[q_forward_F1,qd_forward_F1,lMtilda_forward_F1] = forwardSim_F1(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1-1, R.B, info);
+[q_forward_F2,qd_forward_F2,lMtilda_forward_F2] = forwardSim_F2(R.x(N_1+1),R.xd(N_1+1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1+1:end, R.B, info);
+
 
 %% Plot
 % Results
