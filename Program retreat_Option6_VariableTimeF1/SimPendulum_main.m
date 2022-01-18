@@ -2,8 +2,8 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
-info.trial  = 2;               % Trial number
-info.option = 'Opt5_SRS_FixedTime';              % Name to save results
+info.trial  = 1;               % Trial number
+info.option = 'Opt6_SRS_VarTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
@@ -58,6 +58,7 @@ Fsrs         = opti.variable(1,N-N_1);
 vMtilda      = opti.variable(2,N);
 dFsrsdt      = opti.variable(1,N-N_1); 
 lM_projected = opti.variable(2,N);
+dt1          = opti.variable(1); 
 
 % Parameters that will be optimized
 a_ext         = opti.variable(1);
@@ -76,6 +77,7 @@ opti.subject_to(Lb.lM_projected  <  lM_projected(1,:));
 opti.subject_to(Lb.lM_projected  <  lM_projected(2,:));
 opti.subject_to(Lb.vMtilda  <  vMtilda  < Ub.vMtilda);
 opti.subject_to(Lb.lMtilda  <  lMtilda  < Ub.lMtilda);
+opti.subject_to(0.001 < dt1 < 0.01); 
 
 % % Calculate initial value of Fsrs 
 [Fsrs_f1_cal] = CalculateInitialValueFsrs(lMtilda, a_ext, info, params_OS, data_exp); 
@@ -95,6 +97,7 @@ opti.set_initial(B,0.1);
 opti.set_initial(lM_projected, InitGuess.lM_projected');
 opti.set_initial(lMtilda, InitGuess.lMtilda');     
 opti.set_initial(vMtilda, InitGuess.vM);
+opti.set_initial(dt1,0.005); 
 
 %% Define problem (muscle model)
 % Calculate shift
@@ -105,6 +108,14 @@ shift  = getshift(kT);
 [dlMdt]   = CalculateDLMDT(vMtilda, params_OS); 
 dlMdt_ext = dlMdt(1,:); dlMdt_flex = dlMdt(2,:); 
 
+% Time phase 1
+tF1 = N_1*dt1; 
+dt2 = 0.005; 
+
+opti.subject_to(tF1 > 0.2); 
+opti.subject_to(xd(1:N_1) < 1e-4); 
+opti.subject_to(1e-4 < xd(N_1+1)); % of kleiner als 1 er nog bij? 
+
 % Skeletal dynamics fase 1 
 lMtilda_init = lMtilda(1,1); 
 [error_f1] = CalculateMusculoSkeletalDynamics_F1(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info); 
@@ -114,14 +125,18 @@ lMtilda_init = lMtilda(1,1);
              a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt); 
 
 % Constraints - trapezoidal integration 
-dt = dt_spline; 
+% dt = dt_spline; 
 lMtilda_ext = lMtilda(1,:); 
 lMtilda_flex= lMtilda(2,:); 
-opti.subject_to((xd(1:N-1) + xd(2:N))*dt/2 + x(1:N-1) == x(2:N));
-opti.subject_to((xdd(2:N)+xdd(1:N-1))*dt/2 +xd(1:N-1) == xd(2:N));
-opti.subject_to((dlMdt_ext(2:N)+dlMdt_ext(1:N-1))*dt/2 + lMtilda_ext(1:N-1) == lMtilda_ext(2:N));
-opti.subject_to((dlMdt_flex(2:N)+dlMdt_flex(1:N-1))*dt/2 + lMtilda_flex(1:N-1) == lMtilda_flex(2:N));
-opti.subject_to((dFsrsdt(2:N-N_1)+dFsrsdt(1:N-N_1-1))*dt/2 + Fsrs(1:N-N_1-1) == Fsrs(2:N-N_1));     % Constraint on variable, in functie error dat constraint = variable
+opti.subject_to((xd(1:N_1-1) + xd(2:N_1))*dt1/2 + x(1:N_1-1) == x(2:N_1));
+opti.subject_to((xd(N_1+1:N-1) + xd(N_1+2:N))*dt2/2 + x(N_1+1:N-1) == x(N_1+2:N));
+opti.subject_to((xdd(2:N_1)+xdd(1:N_1-1))*dt1/2 +xd(1:N_1-1) == xd(2:N_1));
+opti.subject_to((xdd(N_1+2:N)+xdd(N_1+1:N-1))*dt2/2 +xd(1+N_1:N-1) == xd(2+N_1:N));
+opti.subject_to((dlMdt_ext(2:N_1)+dlMdt_ext(1:N_1-1))*dt1/2 + lMtilda_ext(1:N_1-1) == lMtilda_ext(2:N_1));
+opti.subject_to((dlMdt_ext(2+N_1:N)+dlMdt_ext(1+N_1:N-1))*dt2/2 + lMtilda_ext(1+N_1:N-1) == lMtilda_ext(2+N_1:N));
+opti.subject_to((dlMdt_flex(2:N_1)+dlMdt_flex(1:N_1-1))*dt1/2 + lMtilda_flex(1:N_1-1) == lMtilda_flex(2:N_1));
+opti.subject_to((dlMdt_flex(2+N_1:N)+dlMdt_flex(1+N_1:N-1))*dt2/2 + lMtilda_flex(1+N_1:N-1) == lMtilda_flex(2+N_1:N));
+opti.subject_to((dFsrsdt(2:N-N_1)+dFsrsdt(1:N-N_1-1))*dt2/2 + Fsrs(1:N-N_1-1) == Fsrs(2:N-N_1));     % Constraint on variable, in functie error dat constraint = variable
 opti.subject_to(error_f1 == 0);
 opti.subject_to(error_f2 == 0); 
 % opti.subject_to(Fsrs(1) == Fsrs_f1_cal) % Fsrs start fase 2 moet gelijk zijn aan Fsrs einde fase 1 
@@ -162,6 +177,9 @@ R.a_flex  = sol.value(a_flex);
 R.a       = [R.a_ext R.a_flex]; 
 R.kFpe    = sol.value(kFpe);
 R.B       = sol.value(B); 
+R.dt1     = sol.value(dt1); 
+R.dt2     = dt2; 
+R.tF1     = N_1*R.dt1; 
 
 % Objective function
 R.wq      = info.wq;
@@ -188,12 +206,12 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 %% Forward version
 %[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
 % F1
-[q_forward_F1,qd_forward_F1,lMtilda_forward_F1] = forwardSim_F1(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1-1, R.B, info);
+[q_forward_F1,qd_forward_F1,lMtilda_forward_F1] = forwardSim_F1(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, R.dt1, data_exp.N_1-1, R.B, info);
 [Fsrs_F1] =  CalculateFsrsF1Forward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
 
 % F2
 %[Fsrs] = CalculateFsrsForward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
-[q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2] = forwardSim_F2(q_forward_F1(end),qd_forward_F1(end),lMtilda_forward_F1(:,end),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N-data_exp.N_1, R.B, info, Fsrs_F1(end));
+[q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2] = forwardSim_F2(q_forward_F1(end),qd_forward_F1(end),lMtilda_forward_F1(:,end),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt2, N-data_exp.N_1, R.B, info, Fsrs_F1(end));
 
 q_forward  = [q_forward_F1 q_forward_F2]; 
 qd_forward = [qd_forward_F1 qd_forward_F2];
