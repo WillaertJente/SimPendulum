@@ -10,7 +10,7 @@ function [error] = CalculateMusculoSkeletalDynamics_F2(q,qd,qdd,lMtilda, lM_proj
 [Fpe, FMltilda, FMvtilda] = getForceLengthVelocityRelation(lMtilda, kFpe, params_OS, vMtilda);
 
 % Fsrs 
-dFsrsdt_cal = Fsrs/0.05;  % Calculated value of derivative of Fsrs (exponential decay)
+dFsrsdt_cal = -Fsrs/0.05;  % Calculated value of derivative of Fsrs (exponential decay)
 error_Fsrs  = dFsrsdt - dFsrsdt_cal; 
 
 % FMce 
