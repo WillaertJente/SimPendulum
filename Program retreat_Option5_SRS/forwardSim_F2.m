@@ -9,7 +9,6 @@ import casadi.*;
 q = NaN(nJoints,N+1); q(:,1) = q_init;
 qd = NaN(nJoints,N+1); qd(:,1) = qd_init;
 lMtilda = NaN(nMuscles,N+1); lMtilda(:,1) = lMtilda_init;
-Fsrs_init = 0; 
 Fsrs    = NaN(nJoints,N+1); Fsrs(:,1) = Fsrs_init; 
 guess = 0.1*ones(3*nStates+2*nMuscles+3,1);
 for i = 1:N
@@ -50,10 +49,10 @@ for i = 1:N
                         
     lMo    = params_OS.MT(2,:); 
     
-    rf = rootfinder('rf','kinsol',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16));
+    rf = rootfinder('rf','kinsol',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16,'error_on_fail',false));
     
         
-    guess = [qd(:,i);       0;            zeros(nMuscles,1);    Fsrs_init/0.05;
+    guess = [qd(:,i);       0;            zeros(nMuscles,1);    0;
              q(:,i) ;       qd(:,i);      lMtilda(:,i);          0;
              qd(:,i);       0;            zeros(nMuscles,1);    0; 
              lMtilda(:,i).*lMo(1);        lMtilda(:,i).*lMo(1)];

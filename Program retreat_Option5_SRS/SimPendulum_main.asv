@@ -6,7 +6,7 @@ info.trial  = 1;               % Trial number
 info.option = 'Opt5_SRS_FixedTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
-info.kSRS   = 0; 
+info.kSRS   = 280; 
 
 %% Import subject parameters and experimental data
 % Path info -  Path to model and experimental data
@@ -154,6 +154,7 @@ R.lMtilda     = sol.value(lMtilda);
 R.vMtilda = sol.value(vMtilda);
 R.lMprojected = sol.value(lM_projected);
 R.dlMdt            = sol.value(dlMdt); 
+R.Fsrs        = sol.value(Fsrs); 
 
 % Parameters
 R.a_ext   = sol.value(a_ext);
@@ -186,12 +187,13 @@ save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.
 
 %% Forward version
 %[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
-info.kSRS=140; 
 % F1
 [q_forward_F1,qd_forward_F1,lMtilda_forward_F1] = forwardSim_F1(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, data_exp.N_1-1, R.B, info);
+[Fsrs_F1] =  CalculateFsrsF1Forward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
+
 % F2
-[Fsrs] = CalculateFsrsForward(lMtilda_forward_F1,R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
-[q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2] = forwardSim_F2(R.x(N_1+1),R.xd(N_1+1),R.lMtilda(:,N_1+1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N-data_exp.N_1, R.B, info, Fsrs);
+%[Fsrs] = CalculateFsrsForward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
+[q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2] = forwardSim_F2(q_forward_F1(end),qd_forward_F1(end),lMtilda_forward_F1(:,end),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N-data_exp.N_1, R.B, info, Fsrs_F1(end));
 
 q_forward  = [q_forward_F1 q_forward_F2]; 
 qd_forward = [qd_forward_F1 qd_forward_F2];

@@ -45,7 +45,7 @@ for i = 1:N
                         
     lMo    = params_OS.MT(2,:); 
     
-    rf = rootfinder('rf','kinsol',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16));
+    rf = rootfinder('rf','kinsol',struct('x',Urf,'g',[errorDyn_meshStart'; errorDyn_meshEnd'; errorIntegration;errorVel_meshStart;errorVel_meshEnd]),struct('abstol',1e-16,'error_on_fail',false));
     
         
     guess = [qd(:,i);       0;            zeros(nMuscles,1); 
@@ -58,5 +58,7 @@ for i = 1:N
     qd(:,i+1) = solution(2*nJoints+nMuscles+nJoints+1:4*nJoints+nMuscles);
     lMtilda(:,i+1) = solution(2*nJoints+nMuscles+2*nJoints+1:4*nJoints+2*nMuscles);
     guess = 0.1*ones(3*nStates+2*nMuscles,1);
+    
+   
 end
 end

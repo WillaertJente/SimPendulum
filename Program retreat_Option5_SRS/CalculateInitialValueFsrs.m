@@ -27,6 +27,9 @@ N_1          = data_exp.N_1;
 stretch      = lMtilda(1,N_1)- lMtilda(1,1);
 
 % Intial value 
-Fsrs_f1_cal  = stretch.*FMltilda(1,N_1)*a_ext*kSRS; 
+tan_val_incr = (0.5* tanh(1000*(5.7e-3-stretch))+0.5).*FMltilda(1,N_1)*a_ext*kSRS.*stretch; 
+tan_val_plat = (0.5* tanh(1000*(stretch-5.7e-3))+0.5).*FMltilda(1,N_1)*a_ext*kSRS*5.7e-3; 
+
+Fsrs_f1_cal  = tan_val_incr + tan_val_plat; 
 end
 

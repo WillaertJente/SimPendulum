@@ -2,7 +2,7 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'TD5';           % Subject name
-info.trial  = 2;               % Trial number
+info.trial  = 1;               % Trial number
 info.option = 'Opt4_AddMuscle_AddVmtoJ';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
@@ -178,6 +178,7 @@ R.bounds.Lb = Lb;
 save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.mat'],'R')
 
 %% Forward version
+R.a(1) = 0.005; 
 [q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
 
 %% Plot
