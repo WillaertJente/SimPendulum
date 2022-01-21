@@ -180,7 +180,7 @@ R.bounds.Ub = Ub;
 R.bounds.Lb = Lb; 
 
 % Calculated Parameters
-[R.C] = RecalculateOutcomes(R); 
+[R.C] = RecalculateOutcomes2(R, info, N_1); 
 
 % Write results 
 save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.mat'],'R')
