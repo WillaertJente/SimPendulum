@@ -213,5 +213,5 @@ f = PlotMuscleGeometry(R, info);
 saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_3.MuscleGeometry.fig']);
 
 % Torques
-p = PlotTorques(R); 
+p = PlotTorques_SRS(R); 
 saveas(f,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_4.Torques.fig']);

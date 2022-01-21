@@ -4,7 +4,7 @@
 info.subj   = 'TD5';           % Subject name
 info.trial  = 1;               % Trial number
 info.option = 'Opt6_SRS_VarTime';              % Name to save results
-info.wq     = 1;               % weight on q error
+info.wq     = 2;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
 
