@@ -1,13 +1,13 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP11';           % Subject name
-info.trial  = 14;               % Trial number
-info.option = 'Opt7_Tau0.04';              % Name to save results
+info.subj   = 'TD5';           % Subject name
+info.trial  = 1;               % Trial number
+info.option = 'Opt7_FTinit';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
-info.tau    = 0.040; 
+info.tau    = 0.080; 
 % B = 0.0467;
 
 %% Import subject parameters and experimental data
