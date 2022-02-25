@@ -1,20 +1,21 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP9';           % Subject name
-info.trial  = 6;               % Trial number
-info.option = 'Opt7_Reflexes';              % Name to save results
+info.subj   = 'CP10';           % Subject name
+info.trial  = 13;               % Trial number
+info.option = 'Opt7_Test2';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
 info.tau    = 0.080; 
+% B = 0.0467;
 
 %% Import subject parameters and experimental data
 % Path info -  Path to model and experimental data
 pathmain = pwd;
 [pathTemp,~,~] = fileparts(pathmain);
 [pathRepo,~,~] = fileparts(pathTemp);
-info.path      = [pathTemp '\Implicit\Muscle\Experimental data\' info.subj '\'];
+info.path      = [pathTemp '\Implicit\Muscle\Experimental data\New/' info.subj '\'];
 
 % Import subject parameters
 params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, l, age, m, RG, SE, Nmr, z)
