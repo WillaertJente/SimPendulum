@@ -1,4 +1,4 @@
-function [Fsrs_f1_cal] = CalculateInitialValueFsrs(lMtilda, a_ext, info, params_OS, data_exp)
+function [Fsrs_f1_cal] = CalculateInitialValueFsrs(lMtilda, a_ext, info, params_OS, N_1)
 % FMltilda
 % Active muscle force-length characteristics
 b11 = params_OS.Fa(1); b21 = params_OS.Fa(2); b31 = params_OS.Fa(3); b41 = params_OS.Fa(4);
@@ -21,7 +21,7 @@ FMltilda = FMtilda1+FMtilda2+FMtilda3;
 
 % kSRS & N_1
 kSRS         = info.kSRS; 
-N_1          = data_exp.N_1; 
+% N_1          = data_exp.N_1; 
 
 % Stretch
 stretch      = lMtilda(1,N_1)- lMtilda(1,1);

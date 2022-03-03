@@ -1,6 +1,6 @@
 function [InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles, coeff_LMT_ma)
 %UNTITLED4 Summary of this function  here
-N      = data_exp.Nspline; 
+N      = data_exp.Nspline(1) + data_exp.Nspline(2); 
 offset = data_exp.offset;  
 x      = data_exp.qspline; 
 
