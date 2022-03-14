@@ -1,8 +1,8 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP10';           % Subject name
-info.option = 'Opt8_MT';              % Name to save results
+info.subj   = 'CP11';           % Subject name
+info.option = 'Opt8_MT_NormalizedTime';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280;
@@ -22,7 +22,7 @@ params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, 
 
 %% Import experimental data
 % Trial 1
-info.trial  = [12];
+info.trial  = [3];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;
@@ -36,7 +36,7 @@ bool_plot = 1;
 data_p1 = data_exp;
 
 % Trial 2
-info.trial  = [13];
+info.trial  = [2];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;
@@ -213,6 +213,7 @@ for i = 1:2
     qdspline = data_exp.qdspline(start(i):stop(i));
     
     cost = DefineObjectiveFunction(x, xd, qspline, qdspline, info, vMtilda);
+    cost = cost/N; 
     J    = J + cost;
 end
 

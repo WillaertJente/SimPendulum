@@ -1,9 +1,9 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP10';           % Subject name
-info.trial  = 13;               % Trial number
-info.option = 'Opt7_Test2';              % Name to save results
+info.subj   = 'CP4';           % Subject name
+info.trial  = 4;               % Trial number
+info.option = 'Opt7_BInitValue';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
@@ -97,9 +97,9 @@ opti.subject_to(Fsrs(1)  == Fsrs_f1_cal);
 opti.set_initial(x, data_exp.qspline);
 opti.set_initial(xd,data_exp.qdspline);
 opti.set_initial(a_ext, 0.01);
-opti.set_initial(a_flex, 0.01);
-opti.set_initial(kFpe,0.1);
-opti.set_initial(B,0.1); 
+opti.set_initial(a_flex,0.01);
+opti.set_initial(kFpe, 0.1);
+opti.set_initial(B,0.1073); %0.1); 
 opti.set_initial(lM_projected, InitGuess.lM_projected');
 opti.set_initial(lMtilda, InitGuess.lMtilda');     
 opti.set_initial(vMtilda, InitGuess.vM);
@@ -150,7 +150,7 @@ opti.subject_to(error_f1 == 0);
 opti.subject_to(error_f2 == 0); 
 
 % Objective function
-J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda); 
+J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda, kR); 
 opti.minimize(J); 
     
 %% Solve problem

@@ -2,7 +2,7 @@
 figure()
 for i = 4:7
     name = ['T',num2str(i)];
-    Name = ['CP2_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['CP2_T', num2str(i),'_Opt7_BInitValue.mat']
     CP2.(char(name)) = load(Name);
     
     subplot(2,5,i-3)
@@ -37,14 +37,14 @@ for i = 4:7
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP2')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Tau0.04.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Tau0.04.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_BInitValue.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_BInitValue.png')
 
 %% CP 4
 figure()
 for i = 3:4
     name = ['T',num2str(i)];
-    Name = ['CP4_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['CP4_T', num2str(i),'_Opt7_BInitValue.mat']
     CP4.(char(name)) = load(Name);
     
     subplot(2,5,i-2)
@@ -79,14 +79,14 @@ for i = 3:4
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP4')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Tau0.04.mat.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Tau0.04.mat.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_BInitValue.mat.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_BInitValue.mat.png')
 
 %% CP8
 figure()
 for i = [2 3 4 5]
     name = ['T',num2str(i)];
-    Name = ['CP8_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['CP8_T', num2str(i),'_Opt7_BInitValue.mat']
     CP8.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -121,14 +121,14 @@ for i = [2 3 4 5]
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP8')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Tau0.04.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Tau0.04.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_BInitValue.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_BInitValue.png')
 
 %% CP9
 figure()
-for i = 3:6
+for i = 2:6
     name = ['T',num2str(i)];
-    Name = ['CP9_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['CP9_T', num2str(i),'_Opt7_BInitValue.mat']
     CP9.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -163,14 +163,14 @@ for i = 3:6
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP9')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Tau0.04.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Tau0.04.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_BInitValue.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_BInitValue.png')
 
 %% CP 10
 figure()
-for i = 13:14
+for i = 12:14
     name = ['T',num2str(i)];
-    Name = ['CP10_T', num2str(i),'_Opt7_ingekort_Bopt.mat']
+    Name = ['CP10_T', num2str(i),'_Opt7_BInitValue.mat']
     CP10.(char(name)) = load(Name);
     
     subplot(2,5,i-11)
@@ -205,14 +205,14 @@ for i = 13:14
     ylim([0 0.12]); line([0 4],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP10')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Tau0.04.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Tau0.04.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_BInitValue.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_BInitValue.png')
 
 %% CP 11
 figure()
 for i = 2:4
     name = ['T',num2str(i)];
-    Name = ['CP11_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['CP11_T', num2str(i),'_Opt7_BInitValue.mat']
     CP11.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -247,14 +247,14 @@ for i = 2:4
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP11')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Tau0.04.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Tau0.04.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_BInitValue.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_BInitValue.png')
 
 %% TD5
 figure()
 for i = 1:2
     name = ['T',num2str(i)];
-    Name = ['TD5_T', num2str(i),'_Opt7_Tau0.04.mat']
+    Name = ['TD5_T', num2str(i),'_Opt7_BInitValue.mat']
     TD5.(char(name)) = load(Name);
     
     subplot(2,5,i)
@@ -281,7 +281,7 @@ for i = 1:2
     subplot(2,5,9)
     bar(i,TD5.(char(name)).R.kR); hold on
     title('kR'); box off; xticks([1 2]); xticklabels({'T1','T2'})
-    ylim([0 10]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
+    ylim([0 0.1]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
     
     subplot(2,5,10)
     bar(i,TD5.(char(name)).R.B); hold on
@@ -289,5 +289,5 @@ for i = 1:2
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('TD5')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Tau0.04.mat.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Tau0.04.mat.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_BInitValue.mat.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_BInitValue.mat.png')

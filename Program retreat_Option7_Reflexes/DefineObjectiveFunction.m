@@ -1,4 +1,4 @@
-function J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda) 
+function J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda, kR) 
 %Define objective function that should be minimized 
 w_q  = info.wq;
 w_qd = info.wqd;

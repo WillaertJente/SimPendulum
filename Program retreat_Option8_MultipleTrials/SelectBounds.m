@@ -6,7 +6,7 @@ function [Ub, Lb] = SelectBounds()
 Lb.x    =  -pi;     Ub.x = 10*pi/180;
 Lb.a    = 0.001;    Ub.a = 1;
 Lb.kFpe = 0;        Ub.kFpe = 0.2;
-Lb.B    = 0.01;     Ub.B = 0.15;
+Lb.B    = 0.001;     Ub.B = 0.15;
 Lb.kR   = 1e-4;     Ub.kR = 10;
 
 Lb.vMtilda= -10;    Ub.vMtilda = 10;
