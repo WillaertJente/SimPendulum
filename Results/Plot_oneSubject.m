@@ -1,8 +1,51 @@
+%% SDR 2 
+figure()
+for i = 1:4
+    name = ['T',num2str(i)];
+    Name = ['SDR2_post_T', num2str(i),'_Opt7.mat']
+    SDR2pre.(char(name)) = load(Name);
+    
+    subplot(2,5,i)
+    plot(SDR2pre.(char(name)).R.exp.qspline,'k','LineWidth',1.5); hold on
+    plot(SDR2pre.(char(name)).R.x,'r','LineWidth',1.5); hold on
+    title(name); box off;
+    ylim([-2 0]); xlim([0 1000])
+    
+    subplot(2,5,6)
+    bar(i,SDR2pre.(char(name)).R.a_ext); hold on
+    title('a_ext'); box off; 
+    ylim([0 0.03]); xticks([1 2 3 4 5 ]); xticklabels({'1','2','3','4','5'})
+    
+    subplot(2,5,7)
+    bar(i,SDR2pre.(char(name)).R.a_flex); hold on
+    title('a_flex'); box off;xticks([1 2 3 4 5 ]); xticklabels({'1','2','3','4','5'})
+    ylim([0 0.1]);
+    
+    subplot(2,5,8)
+    bar(i,SDR2pre.(char(name)).R.kFpe); hold on
+    title('kFpe'); box off; xticks([1 2 3 4 5 ]); xticklabels({'1','2','3','4','5'})
+    ylim([0 0.2]); line([0 5],[0.2 0.2],'Color',[0.7 0.7 0.7],'LineWidth',1.5); 
+    
+    subplot(2,5,9)
+    bar(i,SDR2pre.(char(name)).R.kR); hold on
+    title('kR'); box off; xticks([1 2 3 4 5 ]); xticklabels({'1','2','3','4','5'})
+    ylim([0 1]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
+    
+    subplot(2,5,10)
+    bar(i,SDR2pre.(char(name)).R.B); hold on
+    title('B'); box off; xticks([1 2 3 4 5 ]); xticklabels({'1','2','3','4','5'})
+    ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
+end
+suptitle('CP2')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/SDR2pre_Opt7.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/SDR2pre_Opt7.png')
+
+
 %% CP 2
 figure()
 for i = 4:7
     name = ['T',num2str(i)];
-    Name = ['CP2_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP2_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP2.(char(name)) = load(Name);
     
     subplot(2,5,i-3)
@@ -37,14 +80,14 @@ for i = 4:7
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP2')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_BInitValue.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_BInitValue.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Weigth_kR_0.2.png')
 
 %% CP 4
 figure()
 for i = 3:4
     name = ['T',num2str(i)];
-    Name = ['CP4_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP4_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP4.(char(name)) = load(Name);
     
     subplot(2,5,i-2)
@@ -79,14 +122,14 @@ for i = 3:4
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP4')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_BInitValue.mat.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_BInitValue.mat.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Weigth_kR_0.2.png')
 
 %% CP8
 figure()
 for i = [2 3 4 5]
     name = ['T',num2str(i)];
-    Name = ['CP8_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP8_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP8.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -121,14 +164,14 @@ for i = [2 3 4 5]
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP8')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_BInitValue.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_BInitValue.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Weigth_kR_0.2.png')
 
 %% CP9
 figure()
-for i = 2:6
+for i = 2:5
     name = ['T',num2str(i)];
-    Name = ['CP9_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP9_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP9.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -163,14 +206,14 @@ for i = 2:6
     ylim([0 0.12]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP9')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_BInitValue.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_BInitValue.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Weigth_kR_0.2.png')
 
 %% CP 10
 figure()
 for i = 12:14
     name = ['T',num2str(i)];
-    Name = ['CP10_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP10_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP10.(char(name)) = load(Name);
     
     subplot(2,5,i-11)
@@ -205,14 +248,14 @@ for i = 12:14
     ylim([0 0.12]); line([0 4],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP10')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_BInitValue.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_BInitValue.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Weigth_kR_0.2.png')
 
 %% CP 11
 figure()
 for i = 2:4
     name = ['T',num2str(i)];
-    Name = ['CP11_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['CP11_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     CP11.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -247,14 +290,14 @@ for i = 2:4
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('CP11')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_BInitValue.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_BInitValue.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Weigth_kR_0.2.png')
 
 %% TD5
 figure()
 for i = 1:2
     name = ['T',num2str(i)];
-    Name = ['TD5_T', num2str(i),'_Opt7_BInitValue.mat']
+    Name = ['TD5_T', num2str(i),'_Opt7_Weigth_kR_0.2.mat']
     TD5.(char(name)) = load(Name);
     
     subplot(2,5,i)
@@ -289,5 +332,5 @@ for i = 1:2
     ylim([0 0.12]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
 suptitle('TD5')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_BInitValue.mat.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_BInitValue.mat.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Weigth_kR_0.2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Weigth_kR_0.2.png')

@@ -3,7 +3,7 @@ function [offset] = CalculateOffset(info, params_subject, t_span)
 % x (BK) + offset = knee angle die nodig is voor lMT en ma te bepalen
 
 % Inverse kinematics data 
-IK         = importdata([info.path,'IK_Trial0',num2str(info.trial),'.mot']); 
+IK         = importdata([info.path,'IK_Trial',num2str(info.trial),'.mot']); 
 
 % Selection ~ pendulum onset till end
 start      = find(IK.data(:,1)== t_span(1)); 

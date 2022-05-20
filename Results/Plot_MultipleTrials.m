@@ -9,7 +9,7 @@ trials = [4 5; 4 6; 4 7;5 6; 5 7; 6 7];
 for i = 1:length(trials)
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP2_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP2_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP2.(char(fname)) = load(Name);
     
@@ -37,18 +37,18 @@ xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'4','5','4','6','4','7','5
 box off; title('a ext'); ylim([0 0.006])
 
 subplot(2,6,8)
-bar(1,CP2.V1.R.a_flex(1),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(2,CP2.V1.R.a_flex(2),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(4,CP2.V2.R.a_flex(1),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(5,CP2.V2.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(7,CP2.V3.R.a_flex(1),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(8,CP2.V3.R.a_flex(2),'FaceColor',color7,'EdgeColor',color7); hold on
-bar(10,CP2.V4.R.a_flex(1),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(11,CP2.V4.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP2.V5.R.a_flex(1),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(14,CP2.V5.R.a_flex(2),'FaceColor',color7,'EdgeColor',color7); hold on
-bar(16,CP2.V6.R.a_flex(1),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(17,CP2.V6.R.a_flex(2),'FaceColor',color7,'EdgeColor',color7); hold on
+bar(1,CP2.V1.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(2,CP2.V1.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(4,CP2.V2.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(5,CP2.V2.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(7,CP2.V3.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(8,CP2.V3.R.a_flex,'FaceColor',color7,'EdgeColor',color7); hold on
+bar(10,CP2.V4.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(11,CP2.V4.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP2.V5.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(14,CP2.V5.R.a_flex,'FaceColor',color7,'EdgeColor',color7); hold on
+bar(16,CP2.V6.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(17,CP2.V6.R.a_flex,'FaceColor',color7,'EdgeColor',color7); hold on
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'4','5','4','6','4','7','5','6','5','7','6','7'});
 box off; title('a flex'); ylim([0 0.006])
 
@@ -66,43 +66,43 @@ bar(14,CP2.V5.R.kR(2),'FaceColor',color7,'EdgeColor',color7); hold on
 bar(16,CP2.V6.R.kR(1),'FaceColor',color6,'EdgeColor',color6); hold on
 bar(17,CP2.V6.R.kR(2),'FaceColor',color7,'EdgeColor',color7); hold on
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'4','5','4','6','4','7','5','6','5','7','6','7'});
-box off; title('kR'); ylim([0 2])
+box off; title('kR'); ylim([0 5])
 
 subplot(2,6,10)
-bar(1,CP2.V1.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(2,CP2.V1.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(4,CP2.V2.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(5,CP2.V2.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(7,CP2.V3.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(8,CP2.V3.R.kFpe,'FaceColor',color7,'EdgeColor',color7); hold on
-bar(10,CP2.V4.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(11,CP2.V4.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP2.V5.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(14,CP2.V5.R.kFpe,'FaceColor',color7,'EdgeColor',color7); hold on
-bar(16,CP2.V6.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(17,CP2.V6.R.kFpe,'FaceColor',color7,'EdgeColor',color7); hold on
+bar(1,CP2.V1.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(2,CP2.V1.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(4,CP2.V2.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(5,CP2.V2.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(7,CP2.V3.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(8,CP2.V3.R.kFpe(2),'FaceColor',color7,'EdgeColor',color7); hold on
+bar(10,CP2.V4.R.kFpe(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(11,CP2.V4.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP2.V5.R.kFpe(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(14,CP2.V5.R.kFpe(2),'FaceColor',color7,'EdgeColor',color7); hold on
+bar(16,CP2.V6.R.kFpe(1),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(17,CP2.V6.R.kFpe(2),'FaceColor',color7,'EdgeColor',color7); hold on
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'4','5','4','6','4','7','5','6','5','7','6','7'});
 box off; title('kFpe'); ylim([0 0.2])
 
 subplot(2,6,11)
-bar(1,CP2.V1.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(2,CP2.V1.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(4,CP2.V2.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(5,CP2.V2.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(7,CP2.V3.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(8,CP2.V3.R.B,'FaceColor',color7,'EdgeColor',color7); hold on
-bar(10,CP2.V4.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(11,CP2.V4.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP2.V5.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(14,CP2.V5.R.B,'FaceColor',color7,'EdgeColor',color7); hold on
-bar(16,CP2.V6.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(17,CP2.V6.R.B,'FaceColor',color7,'EdgeColor',color7); hold on
+bar(1,CP2.V1.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(2,CP2.V1.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(4,CP2.V2.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(5,CP2.V2.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(7,CP2.V3.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(8,CP2.V3.R.B(2),'FaceColor',color7,'EdgeColor',color7); hold on
+bar(10,CP2.V4.R.B(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(11,CP2.V4.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP2.V5.R.B(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(14,CP2.V5.R.B(2),'FaceColor',color7,'EdgeColor',color7); hold on
+bar(16,CP2.V6.R.B(1),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(17,CP2.V6.R.B(2),'FaceColor',color7,'EdgeColor',color7); hold on
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'4','5','4','6','4','7','5','6','5','7','6','7'});
 box off; title('B'); ylim([0 0.02])
 
 suptitle('CP2')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_MT2_aFlexConstante.png')
 
 
 %% CP 8
@@ -112,11 +112,11 @@ color4 = [247 127 0]./255;
 color5 = [252 191 73]./255;
 
 figure()
-trials = [2 3; 2 4; 2 5;3 4; 3 5]; 
+trials = [2 3; 2 4; 2 5;3 4; 3 5; 4 5]; 
 for i = 1:length(trials)
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP8_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP8_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP8.(char(fname)) = load(Name);
     
@@ -138,21 +138,25 @@ bar(10,CP8.V4.R.a_ext(1),'FaceColor',color3,'EdgeColor',color3); hold on
 bar(11,CP8.V4.R.a_ext(2),'FaceColor',color4,'EdgeColor',color4); hold on
 bar(13,CP8.V5.R.a_ext(1),'FaceColor',color3,'EdgeColor',color3); hold on
 bar(14,CP8.V5.R.a_ext(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(16,CP8.V6.R.a_ext(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(17,CP8.V6.R.a_ext(2),'FaceColor',color5,'EdgeColor',color5); hold on
 
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'2','3','2','4','2','5','3','4','3','5','4','5'});
 box off; title('a ext'); ylim([0 0.02])
 
 subplot(2,5,7)
-bar(1,CP8.V1.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP8.V1.R.a_flex(2),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP8.V2.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP8.V2.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP8.V3.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP8.V3.R.a_flex(2),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP8.V4.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(11,CP8.V4.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(13,CP8.V5.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP8.V5.R.a_flex(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(1,CP8.V1.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP8.V1.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP8.V2.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP8.V2.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP8.V3.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP8.V3.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP8.V4.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(11,CP8.V4.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(13,CP8.V5.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP8.V5.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(16,CP8.V6.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(17,CP8.V6.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
 
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'2','3','2','4','2','5','3','4','3','5','4','5'});
 box off; title('a flex'); ylim([0 0.02])
@@ -168,43 +172,49 @@ bar(10,CP8.V4.R.kR(1),'FaceColor',color3,'EdgeColor',color3); hold on
 bar(11,CP8.V4.R.kR(2),'FaceColor',color4,'EdgeColor',color4); hold on
 bar(13,CP8.V5.R.kR(1),'FaceColor',color3,'EdgeColor',color3); hold on
 bar(14,CP8.V5.R.kR(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(16,CP8.V6.R.kR(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(17,CP8.V6.R.kR(2),'FaceColor',color5,'EdgeColor',color5); hold on
 
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'2','3','2','4','2','5','3','4','3','5','4','5'});
 box off; title('kR'); ylim([0 10])
 
 subplot(2,5,9)
-bar(1,CP8.V1.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP8.V1.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP8.V2.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP8.V2.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP8.V3.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP8.V3.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP8.V4.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(11,CP8.V4.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(13,CP8.V5.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP8.V5.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(1,CP8.V1.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP8.V1.R.kFpe(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP8.V2.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP8.V2.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP8.V3.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP8.V3.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP8.V4.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(11,CP8.V4.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(13,CP8.V5.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP8.V5.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(16,CP8.V6.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(17,CP8.V6.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
 
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'2','3','2','4','2','5','3','4','3','5','4','5'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,5,10)
-bar(1,CP8.V1.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP8.V1.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP8.V2.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP8.V2.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP8.V3.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP8.V3.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP8.V4.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(11,CP8.V4.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(13,CP8.V5.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP8.V5.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(1,CP8.V1.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP8.V1.R.B(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP8.V2.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP8.V2.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP8.V3.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP8.V3.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP8.V4.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(11,CP8.V4.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(13,CP8.V5.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP8.V5.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(16,CP8.V6.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(17,CP8.V6.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
 
 xticks([1 2 4 5 7 8 10 11 13 14 16 17]); xticklabels({'2','3','2','4','2','5','3','4','3','5','4','5'});
 box off; title('B'); ylim([0 0.15])
 
 suptitle('CP8')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_MT2_aFlexConstante.png')
 
 
 %% TD5
@@ -216,7 +226,7 @@ trials = [1 2];
 for i = 1
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['TD5_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['TD5_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     TD5.(char(fname)) = load(Name);
     
@@ -234,8 +244,8 @@ xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('a ext'); ylim([0 0.02])
 
 subplot(2,5,7)
-bar(1,TD5.V1.R.a_flex(1),'FaceColor',color1,'EdgeColor',color1); hold on
-bar(2,TD5.V1.R.a_flex(2),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(1,TD5.V1.R.a_flex,'FaceColor',color1,'EdgeColor',color1); hold on
+bar(2,TD5.V1.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('a flex'); ylim([0 0.02])
 
@@ -246,20 +256,20 @@ xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('kR'); ylim([0 1])
 
 subplot(2,5,9)
-bar(1,TD5.V1.R.kFpe,'FaceColor',color1,'EdgeColor',color1); hold on
-bar(2,TD5.V1.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(1,TD5.V1.R.kFpe(1),'FaceColor',color1,'EdgeColor',color1); hold on
+bar(2,TD5.V1.R.kFpe(2),'FaceColor',color2,'EdgeColor',color2); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,5,10)
-bar(1,TD5.V1.R.B,'FaceColor',color1,'EdgeColor',color1); hold on
-bar(2,TD5.V1.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(1,TD5.V1.R.B(1),'FaceColor',color1,'EdgeColor',color1); hold on
+bar(2,TD5.V1.R.B(2),'FaceColor',color2,'EdgeColor',color2); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('B'); ylim([0 0.15])
 
 suptitle('TD5')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_MT2_aFlexConstante.png')
 
 
 %% CP 4
@@ -271,7 +281,7 @@ trials = [3 4];
 for i = 1
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP4_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP4_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP4.(char(fname)) = load(Name);
     
@@ -289,8 +299,8 @@ xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('a ext'); ylim([0 0.02])
 
 subplot(2,5,7)
-bar(1,CP4.V1.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(2,CP4.V1.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP4.V1.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(2,CP4.V1.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('a flex'); ylim([0 0.02])
 
@@ -301,20 +311,20 @@ xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('kR'); ylim([0 1])
 
 subplot(2,5,9)
-bar(1,CP4.V1.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(2,CP4.V1.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP4.V1.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(2,CP4.V1.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,5,10)
-bar(1,CP4.V1.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(2,CP4.V1.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP4.V1.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(2,CP4.V1.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 ]); xticklabels({'1','2'});
 box off; title('B'); ylim([0 0.15])
 
 suptitle('CP4')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_MT2_aFlexConstante.png')
 
 %% CP 10
 color12 = [0 48 73]./255;
@@ -322,11 +332,11 @@ color13 = [214 40 40]./255;
 color14 = [247 127 0]./255;
 
 figure()
-trials = [12 14; 13 14; 12 13]; 
+trials = [ 12 14; 13 14]; 
 for i = 1:length(trials)
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP10_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP10_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP10.(char(fname)) = load(Name);
     
@@ -338,58 +348,58 @@ for i = 1:length(trials)
 end
 
 subplot(2,5,6)
+% bar(1,CP10.V1.R.a_ext(1),'FaceColor',color12,'EdgeColor',color12); hold on
+% bar(2,CP10.V1.R.a_ext(2),'FaceColor',color14,'EdgeColor',color14); hold on
 bar(1,CP10.V1.R.a_ext(1),'FaceColor',color12,'EdgeColor',color12); hold on
 bar(2,CP10.V1.R.a_ext(2),'FaceColor',color14,'EdgeColor',color14); hold on
 bar(4,CP10.V2.R.a_ext(1),'FaceColor',color13,'EdgeColor',color13); hold on
 bar(5,CP10.V2.R.a_ext(2),'FaceColor',color14,'EdgeColor',color14); hold on
-bar(7,CP10.V3.R.a_ext(1),'FaceColor',color12,'EdgeColor',color12); hold on
-bar(8,CP10.V3.R.a_ext(2),'FaceColor',color13,'EdgeColor',color13); hold on
-xticks([1 2 4 5 7 8]); xticklabels({'12','13','13','14','12','13'});
+xticks([1 2 4 5]); xticklabels({'12','14','13','14'});
 box off; title('a ext'); ylim([0 0.03])
 
 subplot(2,5,7)
-bar(1,CP10.V1.R.a_flex(1),'FaceColor',color12,'EdgeColor',color12); hold on
-bar(2,CP10.V1.R.a_flex(2),'FaceColor',color14,'EdgeColor',color14); hold on
-bar(4,CP10.V2.R.a_flex(1),'FaceColor',color13,'EdgeColor',color13); hold on
-bar(5,CP10.V2.R.a_flex(2),'FaceColor',color14,'EdgeColor',color14); hold on
-bar(7,CP10.V3.R.a_flex(1),'FaceColor',color12,'EdgeColor',color12); hold on
-bar(8,CP10.V3.R.a_flex(2),'FaceColor',color13,'EdgeColor',color13); hold on
-xticks([1 2 4 5 7 8 ]); xticklabels({'12','13','13','14','12','13'});
+% bar(1,CP10.V1.R.a_flex(1),'FaceColor',color12,'EdgeColor',color12); hold on
+% bar(2,CP10.V1.R.a_flex(2),'FaceColor',color14,'EdgeColor',color14); hold on
+bar(1,CP10.V1.R.a_flex,'FaceColor',color12,'EdgeColor',color12); hold on
+bar(2,CP10.V1.R.a_flex,'FaceColor',color14,'EdgeColor',color14); hold on
+bar(4,CP10.V2.R.a_flex,'FaceColor',color13,'EdgeColor',color13); hold on
+bar(5,CP10.V2.R.a_flex,'FaceColor',color14,'EdgeColor',color14); hold on
+xticks([1 2 4 5]); xticklabels({'12','14','13','14'});
 box off; title('a flex'); ylim([0 0.03])
 
 subplot(2,5,8)
+% bar(1,CP10.V1.R.kR(1),'FaceColor',color12,'EdgeColor',color12); hold on
+% bar(2,CP10.V1.R.kR(2),'FaceColor',color14,'EdgeColor',color14); hold on
 bar(1,CP10.V1.R.kR(1),'FaceColor',color12,'EdgeColor',color12); hold on
 bar(2,CP10.V1.R.kR(2),'FaceColor',color14,'EdgeColor',color14); hold on
 bar(4,CP10.V2.R.kR(1),'FaceColor',color13,'EdgeColor',color13); hold on
 bar(5,CP10.V2.R.kR(2),'FaceColor',color14,'EdgeColor',color14); hold on
-bar(7,CP10.V3.R.kR(1),'FaceColor',color12,'EdgeColor',color12); hold on
-bar(8,CP10.V3.R.kR(2),'FaceColor',color13,'EdgeColor',color13); hold on
-xticks([1 2 4 5 7 8]); xticklabels({'12','13','13','14','12','13'});
+xticks([1 2 4 5]); xticklabels({'12','14','13','14'});
 box off; title('kR'); ylim([0 0.01])
 
 subplot(2,5,9)
-bar(1,CP10.V1.R.kFpe,'FaceColor',color12,'EdgeColor',color12); hold on
-bar(2,CP10.V1.R.kFpe,'FaceColor',color14,'EdgeColor',color14); hold on
-bar(4,CP10.V2.R.kFpe,'FaceColor',color13,'EdgeColor',color13); hold on
-bar(5,CP10.V2.R.kFpe,'FaceColor',color14,'EdgeColor',color14); hold on
-bar(7,CP10.V3.R.kFpe,'FaceColor',color12,'EdgeColor',color12); hold on
-bar(8,CP10.V3.R.kFpe,'FaceColor',color13,'EdgeColor',color13); hold on
-xticks([1 2 4 5 7 8 ]); xticklabels({'12','13','13','14','12','13'});
+% bar(1,CP10.V1.R.kFpe,'FaceColor',color12,'EdgeColor',color12); hold on
+% bar(2,CP10.V1.R.kFpe,'FaceColor',color14,'EdgeColor',color14); hold on
+bar(1,CP10.V1.R.kFpe(1),'FaceColor',color12,'EdgeColor',color12); hold on
+bar(2,CP10.V1.R.kFpe(2),'FaceColor',color14,'EdgeColor',color14); hold on
+bar(4,CP10.V2.R.kFpe(1),'FaceColor',color13,'EdgeColor',color13); hold on
+bar(5,CP10.V2.R.kFpe(2),'FaceColor',color14,'EdgeColor',color14); hold on
+xticks([1 2 4 5]); xticklabels({'12','14','13','14'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,5,10)
-bar(1,CP10.V1.R.B,'FaceColor',color12,'EdgeColor',color12); hold on
-bar(2,CP10.V1.R.B,'FaceColor',color14,'EdgeColor',color14); hold on
-bar(4,CP10.V2.R.B,'FaceColor',color13,'EdgeColor',color13); hold on
-bar(5,CP10.V2.R.B,'FaceColor',color14,'EdgeColor',color14); hold on
-bar(7,CP10.V3.R.B,'FaceColor',color12,'EdgeColor',color12); hold on
-bar(8,CP10.V3.R.B,'FaceColor',color13,'EdgeColor',color13); hold on
-xticks([1 2 4 5 7 8]); xticklabels({'12','13','13','14','12','13'});
+% bar(1,CP10.V1.R.B(1),'FaceColor',color12,'EdgeColor',color12); hold on
+% bar(2,CP10.V1.R.B(2),'FaceColor',color14,'EdgeColor',color14); hold on
+bar(1,CP10.V1.R.B(1),'FaceColor',color13,'EdgeColor',color13); hold on
+bar(2,CP10.V1.R.B(2),'FaceColor',color14,'EdgeColor',color14); hold on
+bar(4,CP10.V2.R.B(1),'FaceColor',color12,'EdgeColor',color12); hold on
+bar(5,CP10.V2.R.B(2),'FaceColor',color13,'EdgeColor',color13); hold on
+xticks([1 2 4 5]); xticklabels({'12','14','13','14'});
 box off; title('B'); ylim([0 0.2])
 
 suptitle('CP10')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_MT2_aFlexConstante.png')
 
 %% CP 11
 color2 = [0 48 73]./255;
@@ -401,7 +411,7 @@ trials = [2 3; 2 4; 3 4;];
 for i = 1:length(trials)
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP11_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP11_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP11.(char(fname)) = load(Name);
     
@@ -423,12 +433,12 @@ xticks([1 2 4 5 7 8 ]); xticklabels({'2','3','2','4','3','4'});
 box off; title('a ext'); ylim([0 0.035])
 
 subplot(2,5,7)
-bar(1,CP11.V1.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP11.V1.R.a_flex(2),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP11.V2.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP11.V2.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP11.V3.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(8,CP11.V3.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP11.V1.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP11.V1.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP11.V2.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP11.V2.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP11.V3.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(8,CP11.V3.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 4 5 7 8 ]); xticklabels({'2','3','2','4','3','4'});
 box off; title('a flex'); ylim([0 0.035])
 
@@ -443,28 +453,28 @@ xticks([1 2 4 5 7 8 ]); xticklabels({'2','3','2','4','3','4'});
 box off; title('kR'); ylim([0 10])
 
 subplot(2,5,9)
-bar(1,CP11.V1.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP11.V1.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP11.V2.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP11.V2.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP11.V3.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(8,CP11.V3.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP11.V1.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP11.V1.R.kFpe(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP11.V2.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP11.V2.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP11.V3.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(8,CP11.V3.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 4 5 7 8 ]); xticklabels({'2','3','2','4','3','4'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,5,10)
-bar(1,CP11.V1.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP11.V1.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP11.V2.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP11.V2.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP11.V3.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(8,CP11.V3.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(1,CP11.V1.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP11.V1.R.B(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP11.V2.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP11.V2.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP11.V3.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(8,CP11.V3.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
 xticks([1 2 4 5 7 8 ]); xticklabels({'2','3','2','4','3','4'});
 box off; title('B'); ylim([0 0.15])
 
 suptitle('CP11')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_MT2_aFlexConstante.png')
 
 %% CP 9
 color2 = [0 48 73]./255;
@@ -474,11 +484,11 @@ color5 = [252 191 73]./255;
 color6 = [234 226 183]./255;
 
 figure()
-trials = [2 3; 2 4; 2 5; 2 6; 3 4; 3 6; 4 5; 4 6; 5 6]; 
+trials = [2 3; 2 4; 2 5; 2 6; 3 4; 3 6; 4 5; 4 6; 5 6; 3 5]; 
 for i = 1:length(trials)
     
     name  = ['T',num2str(trials(i,1)),'-T',num2str(trials(i,2))];
-    Name  = ['CP9_', name,'_Opt8_MT_NormalizedTime.mat']
+    Name  = ['CP9_', name,'_Opt8_MT_aFlexConstant.mat']
     fname = ['V',num2str(i)];
     CP9.(char(fname)) = load(Name);
     
@@ -508,29 +518,33 @@ bar(22,CP9.V8.R.a_ext(1),'FaceColor',color4,'EdgeColor',color4); hold on
 bar(23,CP9.V8.R.a_ext(2),'FaceColor',color6,'EdgeColor',color6); hold on
 bar(25,CP9.V9.R.a_ext(1),'FaceColor',color5,'EdgeColor',color5); hold on
 bar(26,CP9.V9.R.a_ext(2),'FaceColor',color6,'EdgeColor',color6); hold on
-xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6'});
+bar(28,CP9.V10.R.a_ext(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(29,CP9.V10.R.a_ext(2),'FaceColor',color5,'EdgeColor',color5); hold on
+xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6','3','5'});
 box off; title('a ext'); ylim([0 0.01])
 
 subplot(2,9,11)
-bar(1,CP9.V1.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP9.V1.R.a_flex(2),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP9.V2.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP9.V2.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP9.V3.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP9.V3.R.a_flex(2),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP9.V4.R.a_flex(1),'FaceColor',color2,'EdgeColor',color2); hold on
-bar(11,CP9.V4.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP9.V5.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP9.V5.R.a_flex(2),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(16,CP9.V6.R.a_flex(1),'FaceColor',color3,'EdgeColor',color3); hold on
-bar(17,CP9.V6.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(19,CP9.V7.R.a_flex(1),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(20,CP9.V7.R.a_flex(2),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(22,CP9.V8.R.a_flex(1),'FaceColor',color4,'EdgeColor',color4); hold on
-bar(23,CP9.V8.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-bar(25,CP9.V9.R.a_flex(1),'FaceColor',color5,'EdgeColor',color5); hold on
-bar(26,CP9.V9.R.a_flex(2),'FaceColor',color6,'EdgeColor',color6); hold on
-xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6'});
+bar(1,CP9.V1.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP9.V1.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP9.V2.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP9.V2.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP9.V3.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP9.V3.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP9.V4.R.a_flex,'FaceColor',color2,'EdgeColor',color2); hold on
+bar(11,CP9.V4.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP9.V5.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP9.V5.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(16,CP9.V6.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(17,CP9.V6.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(19,CP9.V7.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(20,CP9.V7.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(22,CP9.V8.R.a_flex,'FaceColor',color4,'EdgeColor',color4); hold on
+bar(23,CP9.V8.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(25,CP9.V9.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+bar(26,CP9.V9.R.a_flex,'FaceColor',color6,'EdgeColor',color6); hold on
+bar(28,CP9.V10.R.a_flex,'FaceColor',color3,'EdgeColor',color3); hold on
+bar(29,CP9.V10.R.a_flex,'FaceColor',color5,'EdgeColor',color5); hold on
+xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6','3','5'});
 box off; title('a flex'); ylim([0 0.01])
 
 subplot(2,9,12)
@@ -552,54 +566,60 @@ bar(22,CP9.V8.R.kR(1),'FaceColor',color4,'EdgeColor',color4); hold on
 bar(23,CP9.V8.R.kR(2),'FaceColor',color6,'EdgeColor',color6); hold on
 bar(25,CP9.V9.R.kR(1),'FaceColor',color5,'EdgeColor',color5); hold on
 bar(26,CP9.V9.R.kR(2),'FaceColor',color6,'EdgeColor',color6); hold on
-xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6'});
+bar(28,CP9.V10.R.kR(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(29,CP9.V10.R.kR(2),'FaceColor',color5,'EdgeColor',color5); hold on
+xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6','3','5'});
 box off; title('kR'); ylim([0 1])
 
 subplot(2,9,13)
-bar(1,CP9.V1.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP9.V1.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP9.V2.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP9.V2.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP9.V3.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP9.V3.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP9.V4.R.kFpe,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(11,CP9.V4.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP9.V5.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP9.V5.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(16,CP9.V6.R.kFpe,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(17,CP9.V6.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(19,CP9.V7.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(20,CP9.V7.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(22,CP9.V8.R.kFpe,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(23,CP9.V8.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(25,CP9.V9.R.kFpe,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(26,CP9.V9.R.kFpe,'FaceColor',color6,'EdgeColor',color6); hold on
-xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6'});
+bar(1,CP9.V1.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP9.V1.R.kFpe(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP9.V2.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP9.V2.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP9.V3.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP9.V3.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP9.V4.R.kFpe(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(11,CP9.V4.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP9.V5.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP9.V5.R.kFpe(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(16,CP9.V6.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(17,CP9.V6.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(19,CP9.V7.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(20,CP9.V7.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(22,CP9.V8.R.kFpe(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(23,CP9.V8.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(25,CP9.V9.R.kFpe(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(26,CP9.V9.R.kFpe(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(28,CP9.V10.R.kFpe(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(29,CP9.V10.R.kFpe(2),'FaceColor',color5,'EdgeColor',color5); hold on
+xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6','3','5'});
 box off; title('kFpe');ylim([0 0.2])
 
 subplot(2,9,14)
-bar(1,CP9.V1.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(2,CP9.V1.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(4,CP9.V2.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(5,CP9.V2.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(7,CP9.V3.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(8,CP9.V3.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(10,CP9.V4.R.B,'FaceColor',color2,'EdgeColor',color2); hold on
-bar(11,CP9.V4.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(13,CP9.V5.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(14,CP9.V5.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(16,CP9.V6.R.B,'FaceColor',color3,'EdgeColor',color3); hold on
-bar(17,CP9.V6.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(19,CP9.V7.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(20,CP9.V7.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(22,CP9.V8.R.B,'FaceColor',color4,'EdgeColor',color4); hold on
-bar(23,CP9.V8.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-bar(25,CP9.V9.R.B,'FaceColor',color5,'EdgeColor',color5); hold on
-bar(26,CP9.V9.R.B,'FaceColor',color6,'EdgeColor',color6); hold on
-xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6'});
+bar(1,CP9.V1.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(2,CP9.V1.R.B(2),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(4,CP9.V2.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(5,CP9.V2.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(7,CP9.V3.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(8,CP9.V3.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(10,CP9.V4.R.B(1),'FaceColor',color2,'EdgeColor',color2); hold on
+bar(11,CP9.V4.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(13,CP9.V5.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(14,CP9.V5.R.B(2),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(16,CP9.V6.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(17,CP9.V6.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(19,CP9.V7.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(20,CP9.V7.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(22,CP9.V8.R.B(1),'FaceColor',color4,'EdgeColor',color4); hold on
+bar(23,CP9.V8.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(25,CP9.V9.R.B(1),'FaceColor',color5,'EdgeColor',color5); hold on
+bar(26,CP9.V9.R.B(2),'FaceColor',color6,'EdgeColor',color6); hold on
+bar(28,CP9.V10.R.B(1),'FaceColor',color3,'EdgeColor',color3); hold on
+bar(29,CP9.V10.R.B(2),'FaceColor',color5,'EdgeColor',color5); hold on
+xticks([1 2 4 5 7 8 10 11 13 14 16 17 19 20 22 23 25 26 28 29]); xticklabels({'2','3','2','4','2','5','2','6','3','4','3','6','4','5','4','6','5','6','3','5'});
 box off; title('B'); ylim([0 0.05])
 
 suptitle('CP9')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_MT2_NormalizedTime.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_MT2_NormalizedTime.png')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_MT2_aFlexConstante.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_MT2_aFlexConstante.png')
 

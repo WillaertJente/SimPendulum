@@ -16,15 +16,17 @@ title('a Ext'); xticks([1 2]); xticklabels({'P1','P2'})
 box off;
 
 subplot(152)
-bar(1,R.a_flex(1),'FaceColor',color_p1,'EdgeColor',color_p1); hold on
-bar(2,R.a_flex(2),'FaceColor',color_p2,'EdgeColor',color_p2); hold on
+bar(1,R.a_flex,'FaceColor',color_p1,'EdgeColor',color_p1); hold on
+bar(2,R.a_flex,'FaceColor',color_p2,'EdgeColor',color_p2); hold on
 line([0 3],[R.bounds.Ub.a R.bounds.Ub.a],'Color','k','LineWidth',1.5);hold on %Ub
 line([0 3],[R.bounds.Lb.a R.bounds.Lb.a],'Color','k','LineWidth',1.5);hold on %Lb
 title('a Flex'); xticks([1 2]); xticklabels({'P1','P2'})
 box off; 
 
 subplot(153)
-bar(1,R.kFpe,'FaceColor',color,'EdgeColor',color); hold on
+bar(1,R.kFpe(1),'FaceColor',color_p1,'EdgeColor',color_p1); hold on
+bar(2,R.kFpe(2),'FaceColor',color_p2,'EdgeColor',color_p2); hold on
+
 line([0 2],[R.bounds.Ub.kFpe R.bounds.Ub.kFpe],'Color','k','LineWidth',1.5); hold on; %Ub
 line([0 2],[R.bounds.Lb.kFpe R.bounds.Lb.kFpe],'Color','k','LineWidth',1.5); hold on; %Lb
 line([0 2],[0.1 0.1],'Color','r','LineWidth',1.5); hold on; % nominal
@@ -33,7 +35,8 @@ title('kFpe')
 box off; 
 
 subplot(154)
-bar(1,R.B,'FaceColor',color,'EdgeColor',color); hold on
+bar(1,R.B(1),'FaceColor',color,'EdgeColor',color); hold on
+bar(2,R.B(2),'FaceColor',color,'EdgeColor',color); hold on
 line([0 2],[R.bounds.Ub.B R.bounds.Ub.B],'Color','k','LineWidth',1.5); hold on; %Ub
 line([0 2],[R.bounds.Lb.B R.bounds.Lb.B],'Color','k','LineWidth',1.5); hold on; %Lb
 title('B')

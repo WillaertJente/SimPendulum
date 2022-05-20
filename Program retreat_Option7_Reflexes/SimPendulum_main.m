@@ -1,14 +1,15 @@
 %% SimPendulum_main
 %% Input
+% guess = [0.001 0.05 0.02]; 
+% for l = 1%:3
 % Change here subject and trial
-info.subj   = 'CP4';           % Subject name
+info.subj   = 'CP11';           % Subject name
 info.trial  = 4;               % Trial number
-info.option = 'Opt7_BInitValue';              % Name to save results
+info.option = 'Opt7_vMax_ThetaRconstraint'    %['Opt7_IG_aflex_v',num2str(l)]%%%%%%; % %              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
 info.tau    = 0.080; 
-% B = 0.0467;
 
 %% Import subject parameters and experimental data
 % Path info -  Path to model and experimental data
@@ -22,7 +23,7 @@ params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, 
 
 % Import experimental data
 bool_plot = 0;
-dt_spline = 0.005;
+dt_spline = 0.0021;
 data_exp  = ImportExperimentalData(info, bool_plot, params_subject, dt_spline);
 
 % Define phases of pendulum (initial state, end of first swing)
@@ -34,6 +35,9 @@ bool_plot = 1;
 addpath('MuscleModel');
 muscles = {'rect_fem_','bifemlh_'};
 [params_OS] = ReadOpenSimParams(info, params_subject, muscles);
+
+% % % % AANDACHT: AANGEPASTE VMAX!!!!
+params_OS.MT(5,:) = 5; 
 
 %% Calculate LMT en Ma coefficients
 bool_plot = 1;
@@ -72,7 +76,7 @@ B             = opti.variable(1);
 kR            = opti.variable(1); 
 
 % Bounds
-[Ub, Lb] = SelectBounds();
+[Ub, Lb] = SelectBounds(data_exp);
 opti.subject_to(Lb.x   <  x     < Ub.x);
 opti.subject_to(Lb.a   < a_ext  < Ub.a);
 opti.subject_to(Lb.a   < a_flex < Ub.a);
@@ -84,6 +88,7 @@ opti.subject_to(Lb.vMtilda  <  vMtilda  < Ub.vMtilda);
 opti.subject_to(Lb.lMtilda  <  lMtilda  < Ub.lMtilda);
 opti.subject_to(Lb.dt1 < dt1 < Ub.dt1); 
 opti.subject_to(Lb.kR  < kR  < Ub.kR); 
+opti.subject_to(Lb.x_end < x(end) < Ub.x_end); % Constraint on resting angle (3 graden + en 3 graden -) 
 
 % % Calculate initial value of Fsrs 
 [Fsrs_f1_cal] = CalculateInitialValueFsrs(lMtilda, a_ext, info, params_OS, data_exp); 
@@ -96,16 +101,15 @@ opti.subject_to(Fsrs(1)  == Fsrs_f1_cal);
 % Initial guess
 opti.set_initial(x, data_exp.qspline);
 opti.set_initial(xd,data_exp.qdspline);
-opti.set_initial(a_ext, 0.01);
-opti.set_initial(a_flex,0.01);
+opti.set_initial(a_ext, 0.01 );%0.01
+opti.set_initial(a_flex, 0.01  ); %0.01 guess(l)
 opti.set_initial(kFpe, 0.1);
-opti.set_initial(B,0.1073); %0.1); 
+opti.set_initial(B, 0.1); % 0.1 
 opti.set_initial(lM_projected, InitGuess.lM_projected');
 opti.set_initial(lMtilda, InitGuess.lMtilda');     
 opti.set_initial(vMtilda, InitGuess.vM);
 opti.set_initial(dt1,0.005); 
-opti.set_initial(kR, 0.01); 
-
+opti.set_initial(kR, 0.01 );  %
 %% Define problem (muscle model)
 % Calculate shift
 kT     = 35;
@@ -117,7 +121,7 @@ dlMdt_ext = dlMdt(1,:); dlMdt_flex = dlMdt(2,:);
 
 % Time phase 1
 tF1 = N_1*dt1; 
-dt2 = 0.005; 
+dt2 = 0.002; 
 
 opti.subject_to(tF1 > 0.2); 
 opti.subject_to(xd(1:N_1) < 1e-4); 
@@ -150,7 +154,7 @@ opti.subject_to(error_f1 == 0);
 opti.subject_to(error_f2 == 0); 
 
 % Objective function
-J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda, kR); 
+J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda); 
 opti.minimize(J); 
     
 %% Solve problem
@@ -214,23 +218,24 @@ R.bounds.Lb = Lb;
 % Write results 
 save([pathTemp,'/Results/',info.subj,'_T',num2str(info.trial),'_',info.option,'.mat'],'R')
 
-%% Forward version
-%[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
-% F1
-[q_forward_F1,qd_forward_F1,lMtilda_forward_F1, Fsrs_del_forward_F1] = forwardSim_F1_Refl(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, R.dt1, data_exp.N_1-1, R.B, info, R.Fsrs_del(1), R.kR);
-[Fsrs_F1] =  CalculateFsrsF1Forward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
-
-% F2
-%[Fsrs] = CalculateFsrsForward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
-[q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2, Fsrs_del_forward_F2] = forwardSim_F2_Refl(q_forward_F1(end),qd_forward_F1(end),lMtilda_forward_F1(:,end),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt2, N-data_exp.N_1, R.B, info, Fsrs_F1(end), Fsrs_del_forward_F1(end), R.kR);
-
-q_forward  = [q_forward_F1 q_forward_F2]; 
-qd_forward = [qd_forward_F1 qd_forward_F2];
-lMtilda_forward = [lMtilda_forward_F1 lMtilda_forward_F2];
-Fsrs_del_forward = [Fsrs_del_forward_F1 Fsrs_del_forward_F2];
+% %% Forward version
+% %[q_forward,qd_forward,lMtilda_forward] = forwardSim(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt, N, R.B);
+% % F1
+% [q_forward_F1,qd_forward_F1,lMtilda_forward_F1, Fsrs_del_forward_F1] = forwardSim_F1_Refl(R.x(1),R.xd(1),R.lMtilda(:,1),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, R.dt1, data_exp.N_1-1, R.B, info, R.Fsrs_del(1), R.kR);
+% [Fsrs_F1] =  CalculateFsrsF1Forward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
+% 
+% % F2
+% %[Fsrs] = CalculateFsrsForward(lMtilda_forward_F1(1,:),R.lMtilda(1,1), R.a(1), info.kSRS, params_OS);
+% [q_forward_F2,qd_forward_F2,lMtilda_forward_F2, Fsrs_forward_F2, Fsrs_del_forward_F2] = forwardSim_F2_Refl(q_forward_F1(end),qd_forward_F1(end),lMtilda_forward_F1(:,end),R.kFpe,R.a ,R.exp, coeff_LMT_ma, params_OS, shift, dt2, N-data_exp.N_1, R.B, info, Fsrs_F1(end), Fsrs_del_forward_F1(end), R.kR);
+% 
+% q_forward  = [q_forward_F1 q_forward_F2]; 
+% qd_forward = [qd_forward_F1 qd_forward_F2];
+% lMtilda_forward = [lMtilda_forward_F1 lMtilda_forward_F2];
+% Fsrs_del_forward = [Fsrs_del_forward_F1 Fsrs_del_forward_F2];
 
 %% Plot
 % Results
+q_forward = []
 h = PlotResults(R, q_forward, info);
 saveas(h,[pathTemp,'/Results/Figures/', info.subj, '_T',num2str(info.trial),info.option,'_1.Results.fig']);
 

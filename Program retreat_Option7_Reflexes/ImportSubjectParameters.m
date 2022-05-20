@@ -14,6 +14,6 @@ params.age     = info.(char(subjectname)).age;             % Age of subject
 params.leg     = info.(char(subjectname)).z;               % 18 if left leg, 11 if right leg
 params.Nmr     = info.(char(subjectname)).Nmr;             % First trial with MR
 params.g       = 9.81;                              % Gravitational constant
-params.length_tibia = info.(char(subjectname)).lTibia; 
+%params.length_tibia = info.(char(subjectname)).lTibia; 
 
 end

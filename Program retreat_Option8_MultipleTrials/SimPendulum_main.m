@@ -1,8 +1,8 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP11';           % Subject name
-info.option = 'Opt8_MT_NormalizedTime';              % Name to save results
+info.subj   = 'CP10';           % Subject name
+info.option = 'Opt8_MT_aFlexConstant';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280;
@@ -22,7 +22,7 @@ params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, 
 
 %% Import experimental data
 % Trial 1
-info.trial  = [3];
+info.trial  = [13];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;
@@ -36,7 +36,7 @@ bool_plot = 1;
 data_p1 = data_exp;
 
 % Trial 2
-info.trial  = [2];
+info.trial  = [14];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;
@@ -97,9 +97,9 @@ dt1_tot          = opti.variable(2);
 
 % Parameters that will be optimized
 a_ext_tot        = opti.variable(2);
-a_flex_tot       = opti.variable(2);
-kFpe_tot         = opti.variable(1);
-B_tot            = opti.variable(1);
+a_flex_tot       = opti.variable(1);
+kFpe_tot         = opti.variable(2);
+B_tot            = opti.variable(2);
 kR_tot           = opti.variable(2);
 
 %% Loop over all trials
@@ -125,9 +125,9 @@ for i = 1:2
     
     % Parameters that will be optimized
     a_ext         = a_ext_tot(i);
-    a_flex        = a_flex_tot(i);
-    kFpe          = kFpe_tot(1);
-    B             = B_tot(1);
+    a_flex        = a_flex_tot(1);
+    kFpe          = kFpe_tot(i);
+    B             = B_tot(i);
     kR            = kR_tot(i);
     
     % Bounds
@@ -217,6 +217,7 @@ for i = 1:2
     J    = J + cost;
 end
 
+J  = J * ((stop(1) + (stop(2)-start(2)))/2); 
 opti.minimize(J);
 
 %% Solve problem

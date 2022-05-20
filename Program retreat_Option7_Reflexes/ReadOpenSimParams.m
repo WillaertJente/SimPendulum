@@ -4,7 +4,7 @@ function [params_OS] = ReadOpenSimParams(info, params, muscles)
 import org.opensim.modeling.*
 
 % Model 
-model_path = [info.path,'CP4_ScaledModel_ScaledForces.osim'];    
+model_path = [info.path,'CP11_ScaledModel_ScaledForces.osim'];    
 osimModel  = Model(model_path);
  
 % Inertial params

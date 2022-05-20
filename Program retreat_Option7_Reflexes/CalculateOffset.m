@@ -23,8 +23,8 @@ end
 hip_flex  = IK_sel(:,col_hipF); 
 
 % Interpolate IK data to splined experimental data 
-[pelv_tilt_spline, ~,~,~] = ExpDatAtDiscrTime(t_span,IK_sel(:,1),pelv_tilt,0.005);
-[hip_flex_spline, ~,~,~]  = ExpDatAtDiscrTime(t_span,IK_sel(:,1),hip_flex,0.005);
+[pelv_tilt_spline, ~,~,~] = ExpDatAtDiscrTime(t_span,IK_sel(:,1),pelv_tilt,0.002);
+[hip_flex_spline, ~,~,~]  = ExpDatAtDiscrTime(t_span,IK_sel(:,1),hip_flex,0.002);
 
 % Find offset 
 start_pos      = ones(length(pelv_tilt_spline),1)*90;

@@ -1,4 +1,4 @@
-function [Ub, Lb] = SelectBounds()
+function [Ub, Lb] = SelectBounds(data_exp)
 %Function to make bounds
 % Change bounds here
 
@@ -6,7 +6,7 @@ function [Ub, Lb] = SelectBounds()
 Lb.x    =  -pi;     Ub.x = 10*pi/180;
 Lb.a    = 0.001;    Ub.a = 1;
 Lb.kFpe = 0;        Ub.kFpe = 0.2;
-Lb.B    = 0.001;    Ub.B = 0.12;
+Lb.B    = 0.001;    Ub.B = 0.15;
 Lb.kR   = 1e-4;     Ub.kR = 10;
 
 Lb.vMtilda= -10;    Ub.vMtilda = 10;
@@ -15,6 +15,10 @@ Lb.lM_projected = 1e-4;
 
 Lb.dt1 = 0.001;
 Ub.dt1 = 0.01;
+
+bound    = 2*pi/180;
+Lb.x_end = data_exp.qspline(end) - bound;
+Ub.x_end = data_exp.qspline(end) + bound;
 
 end
 
