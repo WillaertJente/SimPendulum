@@ -1,11 +1,14 @@
 %% Plot to compare different versions 
 % Jente Willaert - 14032022
+
+clear all; close all; clc 
+
 color1 = [0 48 73]./255;
 color2 = [69 123 157]./255;
 color1 = [250 163 7]./255;
 
-v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T1_Opt7.mat'); 
-v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T1_Opt9_Yank.mat'); 
+v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T4_Opt7.mat'); 
+v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T4_Opt9B_ForceFeedback.mat'); 
 
 figure()
 subplot(2,2,1)
@@ -47,4 +50,4 @@ bar(1,v1.R.J,'FaceColor',color1,'EdgeColor',color1); hold on
 bar(2,v2.R.J,'FaceColor',color2,'EdgeColor',color2); hold on
 box off; title('J'); xticks([1 2]); xticklabels({'v1','v2'})
 
-suptitle('SDR2_Post_T1')
+suptitle('SDR2_Post_T4')
