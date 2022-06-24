@@ -1,0 +1,4 @@
+[2022-05-20 10:04:53.000] [info] Updating Model file from 30000 to latest format...
+[2022-05-20 10:04:53.037] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/TD5\TD5_ScaledModel_ScaledForces.osim
+[2022-05-20 10:04:53.152] [info] ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+[2022-05-20 10:04:53.153] [info] ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.

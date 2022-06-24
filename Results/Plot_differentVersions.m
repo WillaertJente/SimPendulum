@@ -4,18 +4,18 @@ color1 = [0 48 73]./255;
 color2 = [69 123 157]./255;
 color1 = [250 163 7]./255;
 
-v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/CP11_T3_Opt7_ThetaR_constraint.mat'); 
-v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/CP11_T3_Opt7_vMax_ThetaRconstraint.mat'); 
+v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T1_Opt7.mat'); 
+v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T1_Opt9_Yank.mat'); 
 
 figure()
 subplot(2,2,1)
 plot(v1.R.exp.qspline,'k','LineWidth',1.5); hold on
 plot(v1.R.x,'r','LineWidth',1.5); hold on
-box off; title('Normal')
+box off; title('Reflex on SRS')
 subplot(2,2,2)
 plot(v2.R.exp.qspline,'k','LineWidth',1.5); hold on
 plot(v2.R.x,'r','LineWidth',1.5); hold on
-box off; title('Constraint on resting angle')
+box off; title('Reflex on force and Yank')
 
 subplot(2,6,7,'replace')
 bar(1,v1.R.a_ext,'FaceColor',color1,'EdgeColor',color1); hold on
@@ -47,4 +47,4 @@ bar(1,v1.R.J,'FaceColor',color1,'EdgeColor',color1); hold on
 bar(2,v2.R.J,'FaceColor',color2,'EdgeColor',color2); hold on
 box off; title('J'); xticks([1 2]); xticklabels({'v1','v2'})
 
-suptitle('CP11 T3')
+suptitle('SDR2_Post_T1')
