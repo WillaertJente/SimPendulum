@@ -1,9 +1,9 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'SDR2_pre';           % Subject name
-info.trial  = 5;               % Trial number
-info.option = 'Opt9B_ForceFeedback_short'      % Name to save results
+info.subj   = 'CP9';           % Subject name
+info.trial  = 3;               % Trial number
+info.option = 'Opt9B_ForceFeedback_spline'      % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 

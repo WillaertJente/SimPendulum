@@ -29,4 +29,4 @@ figure()
 scatter(kost_no,(gain).^2,'Filled'); hold on
 box off; title('Pareto CP11 T3'); ylabel('Gain'); xlabel('Kost without gain'); 
 saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_T3_Pareto2.png');
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_T3_Pareto2.fig');
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/ActivationCP11_T3_Pareto2.fig');

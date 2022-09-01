@@ -1,24 +1,25 @@
-%% Plot to compare different versions 
-% Jente Willaert - 14032022
+% Plot to compare different versions 
+%Jente Willaert - 14032022
 
 clear all; close all; clc 
 
-color1 = [0 48 73]./255;
+% color1 = [0 48 73]./255;
 color2 = [69 123 157]./255;
 color1 = [250 163 7]./255;
 
-v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T4_Opt7.mat'); 
-v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/SDR2_Post_T4_Opt9B_ForceFeedback.mat'); 
+v1 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/CP9_T6_Opt10B_Activation.mat'); 
+v2 = load('C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/CP9_T6_Opt10_ActivationTest.mat'); 
 
 figure()
 subplot(2,2,1)
 plot(v1.R.exp.qspline,'k','LineWidth',1.5); hold on
+plot(v2.R.exp.qspline,'k','LineWidth',1.5); hold on
 plot(v1.R.x,'r','LineWidth',1.5); hold on
-box off; title('Reflex on SRS')
+box off; title('Opt 10B bound reflex 10')
 subplot(2,2,2)
 plot(v2.R.exp.qspline,'k','LineWidth',1.5); hold on
 plot(v2.R.x,'r','LineWidth',1.5); hold on
-box off; title('Reflex on force and Yank')
+box off; title('Opt 10B bound reflex 5')
 
 subplot(2,6,7,'replace')
 bar(1,v1.R.a_ext,'FaceColor',color1,'EdgeColor',color1); hold on
@@ -50,4 +51,4 @@ bar(1,v1.R.J,'FaceColor',color1,'EdgeColor',color1); hold on
 bar(2,v2.R.J,'FaceColor',color2,'EdgeColor',color2); hold on
 box off; title('J'); xticks([1 2]); xticklabels({'v1','v2'})
 
-suptitle('SDR2_Post_T4')
+suptitle('CP9 - T6')
