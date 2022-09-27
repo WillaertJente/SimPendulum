@@ -1,7 +1,7 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'CP10';           % Subject name
+info.subj   = 'TD5';           % Subject name
 info.option = 'Opt8_MT_aFlexConstant';              % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
@@ -22,7 +22,7 @@ params_subject = ImportSubjectParameters(info);    % Input parameters (mtot,lc, 
 
 %% Import experimental data
 % Trial 1
-info.trial  = [13];
+info.trial  = [1];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;
@@ -36,7 +36,7 @@ bool_plot = 1;
 data_p1 = data_exp;
 
 % Trial 2
-info.trial  = [14];
+info.trial  = [2];
 % Import experimental data
 bool_plot = 0;
 dt_spline = 0.005;

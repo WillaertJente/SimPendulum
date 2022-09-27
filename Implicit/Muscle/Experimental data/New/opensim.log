@@ -2,3 +2,43 @@
 [2022-05-20 10:04:53.037] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/TD5\TD5_ScaledModel_ScaledForces.osim
 [2022-05-20 10:04:53.152] [info] ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
 [2022-05-20 10:04:53.153] [info] ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+[2022-09-21 11:19:30.173] [info] Updating Model file from 30000 to latest format...
+[2022-09-21 11:19:30.208] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP9\CP9_ScaledModel_ScaledForces.osim
+[2022-09-21 11:19:30.325] [info] ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+[2022-09-21 11:19:30.327] [info] ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+[2022-09-21 14:12:57.318] [info] Processing subject Jantje...
+[2022-09-21 14:12:57.318] [info] Step 1: Loading generic model
+[2022-09-21 14:12:57.334] [info] Loaded model Gait18 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Gait18_Visual_knee.osim
+[2022-09-21 14:12:57.509] [info] Step 2: Scaling generic model
+[2022-09-21 14:12:57.591] [info] Wrote model file 'Jantje.osim' from model.
+[2022-09-21 14:12:57.687] [info] Loaded model Jantje from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje.osim
+[2022-09-21 14:12:58.169] [info] Loaded model Jantje from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje.osim
+[2022-09-21 14:12:58.216] [info] AbstractTool dummy_motion_mtp loading model C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje.osim
+[2022-09-21 14:12:58.231] [info] Loaded model Jantje from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje.osim
+[2022-09-21 14:12:58.262] [info] No external loads will be applied (external loads file not specified).
+[2022-09-21 14:12:58.282] [info] Loading coordinates from file 'C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje\dummy_motion_mtp.mot'.
+[2022-09-21 14:12:58.282] [info] Old version storage/motion file encountered
+[2022-09-21 14:12:58.282] [info] Storage: read data file = C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje\dummy_motion_mtp.mot (nr=5000 nc=13)
+[2022-09-21 14:12:58.283] [info] .. assuming rotations in Degrees..
+[2022-09-21 14:12:59.045] [info] Found 5000 state vectors with time stamps ranging from 0.01 to 50.0.
+[2022-09-21 14:12:59.045] [info] Executing the analyses from 0.01 to 50.0...
+[2022-09-21 14:13:08.496] [info] Printing results of investigation dummy_motion_mtp to C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje\MuscleAnalysis
+[2022-09-21 14:13:11.174] [info] Loaded model Jantje from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje.osim
+[2022-09-21 14:30:21.696] [info] Processing subject Jantje2...
+[2022-09-21 14:30:21.696] [info] Step 1: Loading generic model
+[2022-09-21 14:30:21.710] [info] Loaded model Gait18 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Gait18_Visual_knee.osim
+[2022-09-21 14:30:21.745] [info] Step 2: Scaling generic model
+[2022-09-21 14:30:21.832] [info] Wrote model file 'Jantje2.osim' from model.
+[2022-09-21 14:30:21.882] [info] Loaded model Jantje2 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim
+[2022-09-21 14:30:22.204] [info] Loaded model Jantje2 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim
+[2022-09-21 14:30:22.234] [info] AbstractTool dummy_motion_mtp loading model C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim
+[2022-09-21 14:30:22.249] [info] Loaded model Jantje2 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim
+[2022-09-21 14:30:22.287] [info] No external loads will be applied (external loads file not specified).
+[2022-09-21 14:30:22.308] [info] Loading coordinates from file 'C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje2\dummy_motion_mtp.mot'.
+[2022-09-21 14:30:22.308] [info] Old version storage/motion file encountered
+[2022-09-21 14:30:22.308] [info] Storage: read data file = C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje2\dummy_motion_mtp.mot (nr=5000 nc=13)
+[2022-09-21 14:30:22.308] [info] .. assuming rotations in Degrees..
+[2022-09-21 14:30:23.180] [info] Found 5000 state vectors with time stamps ranging from 0.01 to 50.0.
+[2022-09-21 14:30:23.180] [info] Executing the analyses from 0.01 to 50.0...
+[2022-09-21 14:30:33.388] [info] Printing results of investigation dummy_motion_mtp to C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje2\MuscleAnalysis
+[2022-09-21 14:30:35.953] [info] Loaded model Jantje2 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim

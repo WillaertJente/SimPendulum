@@ -43,6 +43,7 @@ bool_guess  = 1; % to create trial specific initial guess of lMtilda
 [InitGuess] = CreateInitialGuess(bool_guess,params_OS, data_exp, muscles, coeff_LMT_ma);
 
 %% Define states, controls, bounds and initial guess
+addpath(genpath('C:\GBW_MyPrograms\Casadi'))
 import casadi.*;        % Import casadi libraries
 opti = casadi.Opti();   % Initialise opti structure
 
