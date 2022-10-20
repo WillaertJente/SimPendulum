@@ -28,7 +28,7 @@ a_flex   = R.a_flex;
 B        = R.B;
 kFpe     = R.kFpe; 
 kR       = R.kR; 
-tres     = R.tres;
+%tres     = R.tres;
 
 % OS params
 FMo      = R.OS.MT(1,:);
@@ -164,7 +164,7 @@ output.Fsrs_f1 = Fsrs_f1;
 output.Fsrs    = [Fsrs_f1 R.Fsrs]; 
 
 % Reflexes 
-a_refl = kR * Fce_del - tres; 
+a_refl = kR * Fce_del %- tres; 
 a      = a_ext + a_refl;
 
 output.a_refl = a_refl;

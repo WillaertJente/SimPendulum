@@ -3,9 +3,9 @@
 % Jente Willaert - 9 sept 2022
 
 % Change with trial
-load('CP10_T13_Opt12_IG_set6_Bounds_Set2.mat')
-id_exp  = importdata(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP10\ID-T12_NoFilter_Degree\inverse_dynamics.sto']);
-emg_exp = xlsread(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\EMG/CP10/T12_Sim.xlsx']);
+load('CP11_T4_Opt14_Activation_TanH_IG10.mat')
+id_exp  = importdata(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New\CP11\ID_T4/inverse_dynamics.sto']);
+emg_exp = xlsread(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\EMG/CP11/T4_Sim.xlsx']);
 
 % input
 m       = R.OS.inert.mass_OS;
@@ -20,7 +20,8 @@ B       = R.B;
 theta_d = R.xd;
 
 % ID
-ID = -m*g*l*cos(theta*180/pi) + FT_ext.*ma_ext + FT_flex.*ma_flex - B*theta_d; 
+ID = FT_ext.*ma_ext + FT_flex.*ma_flex - B*theta_d; 
+%-m*g*l*cos(theta*180/pi) + FT_ext.*ma_ext + FT_flex.*ma_flex - B*theta_d; 
 
 % Spline experimental ID
 tvect_spline = R.exp.t(1):R.dt2:R.exp.t(end);     % Time vector for simulation
@@ -37,14 +38,14 @@ emgspline              = spline(emg_exp(:,1),emg_exp(:,2));            % Spline 
 [emg_spline,qd_spline] = SplineEval_ppuval(emgspline,tvect_spline,1); % Get angles and velocities
 
 % Simulated emg
-emg_sim = R.C.a_refl;
+emg_sim = R.C.a;
 
 % Plot
 figure()
 subplot(421)
 plot(R.exp.qspline*180/pi,'k','LineWidth',1.5); hold on
 plot(R.x*180/pi,'r','LineWidth',1.5); hold on
-box off; title('TD5 T1 - IG set 5, Bounds Set 1'); 
+box off; title('CP11 T4'); 
 
 subplot(4,2,3)
 plot(id_spline,'k','LineWidth',1.5); hold on

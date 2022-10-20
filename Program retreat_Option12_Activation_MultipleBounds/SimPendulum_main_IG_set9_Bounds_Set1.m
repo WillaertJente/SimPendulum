@@ -135,11 +135,11 @@ opti.subject_to(1e-4 < xd(N_1+1)); % of kleiner als 1 er nog bij?
 
 % Skeletal dynamics fase 1 
 lMtilda_init = lMtilda(1,1); 
-[error_f1] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del(1:N_1), dFsrs_deldt(1:N_1), kR, tres, Fce_del(1:N_1), dFce_deldt(1:N_1)); 
+[error_f1] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del(1:N_1), dFsrs_deldt(1:N_1), kR, Fce_del(1:N_1), dFce_deldt(1:N_1)); 
 
 % Skeletal dynamics fase 2
 [error_f2] = CalculateMusculoSkeletalDynamics_F2_ForceFeedback(x(N_1+1:end),xd(N_1+1:end),xdd(N_1+1:end),lMtilda(:,N_1+1:end), lM_projected(:,N_1+1:end), kFpe, vMtilda(:,N_1+1:end), ...
-             a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt,Fsrs_del(N_1+1:end), dFsrs_deldt(N_1+1:end), kR,tres,Fce_del(N_1+1:end), dFce_deldt(N_1+1:end) ); 
+             a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt,Fsrs_del(N_1+1:end), dFsrs_deldt(N_1+1:end), kR,Fce_del(N_1+1:end), dFce_deldt(N_1+1:end) ); 
 
 % Constraints - trapezoidal integration 
 % dt = dt_spline; 

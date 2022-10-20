@@ -1,9 +1,9 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'TD5';           % Subject name
-info.trial  = 2% Trial number
-info.option = 'Opt12_IG_set3_Bounds_Set1'      % Name to save results
+info.subj   = 'PD1';           % Subject name
+info.trial  = 7% Trial number
+info.option = 'Giovanni'      % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 

@@ -4,7 +4,7 @@ map_muscleanal        = [info.path 'MA_FakeMot_T',num2str(info.trial)];
 
 %  1. Fakemot file, muscle analysis, data
 % Theta
-theta = (-140:0.5:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4;
+theta = (-140:0.01:20)' *pi/180; theta_sq = theta.^2; theta_th = theta.^3; theta_fo = theta.^4;
 
 % Muscle analysis
 name_LMT = [map_muscleanal,'_MuscleAnalysis_Length.sto'];

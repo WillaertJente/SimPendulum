@@ -2,10 +2,10 @@
 %% Input
 % Change here subject and trial
 info.subj   = 'CP9';           % Subject name
-info.trial  = 6% Trial number
-info.option = 'Opt12_IG_set8_Bounds_Set2_kost'      % Name to save results
+info.trial  = 3% Trial number
+info.option = 'Opt12_IG_set8_Bounds_Set2_NoTresh_FcedelPos'      % Name to save results
 info.wq     = 1;               % weight on q error
-info.wqd    = 0.1;             % weight on qd error
+info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
 info.tau    = 0.080; 
 
@@ -74,7 +74,7 @@ kFpe          = opti.variable(1);
 B             = opti.variable(1); 
 kR            = opti.variable(1); 
 %kY            = opti.variable(1);
-tres          = opti.variable(1); 
+%tres          = opti.variable(1); 
 
 % Bounds
 [Ub, Lb] = SelectBounds_Set2(data_exp);
@@ -90,7 +90,7 @@ opti.subject_to(Lb.lMtilda  <  lMtilda  < Ub.lMtilda);
 opti.subject_to(Lb.dt1 < dt1 < Ub.dt1); 
 opti.subject_to(Lb.kR  < kR  < Ub.kR); 
 %opti.subject_to(Lb.kY  < kY  < Ub.kY); 
-opti.subject_to(Lb.tres < tres < Ub.tres); 
+%opti.subject_to(Lb.tres < tres < Ub.tres); 
 opti.subject_to(Lb.x_end < x(end) < Ub.x_end); % Constraint on resting angle (3 graden + en 3 graden -) 
 
 % % Calculate initial value of Fsrs 
@@ -114,7 +114,7 @@ opti.set_initial(vMtilda, InitGuess.vM);
 opti.set_initial(dt1,0.002); 
 opti.set_initial(kR, 5);  
 %opti.set_initial(kY, 0.01);
-opti.set_initial(tres, 0.01); 
+%opti.set_initial(tres, 0.01); 
 
 %% Define problem (muscle model)
 % Calculate shift
@@ -135,11 +135,11 @@ opti.subject_to(1e-4 < xd(N_1+1)); % of kleiner als 1 er nog bij?
 
 % Skeletal dynamics fase 1 
 lMtilda_init = lMtilda(1,1); 
-[error_f1] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del(1:N_1), dFsrs_deldt(1:N_1), kR, tres, Fce_del(1:N_1), dFce_deldt(1:N_1)); 
+[error_f1] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(x(1:N_1),xd(1:N_1),xdd(1:N_1), lMtilda(:,1:N_1), lMtilda_init, lM_projected(:,1:N_1),kFpe,vMtilda(:,1:N_1), a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del(1:N_1), dFsrs_deldt(1:N_1), kR, Fce_del(1:N_1), dFce_deldt(1:N_1)); 
 
 % Skeletal dynamics fase 2
 [error_f2] = CalculateMusculoSkeletalDynamics_F2_ForceFeedback(x(N_1+1:end),xd(N_1+1:end),xdd(N_1+1:end),lMtilda(:,N_1+1:end), lM_projected(:,N_1+1:end), kFpe, vMtilda(:,N_1+1:end), ...
-             a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt,Fsrs_del(N_1+1:end), dFsrs_deldt(N_1+1:end), kR,tres,Fce_del(N_1+1:end), dFce_deldt(N_1+1:end) ); 
+             a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs, dFsrsdt,Fsrs_del(N_1+1:end), dFsrs_deldt(N_1+1:end), kR,Fce_del(N_1+1:end), dFce_deldt(N_1+1:end) ); 
 
 % Constraints - trapezoidal integration 
 % dt = dt_spline; 
@@ -206,7 +206,7 @@ R.dt1     = sol.value(dt1);
 R.dt2     = dt2; 
 R.tF1     = N_1*R.dt1; 
 R.kR      = sol.value(kR);
-R.tres    = sol.value(tres); 
+% R.tres    = sol.value(tres); 
 
 % Objective function
 R.wq      = info.wq;

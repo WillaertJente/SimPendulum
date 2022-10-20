@@ -6,8 +6,8 @@ function [offset] = CalculateOffset(info, params_subject, t_span)
 IK         = importdata([info.path,'IK_Trial0',num2str(info.trial),'.mot']); 
 
 % Selection ~ pendulum onset till end
-start      = find(IK.data(:,1)== t_span(1)); 
-stop       = find(IK.data(:,1)== t_span(2));
+start      = 1%find(IK.data(:,1)== t_span(1)); 
+stop       = 466%find(IK.data(:,1)== t_span(2));
 IK_sel     = IK.data(start:stop,:); 
 
 % Find pelvis tilt angle 

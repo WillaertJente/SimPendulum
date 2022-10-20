@@ -1,4 +1,4 @@
-function [error] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(q,qd,qdd,lMtilda, lMtilda_init, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del, dFsrs_deldt, kR, tres, Fce_del, dFce_deldt)
+function [error] = CalculateMusculoSkeletalDynamics_F1_ForceFeedback(q,qd,qdd,lMtilda, lMtilda_init, lM_projected, kFpe, vMtilda, a_ext, a_flex, data_exp, coeff_LMT_ma, params_OS, shift, B, info, Fsrs_del, dFsrs_deldt, kR, Fce_del, dFce_deldt)
 % Calculate Muscle tendon lengths and moment arms 
 [lMT, MA] = CalculateMuscleTendonLengthAndMomentArms(q, data_exp, coeff_LMT_ma); 
 
@@ -21,8 +21,8 @@ Fsrs = tan_val_incr + tan_val_plat;
 % Reflexes
 tau    = info.tau;
 
-a_refl = kR * Fce_del - tres; 
-a      = a_ext + a_refl;
+a_refl = kR * Fce_del;  %-tres
+a      = a_ext + (0.5*tanh(1000*a_refl)+0.5)*a_refl;
 
 % FMce 
 Fce_ext  = a.*FMltilda(1,:).* FMvtilda(1,:) + Fsrs;  
