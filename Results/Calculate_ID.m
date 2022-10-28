@@ -3,9 +3,9 @@
 % Jente Willaert - 9 sept 2022
 
 % Change with trial
-load('CP11_T4_Opt14_Activation_TanH_IG10.mat')
-id_exp  = importdata(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New\CP11\ID_T4/inverse_dynamics.sto']);
-emg_exp = xlsread(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\EMG/CP11/T4_Sim.xlsx']);
+load('CP11_T2_Opt14_Activation_TanH_tresh_IG4.mat')
+id_exp  = importdata(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New\CP11\ID_T2/inverse_dynamics.sto']);
+emg_exp = xlsread(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\EMG/CP11/T2_Sim.xlsx']);
 
 % input
 m       = R.OS.inert.mass_OS;
@@ -45,7 +45,7 @@ figure()
 subplot(421)
 plot(R.exp.qspline*180/pi,'k','LineWidth',1.5); hold on
 plot(R.x*180/pi,'r','LineWidth',1.5); hold on
-box off; title('CP11 T4'); 
+box off; title('CP11 T2'); 
 
 subplot(4,2,3)
 plot(id_spline,'k','LineWidth',1.5); hold on
