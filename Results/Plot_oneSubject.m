@@ -43,10 +43,10 @@ saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat
 
 %% CP 2
 figure()
-IG = [0 0 0 5 5 9 5]
+IG = [0 0 0 3 9 9 9 ]
 for i = 4:7
     name = ['T',num2str(i)];
-    Name = ['CP2_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP2_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP2.(char(name)) = load(Name);
     
     subplot(2,5,i-3)
@@ -80,16 +80,16 @@ for i = 4:7
     title('B'); box off; xticks([1 2 3 4]); xticklabels({'T4','T5','T6','T7'})
     ylim([0 0.15]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP2')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Opt14_Tanh_Tresh_Params.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Opt14_Tanh_Tresh_Params.png')
+sgtitle('CP2')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Opt14_Tanh_Tresh_FS_Params.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP2_Opt14_Tanh_Tresh_FS_Params.png')
 
 %% CP 4
 figure()
-IG = [0 0 10 10]
+IG = [0 0 3 9]
 for i = 3:4
     name = ['T',num2str(i)];
-    Name = ['CP4_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP4_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP4.(char(name)) = load(Name);
     
     subplot(2,5,i-2)
@@ -123,16 +123,16 @@ for i = 3:4
     title('B'); box off; xticks([1 2]); xticklabels({'T3','T4'})
     ylim([0 0.15]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP4')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Opt14_Tanh_Tresh_Params.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Opt14_Tanh_Tresh_Params.png')
+sgtitle('CP4')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Opt14_Tanh_Tresh_FS_Params.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP4_Opt14_Tanh_Tresh_FS_Params.png')
 
 %% CP8
 figure()
-IG = [0 6 1 10 6]
+IG = [0 10 9 4 9]
 for i = [2 3 4 5 ]
     name = ['T',num2str(i)];
-    Name = ['CP8_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP8_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP8.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -166,16 +166,16 @@ for i = [2 3 4 5 ]
     title('B'); box off; xticks([1 2 3 4]); xticklabels({'T2','T3','T4','T5'})
     ylim([0 0.15]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP8')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Opt14_Tanh_Tresh_Params2.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Opt14_Tanh_Tresh_Params2.png')
+sgtitle('CP8')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Opt14_Tanh_Tresh_FS_Params1.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP8_Opt14_Tanh_Tresh_FS_Params1.png')
 
 %% CP9
 figure()
-IG = [0 3 3 9 9 9]
+IG = [0 10 9 9 9 9]
 for i = [2 3 4 5 6]
     name = ['T',num2str(i)];
-    Name = ['CP9_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP9_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP9.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -209,16 +209,16 @@ for i = [2 3 4 5 6]
     title('B'); box off; xticks([1 2 3 4 5]); xticklabels({'T3','T4','T5','T6'})
     ylim([0 0.15]); line([0 5],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP9')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Opt14_Tanh_Tresh_Params.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Opt14_Tanh_Tresh_Params.png')
+sgtitle('CP9')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Opt14_Tanh_Tresh_FS_Params.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP9_Opt14_Tanh_Tresh_FS_Params.png')
 
 %% CP 10
 figure()
-IG = [0 0 0 0 0 0 0 0 0 0 0 5 5 4]
+IG = [0 0 0 0 0 0 0 0 0 0 0 9 5 9]
 for i = 12:14
     name = ['T',num2str(i)];
-    Name = ['CP10_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP10_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP10.(char(name)) = load(Name);
     
     subplot(2,5,i-11)
@@ -252,16 +252,16 @@ for i = 12:14
     title('B'); box off; xticks([1 2 3]); xticklabels({'T12','T13','T14'})
     ylim([0 0.15]); line([0 4],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP10')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Opt14_Tanh_Tresh_Params2.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Opt14_Tanh_Tresh_Params2.png')
+sgtitle('CP10')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Opt14_Tanh_Tresh_FS_Params2.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP10_Opt14_Tanh_Tresh_FS_Params2.png')
 
 %% CP 11
-IG = [0 4 4 4 ]
+IG = [0 8 8 8 ]
 figure()
 for i = 2:4
     name = ['T',num2str(i)];
-    Name = ['CP11_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['CP11_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     CP11.(char(name)) = load(Name);
     
     subplot(2,5,i-1)
@@ -295,16 +295,16 @@ for i = 2:4
     title('B'); box off; xticks([1 2]); xticklabels({'T3','T4'})
     ylim([0 0.15]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('CP11')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Opt14_Tanh_Tresh_Params.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Opt14_Tanh_Tresh_Params.png')
+sgtitle('CP11')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Opt14_Tanh_Tresh_FS_Params.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/CP11_Opt14_Tanh_Tresh_FS_Params.png')
 
 %% TD5
 figure()
-IG = [10 9]
+IG = [3 3]
 for i = 1:2
     name = ['T',num2str(i)];
-    Name = ['TD5_T', num2str(i),'_Opt14_Activation_TanH_Tresh_IG',num2str(IG(i)),'.mat']
+    Name = ['TD5_T', num2str(i),'_Opt14_Activation_TanH_Tresh_FS_IG',num2str(IG(i)),'.mat']
     TD5.(char(name)) = load(Name);
     
     subplot(2,5,i)
@@ -338,6 +338,6 @@ for i = 1:2
     title('B'); box off; xticks([1 2]); xticklabels({'T1','T2'})
     ylim([0 0.15]); line([0 3],[10 10],'Color',[0.7 0.7 0.7],'LineWidth',1.5)
 end
-suptitle('TD5')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Opt14_Tanh_Tresh_Params.fig')
-saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Opt14_Tanh_Tresh_Params.png')
+sgtitle('TD5')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Opt14_Tanh_Tresh_FS_Params.fig')
+saveas(gcf,'C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Results/Figures/TD5_Opt14_Tanh_Tresh_FS_Params.png')

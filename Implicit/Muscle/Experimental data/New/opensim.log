@@ -42,3 +42,21 @@
 [2022-09-21 14:30:23.180] [info] Executing the analyses from 0.01 to 50.0...
 [2022-09-21 14:30:33.388] [info] Printing results of investigation dummy_motion_mtp to C:\Users\u0125183\Documents\MATLAB\PredSim_2D\Polynomials\Jantje2\MuscleAnalysis
 [2022-09-21 14:30:35.953] [info] Loaded model Jantje2 from file C:\Users\u0125183\Documents\MATLAB\PredSim_2D\OpenSimModel\Jantje2.osim
+[2022-11-03 08:49:33.380] [info] Updating Model file from 30000 to latest format...
+[2022-11-03 08:49:33.424] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces.osim
+[2022-11-03 08:49:33.565] [info] ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+[2022-11-03 08:49:33.568] [info] ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+[2022-11-03 08:52:14.066] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 08:55:36.395] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:03:57.478] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:05:41.561] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:05:57.772] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:06:13.688] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:06:36.432] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:07:00.656] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:07:35.352] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim
+[2022-11-03 09:08:40.099] [info] Updating Model file from 30000 to latest format...
+[2022-11-03 09:08:40.140] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces.osim
+[2022-11-03 09:08:40.143] [info] ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+[2022-11-03 09:08:40.144] [info] ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+[2022-11-03 09:26:19.723] [info] Loaded model 3DGaitModel2354-scaled from file C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New/CP4\CP4_ScaledModel_ScaledForces_OS4.osim

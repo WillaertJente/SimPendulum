@@ -40,5 +40,5 @@ line([0 2],[R.bounds.Lb.kR R.bounds.Lb.kR],'Color','k','LineWidth',1.5); hold on
 title('kR')
 box off 
 
-suptitle([info.subj ' Trial ', num2str(info.trial)])
+sgtitle([info.subj ' Trial ', num2str(info.trial)])
 end

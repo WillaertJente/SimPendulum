@@ -1,9 +1,9 @@
 %% SimPendulum_main
 %% Input
 % Change here subject and trial
-info.subj   = 'TD5';           % Subject name
-info.trial  =2 % Trial number
-info.option = 'Opt14_Activation_TanH_tresh_IG9'      % Name to save results
+info.subj   = 'CP9';           % Subject name
+info.trial  = 5% Trial number
+info.option = 'Opt14_Activation_TanH_tresh_FS_IG9_TestInertie3'      % Name to save results
 info.wq     = 1;               % weight on q error
 info.wqd    = 0.5;             % weight on qd error
 info.kSRS   = 280; 
@@ -37,7 +37,7 @@ bool_plot = 1;
 % OpenSim
 addpath('MuscleModel');
 muscles = {'rect_fem_','bifemlh_'};
-[params_OS] = ReadOpenSimParams(info, params_subject, muscles);
+[params_OS] = ReadOpenSimParams_OS4(info, params_subject, muscles);
 
 %% Calculate LMT en Ma coefficients
 bool_plot = 1;
@@ -163,7 +163,7 @@ opti.subject_to((dFce_deldt(N_1:N-1) + dFce_deldt(N_1+1:N))*dt2/2 + Fce_del(N_1:
 
 
 % Objective function
-J = DefineObjectiveFunction(x,xd,data_exp, info, vMtilda, a_ext, a_flex, kR); 
+J = DefineObjectiveFunction_FS(x,xd,data_exp, info, vMtilda, a_ext, a_flex, kR); 
 opti.minimize(J); 
     
 %% Solve problem

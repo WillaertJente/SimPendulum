@@ -13,7 +13,7 @@ if nPhases > 1
     fTabGroup = uitabgroup;
 end
 
-Cs = linspecer(3);
+% Cs = linspecer(3);
 
 for i=1:nPhases
     % set the name of the tab

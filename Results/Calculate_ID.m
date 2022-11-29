@@ -3,7 +3,7 @@
 % Jente Willaert - 9 sept 2022
 
 % Change with trial
-load('CP11_T2_Opt14_Activation_TanH_tresh_IG4.mat')
+load('CP11_T2_Opt14_Activation_TanH_tresh_FS_IG8.mat')
 id_exp  = importdata(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\Implicit\Muscle\Experimental data\New\CP11\ID_T2/inverse_dynamics.sto']);
 emg_exp = xlsread(['C:\Users\u0125183\Documents\MATLAB\SimPendulum - programming retreat\EMG/CP11/T2_Sim.xlsx']);
 
